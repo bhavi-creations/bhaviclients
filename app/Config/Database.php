@@ -40,7 +40,7 @@ class Database extends Config
         'password'     => 'd8Az75YlgmyBnVM',
 
 
-        'database'     => 'hms_ram',
+        'database'     => 'bhaviclients',
 
 
         
