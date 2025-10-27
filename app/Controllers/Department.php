@@ -5,17 +5,14 @@ namespace App\Controllers;
 
 use CodeIgniter\Controller;
 use App\Models\DepartmentModel;
-use App\Models\EmployeeTaskModel; // or your actual Task model
-
 
 class Department extends Controller
 {
     // Property to hold the Model instance
-    protected $departmentModel;    protected $employeeTaskModel;
-
+    protected $departmentModel;
 
     // Constructor to load the Model and Helpers
-    public function __construct()
+    public function __construct() 
     {
         log_message('debug', 'ROLE CHECK: ' . print_r(session()->get(), true));
 
@@ -39,39 +36,9 @@ class Department extends Controller
     // R - Read (Displays the list)
     public function index()
     {
-        $roleId = session()->get('role_id');
-        $userId = session()->get('user_id');
-
-        // For admin/admin manager: show all stats; for others, optionally redirect or adapt
-        if ($roleId == 1 || $roleId == 5) {
-            $clientModel = new \App\Models\ClientModel();
-            $employeeModel = new \App\Models\EmployeeModel();
-            $userModel = new \App\Models\UserModel();
-            $maintenanceModel = new \App\Models\MaintenanceModel();
-            $fileModel = new \App\Models\ClientFileModel();
-
-            $totalClients = $clientModel->countAllResults();
-            $totalEmployees = $employeeModel->countAllResults();
-            $totalUsers = $userModel->countAllResults();
-            $recentClients = $clientModel->orderBy('created_at', 'DESC')->limit(5)->findAll();
-            $maintenanceCount = $maintenanceModel->countAllResults();
-            $totalFiles = $fileModel->countAllResults();
-
-            $data = [
-                'title' => 'Dashboard',
-                'totalClients' => $totalClients,
-                'totalEmployees' => $totalEmployees,
-                'totalUsers' => $totalUsers,
-                'recentClients' => $recentClients,
-                'maintenanceCount' => $maintenanceCount,
-                'totalFiles' => $totalFiles,
-            ];
-
-            return view('dashboard/index', $data);
-        } else {
-            // Optionally: redirect other roles or show minimal info
-            return redirect()->to('client-dashboard');
-        }
+        $data['departments'] = $this->departmentModel->findAll();
+        $data['title'] = 'Department List';
+        return view('department/index', $data);
     }
 
     // C - Create (Displays the form)
