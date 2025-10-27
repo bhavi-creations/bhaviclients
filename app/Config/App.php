@@ -6,7 +6,7 @@ use CodeIgniter\Config\BaseConfig;
 
 class App extends BaseConfig
 {
-    public string $baseURL = 'http://localhost/bhaviclients/';
+    public string $baseURL = 'bhaviclients.bhavicreations.com';
 
     public array $allowedHostnames = [];
 
