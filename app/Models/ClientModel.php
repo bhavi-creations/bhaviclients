@@ -16,6 +16,7 @@ class ClientModel extends Model
      */
     protected $allowedFields = [
         'user_id',             // Foreign Key to the users table
+        'client_manager_id',   // ← ADD THIS LINE
         'name',                // Company Name
         'owner_first_name',
         'owner_last_name',
@@ -30,7 +31,8 @@ class ClientModel extends Model
 
     // Updated validation rules to include the new fields
     protected $validationRules = [
-        'user_id'          => 'permit_empty|integer', // Made optional for insert, will be set in controller
+        'user_id'          => 'permit_empty|integer',
+        'client_manager_id'=> 'permit_empty|integer', // ← ADD THIS LINE TOO (optional)
         'name'             => 'required|min_length[3]|max_length[255]',
         'owner_first_name' => 'required|min_length[2]|max_length[100]',
         'owner_last_name'  => 'required|min_length[2]|max_length[100]',

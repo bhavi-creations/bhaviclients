@@ -1,15 +1,14 @@
 <?php
-// C:\xampp\htdocs\bhaviclients\app\Controllers\Employee.php
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController; // Reverted to CI standard BaseController
+use App\Controllers\BaseController;
 use App\Models\EmployeeModel;
 use App\Models\DepartmentModel;
 use App\Models\RoleModel;
 use App\Models\UserModel;
 
-class Employee extends BaseController // Reverted to CI standard BaseController
+class Employee extends BaseController
 {
     protected $employeeModel;
     protected $departmentModel;
@@ -17,32 +16,43 @@ class Employee extends BaseController // Reverted to CI standard BaseController
     protected $userModel;
     protected $validation;
     protected $session;
-    protected $db;  
+    protected $db;
+
+   
 
     public function __construct()
     {
-        // Initialize the models
-        $this->employeeModel = new EmployeeModel();
+        $this->employeeModel   = new EmployeeModel();
         $this->departmentModel = new DepartmentModel();
-        $this->roleModel = new RoleModel();
-        $this->userModel = new UserModel();
-        $this->session = \Config\Services::session();
-        $this->validation = \Config\Services::validation();
-        // Initialize Database Connection Service
-        $this->db = \Config\Database::connect();    
-
+        $this->roleModel       = new RoleModel();
+        $this->userModel       = new UserModel();
+        $this->session         = \Config\Services::session();
+        $this->validation      = \Config\Services::validation();
+        $this->db              = \Config\Database::connect();
         helper(['form', 'url']);
+
+        // --- ACCESS CHECK FOR ADMIN + ADMIN MANAGER ---
+        if (!in_array(session()->get('role_id'), [1, 5])) {
+            if (!function_exists('redirect')) {
+                header('Location: ' . base_url('dashboard'));
+                exit;
+            } else {
+                redirect()->to(base_url('dashboard'))->send();
+                exit;
+            }
+        }
     }
 
+
     /**
-     * R - Read (Displays the employee list with departments and roles)
+     * Display employee list
      */
     public function index()
     {
         $employees = $this->employeeModel
             ->select('employees.*, departments.name AS department_name, roles.name AS role_name')
             ->join('departments', 'departments.id = employees.department_id', 'left')
-            ->join('roles', 'roles.id = employees.role_id', 'left') // <-- FIXED: Changed employees->role_id to employees.role_id
+            ->join('roles', 'roles.id = employees.role_id', 'left')
             ->findAll();
 
         $data['employees'] = $employees;
@@ -50,15 +60,13 @@ class Employee extends BaseController // Reverted to CI standard BaseController
         return view('employee/index', $data);
     }
 
-    // --------------------------------------------------------------------------------
-    // --- C - Create ---
-    // --------------------------------------------------------------------------------
-
-
+    /**
+     * Show create form
+     */
     public function create()
     {
-        $data['departments'] = $this->departmentModel->findAll(); // Using model for simplicity
-        $data['roles'] = $this->roleModel->findAll(); // Fetch roles for the dropdown
+        $data['departments'] = $this->departmentModel->findAll();
+        $data['roles'] = $this->roleModel->findAll();
         $data['title'] = 'Add New Employee';
         $data['validation'] = $this->validation;
 
@@ -67,64 +75,45 @@ class Employee extends BaseController // Reverted to CI standard BaseController
 
     public function store()
     {
-        // 1. Define Validation Rules
+        // Validation Rules
         $rules = [
-            'first_name'    => 'required|min_length[3]|max_length[100]',
-            'last_name'     => 'required|min_length[3]|max_length[100]',
-            'email'         => 'required|valid_email|is_unique[users.email]|max_length[255]',
-            'phone'         => 'required|min_length[10]|max_length[20]|is_unique[users.phone]',
-            'department_id' => 'required|numeric',
-            'role_id'       => 'required|numeric', // Ensure role_id is passed from form
+            'first_name'    => 'required|min_length[2]|max_length[100]',
+            'last_name'     => 'required|min_length[2]|max_length[100]',
+            'email'         => 'required|valid_email|is_unique[users.email]',
+            'phone'         => 'required|numeric|min_length[10]|max_length[20]|is_unique[users.phone]',
+            'department_id' => 'required|integer',
+            'role_id'       => 'required|integer',
         ];
 
         if (!$this->validate($rules)) {
-            $this->session->setFlashdata('error', 'Validation failed. Please correct the errors shown below.');
-            return redirect()->back()->withInput()->with('validation', $this->validation);
+            $errors = $this->validation->getErrors();
+            log_message('error', 'Employee Validation Failed: ' . json_encode($errors));
+
+            return redirect()->back()
+                ->withInput()
+                ->with('validation', $this->validation)
+                ->with('error', 'Validation failed. Please check the form.');
         }
 
         $input = $this->request->getPost();
 
-        // --- START TRANSACTION ---
+        // Start transaction
         $this->db->transStart();
 
         try {
-            // 1. Prepare Employee Data (NOW including address)
-            $employeeData = [
-                'first_name'    => $input['first_name'],
-                'last_name'     => $input['last_name'],
-                'email'         => $input['email'],
-                'phone'         => $input['phone'],
-                'department_id' => $input['department_id'],
-                'role_id'       => $input['role_id'], // Use submitted role_id
-                'address'       => $input['address'] ?? null, // Include optional address
-                'user_id'       => 0, // Placeholder, will be updated later
-            ];
-
-            // 2. Save Employee and get the new ID
-            $this->employeeModel->insert($employeeData);
-            $employeeId = $this->employeeModel->getInsertID();
-
-            if (!$employeeId) {
-                throw new \Exception('Failed to save employee data.');
-            }
-
-            // 3. Prepare User Data for the 'users' table (NOW including address)
+            // 1. Create User first (UserModel will hash password automatically)
             $userData = [
-                'employee_id'   => $employeeId,
-                'role_id'       => $input['role_id'], // Use submitted role_id
-                'first_name'    => $input['first_name'],
-                'last_name'     => $input['last_name'],
-                'email'         => $input['email'],
-                'phone'         => $input['phone'],
-                'address'       => $input['address'] ?? null, // Include optional address
-                // Set department_id for quick lookups
+                'role_id'       => $input['role_id'],
+                'first_name'    => trim($input['first_name']),
+                'last_name'     => trim($input['last_name']),
+                'email'         => trim($input['email']),
+                'phone'         => trim($input['phone']),
                 'department_id' => $input['department_id'],
-                // Default username and password based on input
-                'username'      => $input['email'],
-                'password'      => $input['phone'], // Hashed by UserModel's beforeInsert
+                'username'      => trim($input['email']),
+                'password'      => $input['phone'], // ← REMOVED password_hash() - Let UserModel handle it
+                'created_at'    => date('Y-m-d H:i:s'),
             ];
 
-            // 4. Save User and get the new User ID
             $this->userModel->insert($userData);
             $userId = $this->userModel->getInsertID();
 
@@ -132,32 +121,59 @@ class Employee extends BaseController // Reverted to CI standard BaseController
                 throw new \Exception('Failed to create user account.');
             }
 
-            // 5. CRITICAL FIX: Update the employee record with the new user's ID
-            $this->employeeModel->update($employeeId, ['user_id' => $userId]);
+            // 2. Create Employee with user_id
+            $employeeData = [
+                'user_id'       => $userId,
+                'first_name'    => trim($input['first_name']),
+                'last_name'     => trim($input['last_name']),
+                'email'         => trim($input['email']),
+                'phone'         => trim($input['phone']),
+                'department_id' => $input['department_id'],
+                'role_id'       => $input['role_id'],
+                'created_at'    => date('Y-m-d H:i:s'),
+            ];
 
-            // Commit the transaction
+            $this->employeeModel->insert($employeeData);
+            $employeeId = $this->employeeModel->getInsertID();
+
+            if (!$employeeId) {
+                throw new \Exception('Failed to create employee record.');
+            }
+
+            // 3. Update user with employee_id
+            $this->userModel->update($userId, ['employee_id' => $employeeId]);
+
+            // Commit transaction
             $this->db->transComplete();
 
             if ($this->db->transStatus() === false) {
-                throw new \Exception('Transaction failed to commit.');
+                throw new \Exception('Transaction failed.');
             }
 
-            $this->session->setFlashdata('success', 'Employee and User created successfully! Email is the username, and the phone number is the temporary password.');
+            $this->session->setFlashdata(
+                'success',
+                'Employee created successfully! Username: ' . $input['email'] . ', Password: ' . $input['phone']
+            );
+
             return redirect()->to(base_url('employee'));
         } catch (\Exception $e) {
             $this->db->transRollback();
             log_message('error', 'Employee Creation Error: ' . $e->getMessage());
-            $this->session->setFlashdata('error', 'System Error! Employee creation failed. ' . $e->getMessage());
+
+            $this->session->setFlashdata('error', 'Failed to create employee: ' . $e->getMessage());
             return redirect()->back()->withInput();
         }
     }
 
-    // =============================================================
-    // EDIT & UPDATE METHODS (Clean, Rebuilt, Stable)
-    // =============================================================
+
+    /**
+     * Show edit form
+     */
     public function edit($id = null)
     {
-        if ($id === null || !$employee = $this->employeeModel->find($id)) {
+        $employee = $this->employeeModel->find($id);
+
+        if (!$employee) {
             session()->setFlashdata('error', 'Employee not found.');
             return redirect()->to(base_url('employee'));
         }
@@ -172,14 +188,13 @@ class Employee extends BaseController // Reverted to CI standard BaseController
         return view('employee/edit', $data);
     }
 
-
+    /**
+     * Update employee
+     */
     public function update($id = null)
     {
-        if (!$this->request->is('post')) {
-            return redirect()->to(base_url('employee/edit/' . $id));
-        }
-
         $employee = $this->employeeModel->find($id);
+
         if (!$employee) {
             session()->setFlashdata('error', 'Employee not found.');
             return redirect()->to(base_url('employee'));
@@ -187,153 +202,117 @@ class Employee extends BaseController // Reverted to CI standard BaseController
 
         $userId = $employee['user_id'];
 
-        // --- CUSTOM VALIDATION (fixes uniqueness issue) ---
+        // Validation with uniqueness excluding current record
         $rules = [
-            'first_name'    => 'required|max_length[100]',
-            'last_name'     => 'required|max_length[100]',
-            // Custom unique checks using callbacks instead of is_unique
-            'email' => [
-                'label' => 'Email',
-                'rules' => [
-                    'required',
-                    'valid_email',
-                    'max_length[255]',
-                    function ($value) use ($userId) {
-                        return $this->checkUniqueExcludingId($value, 'email', 'users', $userId);
-                    }
-                ],
-                'errors' => [
-                    'checkUniqueExcludingId' => 'The email is already in use by another employee.',
-                ],
-            ],
-            'phone' => [
-                'label' => 'Phone',
-                'rules' => [
-                    'required',
-                    'numeric',
-                    'min_length[10]',
-                    'max_length[20]',
-                    function ($value) use ($userId) {
-                        return $this->checkUniqueExcludingId($value, 'phone', 'users', $userId);
-                    }
-                ],
-                'errors' => [
-                    'checkUniqueExcludingId' => 'The phone is already in use by another employee.',
-                ],
-            ],
+            'first_name'    => 'required|min_length[2]|max_length[100]',
+            'last_name'     => 'required|min_length[2]|max_length[100]',
+            'email'         => "required|valid_email|is_unique[users.email,id,{$userId}]",
+            'phone'         => "required|numeric|min_length[10]|is_unique[users.phone,id,{$userId}]",
             'department_id' => 'required|integer',
         ];
 
         if (!$this->validate($rules)) {
-            log_message('debug', 'Validation errors: ' . json_encode($this->validator->getErrors()));
-            session()->setFlashdata('error', 'Validation failed. Please check your inputs.');
-            return redirect()->back()->withInput()->with('validation', $this->validator);
+            $errors = $this->validation->getErrors();
+            log_message('error', 'Update Validation Failed: ' . json_encode($errors));
+
+            return redirect()->back()
+                ->withInput()
+                ->with('validation', $this->validation)
+                ->with('error', 'Validation failed: ' . implode(', ', $errors));
         }
 
-        // Capture input
         $input = $this->request->getPost();
 
-        // Prepare employee data
-        $employeeData = [
-            'first_name'    => trim($input['first_name']),
-            'last_name'     => trim($input['last_name']),
-            'email'         => trim($input['email']),
-            'phone'         => trim($input['phone']),
-            'department_id' => $input['department_id'],
-            'role_id'       => 2, // fixed role
-        ];
-
-        // Prepare user table data
-        $userData = [
-            'first_name'    => trim($input['first_name']),
-            'last_name'     => trim($input['last_name']),
-            'email'         => trim($input['email']),
-            'username'      => trim($input['email']),
-            'phone'         => trim($input['phone']),
-            'department_id' => $input['department_id'],
-            'role_id'       => 2,
-        ];
-
-        // --- TRANSACTION START ---
+        // Start transaction
         $this->db->transStart();
 
         try {
-            // Force employee update (skip validation prevents SELECT)
-            $this->employeeModel->skipValidation(true)->update($id, $employeeData);
-            log_message('debug', 'Employee update query: ' . $this->db->getLastQuery());
+            // Update employee
+            $employeeData = [
+                'first_name'    => trim($input['first_name']),
+                'last_name'     => trim($input['last_name']),
+                'email'         => trim($input['email']),
+                'phone'         => trim($input['phone']),
+                'department_id' => $input['department_id'],
+                'updated_at'    => date('Y-m-d H:i:s'),
+            ];
 
-            // Update linked user record if exists
+            // Use skipValidation to avoid model validation conflicts
+            $this->employeeModel->skipValidation(true)->update($id, $employeeData);
+
+            log_message('debug', 'Employee Update Query: ' . $this->db->getLastQuery());
+
+            // Update user (WITHOUT password field - don't change password on update)
             if ($userId) {
-                $this->userModel->skipValidation(true)->update($userId, $userData);
-                log_message('debug', 'User update query: ' . $this->db->getLastQuery());
+                $userData = [
+                    'first_name'    => trim($input['first_name']),
+                    'last_name'     => trim($input['last_name']),
+                    'email'         => trim($input['email']),
+                    'username'      => trim($input['email']),
+                    'phone'         => trim($input['phone']),
+                    'department_id' => $input['department_id'],
+                    'updated_at'    => date('Y-m-d H:i:s'),
+                ];
+
+                // Skip validation and callbacks to avoid password hashing
+                $this->userModel->skipValidation(true);
+                $this->db->table('users')->where('id', $userId)->update($userData);
+
+                log_message('debug', 'User Update Query: ' . $this->db->getLastQuery());
             }
 
-            // Commit transaction
             $this->db->transComplete();
 
             if ($this->db->transStatus() === false) {
-                throw new \Exception('Transaction failed to commit');
+                throw new \Exception('Transaction failed.');
             }
 
-            session()->setFlashdata('success', 'Employee and user details updated successfully.');
+            session()->setFlashdata('success', 'Employee updated successfully.');
+            return redirect()->to(base_url('employee'));
         } catch (\Exception $e) {
             $this->db->transRollback();
             log_message('error', 'Employee Update Error: ' . $e->getMessage());
+
             session()->setFlashdata('error', 'Update failed: ' . $e->getMessage());
             return redirect()->back()->withInput();
         }
-
-        // Redirect on success
-        return redirect()->to(base_url('employee'));
     }
 
 
-    // Helper function for custom uniqueness validation
-    protected function checkUniqueExcludingId($value, $field, $table, $ignoreId)
-    {
-        $builder = $this->db->table($table);
-        $builder->where($field, $value);
-        $builder->where('id !=', $ignoreId);
-        $result = $builder->countAllResults();
-
-        if ($result > 0) {
-            return false;
-        }
-        return true;
-    }
-
-
-
-
-
+    /**
+     * Delete employee
+     */
     public function delete($id = null)
     {
         $employee = $this->employeeModel->find($id);
+
         if (!$employee) {
-            session()->setFlashdata('error', 'Employee not found for deletion.');
+            session()->setFlashdata('error', 'Employee not found.');
             return redirect()->to(base_url('employee'));
         }
 
         $this->db->transStart();
 
         try {
-            if ($employee['user_id'] > 0) {
-                $this->userModel->where('id', $employee['user_id'])->delete();
+            // Delete user first
+            if ($employee['user_id']) {
+                $this->userModel->delete($employee['user_id']);
             }
 
+            // Delete employee
             $this->employeeModel->delete($id);
 
             $this->db->transComplete();
 
             if ($this->db->transStatus() === false) {
-                session()->setFlashdata('error', 'Database operation failed during employee and user deletion.');
-            } else {
-                session()->setFlashdata('success', 'Employee and associated user deleted successfully!');
+                throw new \Exception('Transaction failed.');
             }
+
+            session()->setFlashdata('success', 'Employee deleted successfully.');
         } catch (\Exception $e) {
             $this->db->transRollback();
             log_message('error', 'Employee Deletion Error: ' . $e->getMessage());
-            session()->setFlashdata('error', 'An error occurred during deletion: ' . $e->getMessage());
+            session()->setFlashdata('error', 'Deletion failed: ' . $e->getMessage());
         }
 
         return redirect()->to(base_url('employee'));

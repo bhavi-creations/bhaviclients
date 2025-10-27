@@ -19,6 +19,8 @@ class Client extends Controller
     protected $db;
     protected $clientRoleId = 3; // Client role ID
 
+
+
     public function __construct()
     {
         $this->clientModel = new ClientModel();
@@ -27,7 +29,19 @@ class Client extends Controller
         $this->validation = \Config\Services::validation();
         $this->db = \Config\Database::connect();
         helper(['form', 'url']);
+
+        // Access control: Only allow admins and admin managers
+        if (!in_array(session()->get('role_id'), [1, 5])) {
+            if (!function_exists('redirect')) {
+                header('Location: ' . base_url('dashboard'));
+                exit;
+            } else {
+                redirect()->to(base_url('dashboard'))->send();
+                exit;
+            }
+        }
     }
+
 
     public function index()
     {
@@ -246,7 +260,7 @@ class Client extends Controller
         return redirect()->to(base_url('client'))->with('message', 'Client deleted successfully.');
     }
 
-   
+
     // Custom validation callbacks
 
     public function validateUniqueEmail(string $email, ?string $fields, array $data): bool

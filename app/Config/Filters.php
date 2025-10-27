@@ -88,13 +88,13 @@ class Filters extends BaseFilters
 
         // 2. Role-Based Authorization (Requires the 'admin' role)
         // FIX: Use the defined alias 'auth' with the argument ':admin'
-        'auth:admin' => ['before' => [
-            'client',          // Client main list
-            'client/*',        // All Client-related routes (create, edit, delete, etc.)
-            'department',      // Department main list
-            'department/*',    // All Department-related routes
-            'employee',        // Employee main list
-            'employee/*',      // All Employee-related routes
-        ]],
+        // 'auth:admin' => ['before' => [
+        //     'client',          // Client main list
+        //     'client/*',        // All Client-related routes (create, edit, delete, etc.)
+        //     'department',      // Department main list
+        //     'department/*',    // All Department-related routes
+        //     'employee',        // Employee main list
+        //     'employee/*',      // All Employee-related routes
+        // ]],
     ];
 }

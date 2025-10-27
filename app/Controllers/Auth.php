@@ -1,4 +1,4 @@
-<?php 
+<?php
 // C:\xampp\htdocs\bhaviclients\app\Controllers\Auth.php
 
 namespace App\Controllers;
@@ -44,64 +44,60 @@ class Auth extends Controller
 
         // 1. Validation Rules
         $rules = [
-            'email'    => 'required|valid_email',
-            'password' => 'required', // We removed min_length[5] to allow 10-digit phone numbers as passwords
+            'username' => 'required',
+            'password' => 'required',
         ];
 
         if (!$this->validate($rules)) {
-            // Validation failed, return to form with errors
             return redirect()->back()->withInput();
         }
 
-        $email = $input['email'];
-        $rawPassword = $input['password']; // This is the raw phone number entered by the user
-        
-        // 2. Look up user by email (used as username)
-        $user = $this->userModel->where('email', $email)->first();
+        $username = $input['username'];
+        $rawPassword = $input['password'];
+
+        // 2. Look up user by username
+        $user = $this->userModel->where('username', $username)->first();
 
         if ($user) {
             // 3. Verify the password hash
             if (password_verify($rawPassword, $user['password'])) {
-                
-                // 4. FIX: Fetch the role name directly from the database
+
+                // 4. Fetch the role name
                 $db = \Config\Database::connect();
                 $role = $db->table('roles')
-                           // FIX: Assuming the column is 'name' instead of 'role_name'
-                           ->select('name')
-                           ->where('id', $user['role_id'])
-                           ->get()
-                           ->getRow();
+                    ->select('name')
+                    ->where('id', $user['role_id'])
+                    ->get()
+                    ->getRow();
 
-                // Determine the role name for the session
-                // We use $role->name assuming the select was successful and the column is 'name'
-                $roleName = $role ? $role->name : 'unknown'; 
+                $roleName = $role ? $role->name : 'unknown';
 
                 // Success: Set Session Data
                 $ses_data = [
-                    'user_id'    => $user['id'], 
+                    'user_id'    => $user['id'],
                     'first_name' => $user['first_name'],
                     'last_name'  => $user['last_name'],
                     'email'      => $user['email'],
-                    'role_id'    => $user['role_id'], 
-                    'role_name'  => $roleName, // Added role_name to session
+                    'role_id'    => $user['role_id'],
+                    'role_name'  => $roleName,
+                    'client_id'  => $user['client_id'] ?? null,      // Add this for clients
+                    'employee_id' => $user['employee_id'] ?? null,   // Add this for employees
                     'isLoggedIn' => TRUE
                 ];
                 $session->set($ses_data);
-                
-                // Redirect based on role or to a default dashboard
-                return redirect()->to(base_url('dashboard')); 
 
+                // Redirect to dashboard
+                return redirect()->to(base_url('dashboard'));
             } else {
-                // Failure: Password does not match hash
-                $session->setFlashdata('error', 'Invalid Email or Password.');
+                $session->setFlashdata('error', 'Invalid Username or Password.');
                 return redirect()->back()->withInput();
             }
-        } 
-        
-        // Failure: User not found
-        $session->setFlashdata('error', 'Invalid Email or Password.');
+        }
+
+        $session->setFlashdata('error', 'Invalid Username or Password.');
         return redirect()->back()->withInput();
     }
+
 
     /**
      * Log the user out and destroy the session.

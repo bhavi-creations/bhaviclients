@@ -1,5 +1,4 @@
-<?php 
-// C:\xampp\htdocs\bhaviclients\app\Models\EmployeeTaskModel.php
+<?php
 
 namespace App\Models;
 
@@ -7,39 +6,67 @@ use CodeIgniter\Model;
 
 class EmployeeTaskModel extends Model
 {
-    protected $table = 'employee_tasks';
-    protected $primaryKey = 'id';
-    protected $returnType = 'array';
-    protected $useTimestamps = true;
-
-    protected $allowedFields = [
+    protected $table            = 'employee_tasks';
+    protected $primaryKey       = 'id';
+    protected $useAutoIncrement = true;
+    protected $returnType       = 'array';
+    protected $useSoftDeletes   = false;
+    protected $protectFields    = true;
+    protected $allowedFields    = [
         'employee_id',
-        'client_id', // <-- CRITICAL: Added to allow saving the client association
+        'client_id',
         'title',
         'description',
-        'due_date',
         'status',
+        'submitted_at',
+        'files_upload',
+        'updated_at'
     ];
 
+    // Dates
+    protected $useTimestamps = false;
     protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
+    protected $createdField  = 'submitted_at';
     protected $updatedField  = 'updated_at';
 
-    /**
-     * Retrieves tasks associated with an employee, along with the linked client's name.
-     * * This method joins the 'clients' table using the foreign key 'client_id'.
-     * * @param int|null $employeeId Optional ID to filter by
-     * @return array
-     */
-    public function getEmployeeTasksWithClient(int $employeeId = null): array
+    // Validation
+    protected $validationRules = [
+        'employee_id' => 'required|integer',
+        'title'       => 'required|min_length[3]|max_length[255]',
+        'description' => 'required|min_length[10]',
+        'status'      => 'in_list[Pending,In Progress,Completed,Review]',
+    ];
+
+    protected $validationMessages = [
+        'title' => [
+            'required' => 'Task title is required',
+            'min_length' => 'Title must be at least 3 characters',
+        ],
+        'description' => [
+            'required' => 'Task description is required',
+            'min_length' => 'Description must be at least 10 characters',
+        ],
+    ];
+
+    protected $skipValidation = false;
+    protected $cleanValidationRules = true;
+
+    // Callbacks
+    protected $allowCallbacks = true;
+    protected $beforeInsert   = ['setSubmittedAt'];
+    protected $beforeUpdate   = ['setUpdatedAt'];
+
+    protected function setSubmittedAt(array $data)
     {
-        $builder = $this->select('employee_tasks.*, clients.name AS client_name')
-                        ->join('clients', 'clients.id = employee_tasks.client_id', 'left');
-
-        if ($employeeId !== null) {
-            $builder->where('employee_tasks.employee_id', $employeeId);
+        if (!isset($data['data']['submitted_at'])) {
+            $data['data']['submitted_at'] = date('Y-m-d H:i:s');
         }
+        return $data;
+    }
 
-        return $builder->findAll();
+    protected function setUpdatedAt(array $data)
+    {
+        $data['data']['updated_at'] = date('Y-m-d H:i:s');
+        return $data;
     }
 }

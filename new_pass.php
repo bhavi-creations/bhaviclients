@@ -1,5 +1,5 @@
 <?php
-$phone = '9879879879'; // current phone number from patients table
+$phone = 'password123'; // current phone number from patients table
 $hash = password_hash(trim($phone), PASSWORD_DEFAULT);
 echo "Generated hash: $hash\n";
 

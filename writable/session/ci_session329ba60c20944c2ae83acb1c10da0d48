@@ -1,4 +1,0 @@
-__ci_last_regenerate|i:1761286694;_ci_previous_url|s:53:"http://localhost/bhaviclients/index.php/client/create";user_id|i:1;first_name|s:6:"System";last_name|s:5:"Admin";email|s:14:"admin@test.com";role|s:5:"admin";isLoggedIn|b:1;error|s:294:"A system error occurred during client creation. No records were saved. Please check the logs (writable/logs) for details on the failure: Step 3 (User Update) Failed. Affected Rows: 0. Model Errors: Array
-(
-)
-. CRITICAL: Check if 'client_id' and 'company_name' are in UserModel's $allowedFields.";__ci_vars|a:2:{s:5:"error";s:3:"old";s:13:"_ci_old_input";s:3:"old";}_ci_old_input|a:2:{s:3:"get";a:0:{}s:4:"post";a:5:{s:4:"name";s:16:"Vk Constructions";s:16:"owner_first_name";s:5:"dvvre";s:15:"owner_last_name";s:9:"revergerg";s:5:"email";s:26:"ramumarketrgeing@gmail.com";s:5:"phone";s:10:"1236547410";}}

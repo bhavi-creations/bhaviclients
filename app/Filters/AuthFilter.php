@@ -9,43 +9,40 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class AuthFilter implements FilterInterface
 {
-    /**
-     * Do before the controller is executed.
-     * This checks if the user is logged in and handles role separation.
-     */
     public function before(RequestInterface $request, $arguments = null)
     {
-        $session = session();
-        
-        // --- 1. Authentication Check ---
-        if (!$session->get('isLoggedIn')) {
-            // User is NOT logged in. Redirect to the login page.
-            // This is the necessary step to protect routes.
+        // Check if user is logged in
+        if (!session()->get('isLoggedIn')) {
             return redirect()->to(base_url('login'));
         }
 
-        // --- 2. Role-based Check (Handles 'auth:admin' type filters) ---
-        if ($arguments !== null && !empty($arguments)) {
-            $requiredRole = $arguments[0]; // e.g., 'admin' from 'auth:admin'
+        // --- ADMIN BYPASS: Admin (role_id = 1) can access EVERYTHING ---
+        if (session()->get('role_id') == 1) {
+            // Admin has full access, skip all role checks
+            return $request;
+        }
 
-            // Check if the user's current session role matches the required role
-            if ($session->get('role') !== $requiredRole) {
-                // User is logged in but does not have the required role.
-                $session->setFlashdata('error', 'Access denied. You do not have the required permissions.');
-                
-                // Redirect them to the general dashboard, preventing them from accessing admin-only pages.
+        // If role-based filtering is requested for non-admin users
+        if (!empty($arguments)) {
+            $userRoleId = session()->get('role_id');
+            // Fix: properly split comma-separated argument strings to a flat array of allowed roles
+            $allowedRoles = [];
+            foreach ($arguments as $arg) {
+                $allowedRoles = array_merge($allowedRoles, explode(',', $arg));
+            }
+            $allowedRoles = array_map('trim', $allowedRoles); // Remove spaces
+
+            if (!in_array($userRoleId, $allowedRoles)) {
+                session()->setFlashdata('error', 'Access denied. You do not have permission to access this page.');
                 return redirect()->to(base_url('dashboard'));
             }
         }
-        
-        // If logged in and role matches (or no role specified), allow access.
+
+        return $request;
     }
 
-    /**
-     * Do after the controller is executed.
-     */
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
-        // No action needed after controller execution for this filter
+        // Do nothing
     }
 }

@@ -20,7 +20,7 @@
         <!-- /.login-logo -->
         <div class="card card-outline card-primary shadow-lg">
             <div class="card-body login-card-body">
-                <p class="login-box-msg">Sign in to start your employee session</p>
+                <p class="login-box-msg">Sign in to start your session</p>
 
                 <!-- Flash Messages (Success/Error/General) -->
                 <?php if (session()->getFlashdata('message')): ?>
@@ -42,16 +42,16 @@
 
                 <?= form_open(base_url('authenticate')) ?>
                     <div class="input-group mb-3">
-                        <input type="email" name="email" class="form-control <?= (session('validation') && session('validation')->hasError('email')) ? 'is-invalid' : '' ?>" 
-                            placeholder="Email" value="<?= old('email') ?>" autofocus>
+                        <input type="text" name="username" class="form-control <?= (session('validation') && session('validation')->hasError('username')) ? 'is-invalid' : '' ?>" 
+                            placeholder="Username" value="<?= old('username') ?>" autofocus>
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
+                                <span class="fas fa-user"></span>
                             </div>
                         </div>
-                        <?php if (session('validation') && session('validation')->hasError('email')): ?>
+                        <?php if (session('validation') && session('validation')->hasError('username')): ?>
                             <div class="invalid-feedback">
-                                <?= session('validation')->getError('email') ?>
+                                <?= session('validation')->getError('username') ?>
                             </div>
                         <?php endif; ?>
                     </div>

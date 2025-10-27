@@ -15,6 +15,7 @@ class ClientFileModel extends Model
         'original_name',  // Original uploaded file name (for display)
         'file_type',
         'file_size',
+        'uploaded_by',    // ← ADD THIS LINE
     ];
 
     protected $useTimestamps = false;
