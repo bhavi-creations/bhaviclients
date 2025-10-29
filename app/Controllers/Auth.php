@@ -1,11 +1,9 @@
 <?php
-// C:\xampp\htdocs\bhaviclients\app\Controllers\Auth.php
-
 namespace App\Controllers;
 
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
-use App\Models\UserModel; // Import the UserModel
+use App\Models\UserModel;
 
 class Auth extends Controller
 {
@@ -13,7 +11,6 @@ class Auth extends Controller
 
     public function __construct()
     {
-        // Load the UserModel
         $this->userModel = new UserModel();
     }
 
@@ -74,20 +71,30 @@ class Auth extends Controller
 
                 // Success: Set Session Data
                 $ses_data = [
-                    'user_id'    => $user['id'],
-                    'first_name' => $user['first_name'],
-                    'last_name'  => $user['last_name'],
-                    'email'      => $user['email'],
-                    'role_id'    => $user['role_id'],
-                    'role_name'  => $roleName,
-                    'client_id'  => $user['client_id'] ?? null,      // Add this for clients
-                    'employee_id' => $user['employee_id'] ?? null,   // Add this for employees
-                    'isLoggedIn' => TRUE
+                    'user_id'     => $user['id'],
+                    'first_name'  => $user['first_name'],
+                    'last_name'   => $user['last_name'],
+                    'email'       => $user['email'],
+                    'role_id'     => $user['role_id'],
+                    'role_name'   => $roleName,
+                    'client_id'   => $user['client_id'] ?? null,       // Client-specific info
+                    'employee_id' => $user['employee_id'] ?? null,     // Employee-specific info
+                    'isLoggedIn'  => TRUE
                 ];
                 $session->set($ses_data);
 
-                // Redirect to dashboard
-                return redirect()->to(base_url('dashboard'));
+                // ---- Role-based redirect ----
+                if ($user['role_id'] == 1 || $user['role_id'] == 5) {
+                    return redirect()->to(base_url('dashboard'));
+                } elseif ($user['role_id'] == 2) {
+                    return redirect()->to(base_url('employee-dashboard'));
+                } elseif ($user['role_id'] == 3 || $user['role_id'] == 4) {
+                    return redirect()->to(base_url('client-dashboard'));
+                } else {
+                    // Unknown role, fallback to login
+                    return redirect()->to(base_url('login'))->with('error', 'Role not recognized');
+                }
+
             } else {
                 $session->setFlashdata('error', 'Invalid Username or Password.');
                 return redirect()->back()->withInput();
@@ -97,7 +104,6 @@ class Auth extends Controller
         $session->setFlashdata('error', 'Invalid Username or Password.');
         return redirect()->back()->withInput();
     }
-
 
     /**
      * Log the user out and destroy the session.
