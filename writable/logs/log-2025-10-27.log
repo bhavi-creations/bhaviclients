@@ -1173,3 +1173,24 @@ DEBUG - 2025-10-27 15:07:56 --> ROLE CHECK: Array
     [isLoggedIn] => 1
 )
 
+DEBUG - 2025-10-27 15:13:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-10-27 15:13:51 --> ROLE CHECK: Array
+(
+    [__ci_last_regenerate] => 1761558231
+    [_ci_previous_url] => http://localhost/bhaviclients/index.php/department
+    [user_id] => 1
+    [first_name] => bhavi pvt
+    [last_name] => creations
+    [email] =>  
+    [role_id] => 1
+    [role_name] => Admin
+    [client_id] => 
+    [employee_id] => 
+    [isLoggedIn] => 1
+)
+
+DEBUG - 2025-10-27 15:13:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-10-27 15:13:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-10-27 15:14:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-10-27 15:14:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-10-27 15:16:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
