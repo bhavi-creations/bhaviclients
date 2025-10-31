@@ -105,7 +105,7 @@
                         <i class="fas fa-folder-open"></i> Uploaded Documents
                     </h3>
                     <div class="card-tools">
-                        <span class="badge badge-light"><?= count($clientFiles) ?> Files</span>
+                        <span class="badge badge-dark"  ><?= count($clientFiles) ?> Files</span>
                     </div>
                 </div>
                 <div class="card-body p-0">
