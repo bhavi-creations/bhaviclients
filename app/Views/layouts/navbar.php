@@ -9,63 +9,51 @@
                     <i class="bi bi-list"></i>
                 </a>
             </li>
-            <!-- You can uncomment these if you need them later
-            <li class="nav-item d-none d-md-block">
-                <a href="<?= base_url('/') ?>" class="nav-link">Home</a>
-            </li>
-            <li class="nav-item d-none d-md-block">
-                <a href="#" class="nav-link">Contact</a>
-            </li> -->
         </ul>
         <!-- End navbar links -->
 
-        <!-- START MARQUEE FOR CENTER ALIGNMENT -->
-        <!-- <div class="d-none d-sm-block mx-auto flex-grow-1" style="max-width: 60%;">
-            <marquee behavior="scroll" direction="left" scrollamount="6" style="color: #007bff; font-weight: 600; padding: 5px 0;">
-                **HOSPITAL ANNOUNCEMENT:** Our new digital patient record system is now live! Please report any issues to IT immediately. Thank you for your cooperation.
-            </marquee>
-        </div> -->
-        <!-- END MARQUEE -->
-
         <!-- Right Side: User Menu and Icons -->
         <ul class="navbar-nav ms-auto">
-            <!-- Navbar Search (Commented out) -->
-            <!-- <li class="nav-item">...</li> -->
-
             <li class="nav-item dropdown user-menu">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                    <!-- Placeholder for user avatar or icon if needed -->
-                    <i class="bi bi-person-circle"></i> 
-                    <!-- <span class="d-none d-md-inline">Alexander Pierce</span> -->
+                    <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+                    <span class="d-none d-md-inline ms-1">
+                        <?= esc(session()->get('first_name') . ' ' . session()->get('last_name')) ?>
+                    </span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                    <!-- User image -->
-                    <li class="user-header text-bg-primary">
-                        <p>
-                             User Name - Role
-                             <small>Member since Nov. 2023</small>
+                    <!-- User Image -->
+                    <li class="user-header text-bg-primary text-center py-3">
+                        <img src="https://ui-avatars.com/api/?name=<?= urlencode(session()->get('first_name') . ' ' . session()->get('last_name')) ?>&size=90&background=fff&color=007bff&bold=true" 
+                             class="img-circle elevation-2 mb-2" 
+                             alt="User Image"
+                             style="width: 90px; height: 90px;">
+                        <p class="mb-1" style="font-size: 16px; font-weight: 600;">
+                            <?= esc(session()->get('first_name') . ' ' . session()->get('last_name')) ?>
                         </p>
+                        <small style="opacity: 0.9;">
+                            <?= esc(session()->get('role_name') ?? 'User') ?>
+                        </small>
                     </li>
+
                     <!-- Menu Body -->
                     <li class="user-body">
-                        <!--begin::Row-->
-                        <div class="row">
-                            <div class="col-4 text-center">
-                                <a href="#">Followers</a>
-                            </div>
-                            <div class="col-4 text-center">
-                                <a href="#">Sales</a>
-                            </div>
-                            <div class="col-4 text-center">
-                                <a href="#">Friends</a>
-                            </div>
+                        <div class="list-group list-group-flush">
+                            <a href="<?= base_url('profile/edit-username') ?>" class="list-group-item list-group-item-action">
+                                <i class="fas fa-user-circle mr-2 text-primary"></i> Change Username
+                            </a>
+                            <a href="<?= base_url('profile/change-password') ?>" class="list-group-item list-group-item-action">
+                                <i class="fas fa-key mr-2 text-warning"></i> Change Password
+                            </a>
                         </div>
-                        <!--end::Row-->
                     </li>
-                    <!-- Menu Footer-->
-                    <li class="user-footer">
-                        <a href="#" class="btn btn-default btn-flat">Profile</a>
-                        <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
+
+                    <!-- Menu Footer -->
+                    <li class="user-footer text-bg-primary">
+                        <a href="<?= base_url('logout') ?>" class="btn btn-flat btn-block" 
+                           style="background-color: white; color: #0c51b8ff; font-weight: 600;">
+                            <i class="fas fa-sign-out-alt mr-1"></i> Sign Out
+                        </a>
                     </li>
                 </ul>
             </li>

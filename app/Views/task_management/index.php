@@ -1,3 +1,7 @@
+<?php 
+// C:\xampp\htdocs\bhaviclients\app\Views\task_management\index.php 
+$request = \Config\Services::request();
+?>
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
@@ -11,8 +15,8 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="<?= base_url('dashboard') ?>">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Employee Tasks</li>
+                        <li class="breadcrumb-item"><a href="<?= base_url('dashboard') ?>">Home</a></li>
+                        <li class="breadcrumb-item active"><?= esc($title) ?></li>
                     </ol>
                 </div>
             </div>
@@ -21,264 +25,214 @@
 
     <section class="content">
         <div class="container-fluid">
-            
-            <!-- Flash Messages -->
+
             <?php if (session()->getFlashdata('success')): ?>
                 <div class="alert alert-success alert-dismissible fade show">
                     <?= session()->getFlashdata('success') ?>
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
                 </div>
             <?php endif; ?>
 
             <?php if (session()->getFlashdata('error')): ?>
                 <div class="alert alert-danger alert-dismissible fade show">
                     <?= session()->getFlashdata('error') ?>
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
                 </div>
             <?php endif; ?>
 
-            <!-- Filter Card -->
-            <div class="card">
+            <!-- Filters Card -->
+            <div class="card card-primary collapsed-card">
                 <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-filter"></i> Filter Tasks
-                    </h3>
+                    <h3 class="card-title">Filters</h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                            <i class="fas fa-minus"></i>
+                            <i class="fas fa-plus"></i>
                         </button>
                     </div>
                 </div>
                 <div class="card-body">
-                    <form method="get" action="<?= base_url('task-management') ?>" id="filterForm">
-                        <div class="row">
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label>Employee</label>
-                                    <select class="form-control live-filter" name="employee_id" id="filterEmployee">
-                                        <option value="">-- All Employees --</option>
-                                        <?php foreach ($employees as $emp): ?>
-                                            <option value="<?= $emp['id'] ?>" 
-                                                <?= (isset($_GET['employee_id']) && $_GET['employee_id'] == $emp['id']) ? 'selected' : '' ?>>
-                                                <?= esc($emp['first_name'] . ' ' . $emp['last_name']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label>Client</label>
-                                    <select class="form-control live-filter" name="client_id" id="filterClient">
-                                        <option value="">-- All Clients --</option>
-                                        <?php foreach ($clients as $client): ?>
-                                            <option value="<?= $client['id'] ?>" 
-                                                <?= (isset($_GET['client_id']) && $_GET['client_id'] == $client['id']) ? 'selected' : '' ?>>
-                                                <?= esc($client['name']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label>Status</label>
-                                    <select class="form-control live-filter" name="status" id="filterStatus">
-                                        <option value="">-- All Status --</option>
-                                        <option value="Pending" <?= (isset($_GET['status']) && $_GET['status'] == 'Pending') ? 'selected' : '' ?>>Pending</option>
-                                        <option value="In Progress" <?= (isset($_GET['status']) && $_GET['status'] == 'In Progress') ? 'selected' : '' ?>>In Progress</option>
-                                        <option value="Completed" <?= (isset($_GET['status']) && $_GET['status'] == 'Completed') ? 'selected' : '' ?>>Completed</option>
-                                        <option value="Review" <?= (isset($_GET['status']) && $_GET['status'] == 'Review') ? 'selected' : '' ?>>Review</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label>From Date</label>
-                                    <input type="date" 
-                                           class="form-control live-filter" 
-                                           name="from_date" 
-                                           id="fromDate"
-                                           value="<?= isset($_GET['from_date']) ? $_GET['from_date'] : '' ?>">
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label>To Date</label>
-                                    <input type="date" 
-                                           class="form-control live-filter" 
-                                           name="to_date" 
-                                           id="toDate"
-                                           value="<?= isset($_GET['to_date']) ? $_GET['to_date'] : '' ?>">
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label>&nbsp;</label>
-                                    <div>
-                                        <a href="<?= base_url('task-management') ?>" class="btn btn-secondary btn-block">
-                                            <i class="fas fa-redo"></i> Reset
-                                        </a>
-                                    </div>
-                                </div>
+                    <?= form_open(base_url('task-management'), ['method' => 'get']) ?>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Employee</label>
+                                <select name="employee_id" class="form-control select2">
+                                    <option value="">All Employees</option>
+                                    <?php foreach ($employees as $emp): ?>
+                                        <option value="<?= $emp['id'] ?>" <?= ($request->getGet('employee_id') == $emp['id']) ? 'selected' : '' ?>>
+                                            <?= esc($emp['first_name'] . ' ' . $emp['last_name']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                         </div>
-                    </form>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Department</label>
+                                <select name="department_id" class="form-control">
+                                    <option value="">All Departments</option>
+                                    <?php foreach ($departments as $dept): ?>
+                                        <option value="<?= $dept['id'] ?>" <?= ($request->getGet('department_id') == $dept['id']) ? 'selected' : '' ?>>
+                                            <?= esc($dept['name']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Client</label>
+                                <select name="client_id" class="form-control">
+                                    <option value="">All Clients</option>
+                                    <?php foreach ($clients as $client): ?>
+                                        <option value="<?= $client['id'] ?>" <?= ($request->getGet('client_id') == $client['id']) ? 'selected' : '' ?>>
+                                            <?= esc($client['name']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select name="status" class="form-control">
+                                    <option value="">All Status</option>
+                                    <option value="Pending" <?= ($request->getGet('status') == 'Pending') ? 'selected' : '' ?>>Pending</option>
+                                    <option value="In Progress" <?= ($request->getGet('status') == 'In Progress') ? 'selected' : '' ?>>In Progress</option>
+                                    <option value="Completed" <?= ($request->getGet('status') == 'Completed') ? 'selected' : '' ?>>Completed</option>
+                                    <option value="Review" <?= ($request->getGet('status') == 'Review') ? 'selected' : '' ?>>Review</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Priority</label>
+                                <select name="priority" class="form-control">
+                                    <option value="">All Priority</option>
+                                    <option value="Low" <?= ($request->getGet('priority') == 'Low') ? 'selected' : '' ?>>Low</option>
+                                    <option value="Medium" <?= ($request->getGet('priority') == 'Medium') ? 'selected' : '' ?>>Medium</option>
+                                    <option value="High" <?= ($request->getGet('priority') == 'High') ? 'selected' : '' ?>>High</option>
+                                    <option value="Urgent" <?= ($request->getGet('priority') == 'Urgent') ? 'selected' : '' ?>>Urgent</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>From Date</label>
+                                <input type="date" name="from_date" class="form-control" value="<?= $request->getGet('from_date') ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>To Date</label>
+                                <input type="date" name="to_date" class="form-control" value="<?= $request->getGet('to_date') ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>&nbsp;</label><br>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-filter"></i> Apply Filters
+                                </button>
+                                <a href="<?= base_url('task-management') ?>" class="btn btn-secondary">
+                                    <i class="fas fa-redo"></i> Reset
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <?= form_close() ?>
                 </div>
             </div>
 
-            <!-- Tasks Table Card -->
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">All Employee Tasks</h3>
+            <!-- Tasks Table -->
+            <div class="card shadow-lg">
+                <div class="card-header border-0">
+                    <h3 class="card-title">All Tasks</h3>
                     <div class="card-tools">
-                        <span class="badge badge-info"><?= count($tasks) ?> Tasks</span>
+                        <a href="<?= base_url('task-management/create') ?>" class="btn btn-success btn-sm">
+                            <i class="fas fa-plus-circle"></i> Assign New Task
+                        </a>
                     </div>
                 </div>
-                <div class="card-body">
-                    <?php if (!empty($tasks)): ?>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th width="5%">S.No</th>
-                                        <th width="15%">Employee</th>
-                                        <th width="20%">Title</th>
-                                        <th width="15%">Client</th>
-                                        <th width="10%">Department</th>
-                                        <th width="10%">Status</th>
-                                        <th width="12%">Submitted</th>
-                                        <th width="13%">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php $sno = 1; ?>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-valign-middle">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Task Title</th>
+                                    <th>Employee</th>
+                                    <th>Client</th>
+                                    <th>Priority</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (!empty($tasks)): ?>
+                                    <?php $sn = 1; ?>
                                     <?php foreach ($tasks as $task): ?>
                                         <tr>
-                                            <td><?= $sno++ ?></td>
-                                            <td>
-                                                <strong><?= esc($task['emp_first_name'] . ' ' . $task['emp_last_name']) ?></strong>
-                                                <?php if (!empty($task['department_name'])): ?>
-                                                    <br><small class="text-muted"><?= esc($task['department_name']) ?></small>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <?= esc($task['title']) ?>
-                                                <?php if (!empty($task['files_upload'])): ?>
-                                                    <?php $files = json_decode($task['files_upload'], true); ?>
-                                                    <?php if (is_array($files) && count($files) > 0): ?>
-                                                        <br><small class="text-info">
-                                                            <i class="fas fa-paperclip"></i> <?= count($files) ?> file(s)
-                                                        </small>
-                                                    <?php endif; ?>
-                                                <?php endif; ?>
-                                            </td>
+                                            <td><?= $sn++ ?></td>
+                                            <td><strong><?= esc($task['title']) ?></strong></td>
+                                            <td><?= esc($task['emp_first_name'] . ' ' . $task['emp_last_name']) ?></td>
                                             <td><?= esc($task['client_name'] ?? 'N/A') ?></td>
-                                            <td><?= esc($task['department_name'] ?? 'N/A') ?></td>
                                             <td>
                                                 <?php
-                                                $statusClass = [
+                                                $priorityBadge = [
+                                                    'Low' => 'secondary',
+                                                    'Medium' => 'info',
+                                                    'High' => 'warning',
+                                                    'Urgent' => 'danger'
+                                                ];
+                                                $badge = $priorityBadge[$task['priority']] ?? 'secondary';
+                                                ?>
+                                                <span class="badge badge-<?= $badge ?>"><?= esc($task['priority']) ?></span>
+                                            </td>
+                                            <td>
+                                                <?php if (!empty($task['due_date'])): ?>
+                                                    <?= date('M d, Y', strtotime($task['due_date'])) ?>
+                                                <?php else: ?>
+                                                    <span class="text-muted">No deadline</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>
+                                                <?php
+                                                $statusBadge = [
                                                     'Pending' => 'warning',
                                                     'In Progress' => 'info',
                                                     'Completed' => 'success',
                                                     'Review' => 'primary'
                                                 ];
-                                                $class = $statusClass[$task['status']] ?? 'secondary';
+                                                $badge = $statusBadge[$task['status']] ?? 'secondary';
                                                 ?>
-                                                <span class="badge badge-<?= $class ?>">
-                                                    <?= esc($task['status']) ?>
-                                                </span>
+                                                <span class="badge badge-<?= $badge ?>"><?= esc($task['status']) ?></span>
                                             </td>
                                             <td>
-                                                <small>
-                                                    <?= date('M d, Y', strtotime($task['submitted_at'])) ?><br>
-                                                    <?= date('h:i A', strtotime($task['submitted_at'])) ?>
-                                                </small>
-                                            </td>
-                                            <td>
-                                                <div class="btn-group btn-group-sm">
-                                                    <a href="<?= base_url('task-management/view/' . $task['id']) ?>" 
-                                                       class="btn btn-info" 
-                                                       title="View Details">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    
-                                                    <?php if (session()->get('role_id') == 1): ?>
-                                                        <!-- Status Update Button (Admin Only) -->
-                                                        <button type="button" 
-                                                                class="btn btn-warning" 
-                                                                data-toggle="modal" 
-                                                                data-target="#statusModal<?= $task['id'] ?>"
-                                                                title="Update Status">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
-                                                        
-                                                        <!-- Delete Button (Admin Only) -->
-                                                        <button type="button" 
-                                                                class="btn btn-danger" 
-                                                                onclick="confirmDelete(<?= $task['id'] ?>)"
-                                                                title="Delete Task">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-
-                                                        <!-- Hidden Delete Form -->
-                                                        <form id="deleteForm<?= $task['id'] ?>" 
-                                                              action="<?= base_url('task-management/delete/' . $task['id']) ?>" 
-                                                              method="post" 
-                                                              style="display:none;">
-                                                            <?= csrf_field() ?>
-                                                        </form>
-                                                    <?php endif; ?>
-                                                </div>
+                                                <a href="<?= base_url('task-management/view/' . $task['id']) ?>" 
+                                                   class="btn btn-sm btn-primary" title="View">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="<?= base_url('task-management/edit/' . $task['id']) ?>" 
+                                                   class="btn btn-sm btn-info" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="#" onclick="confirmDelete(<?= $task['id'] ?>)" 
+                                                   class="btn btn-sm btn-danger" title="Delete">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
                                             </td>
                                         </tr>
-
-                                        <!-- Status Update Modal (Admin Only) -->
-                                        <?php if (session()->get('role_id') == 1): ?>
-                                            <div class="modal fade" id="statusModal<?= $task['id'] ?>" tabindex="-1">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">Update Task Status</h5>
-                                                            <button type="button" class="close" data-dismiss="modal">
-                                                                <span>&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <form action="<?= base_url('task-management/update-status/' . $task['id']) ?>" method="post">
-                                                            <?= csrf_field() ?>
-                                                            <div class="modal-body">
-                                                                <p><strong>Task:</strong> <?= esc($task['title']) ?></p>
-                                                                <p><strong>Employee:</strong> <?= esc($task['emp_first_name'] . ' ' . $task['emp_last_name']) ?></p>
-                                                                <hr>
-                                                                <div class="form-group">
-                                                                    <label>New Status</label>
-                                                                    <select class="form-control" name="status" required>
-                                                                        <option value="Pending" <?= $task['status'] == 'Pending' ? 'selected' : '' ?>>Pending</option>
-                                                                        <option value="In Progress" <?= $task['status'] == 'In Progress' ? 'selected' : '' ?>>In Progress</option>
-                                                                        <option value="Completed" <?= $task['status'] == 'Completed' ? 'selected' : '' ?>>Completed</option>
-                                                                        <option value="Review" <?= $task['status'] == 'Review' ? 'selected' : '' ?>>Review</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                                <button type="submit" class="btn btn-primary">Update Status</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <?php endif; ?>
-
                                     <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    <?php else: ?>
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle"></i> No tasks found.
-                        </div>
-                    <?php endif; ?>
+                                <?php else: ?>
+                                    <tr><td colspan="8" class="text-center py-4">No tasks found.</td></tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -286,19 +240,40 @@
     </section>
 </div>
 
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <form id="deleteForm" method="post" action="">
+            <?= csrf_field() ?>
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Confirm Deletion</h5>
+                   
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this task?
+                </div>
+                <div class="modal-footer">
+                   
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
-// Live filtering - auto-submit on change
-document.querySelectorAll('.live-filter').forEach(function(element) {
-    element.addEventListener('change', function() {
-        document.getElementById('filterForm').submit();
+function confirmDelete(id) {
+    document.getElementById('deleteForm').action = '<?= base_url("task-management/delete/") ?>' + id;
+    $('#deleteModal').modal('show');
+}
+
+$(document).ready(function() {
+    $('.select2').select2({
+        theme: 'bootstrap4',
+        width: '100%'
     });
 });
-
-function confirmDelete(taskId) {
-    if (confirm('Are you sure you want to delete this task? All associated files will also be deleted. This action cannot be undone.')) {
-        document.getElementById('deleteForm' + taskId).submit();
-    }
-}
 </script>
 
 <?= $this->endSection() ?>

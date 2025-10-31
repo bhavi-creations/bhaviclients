@@ -22,76 +22,113 @@
     <section class="content">
         <div class="container-fluid">
 
-            <div class="card">
+            <div class="card shadow-lg">
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-file-excel"></i> Files Available for Download
                     </h3>
                     <div class="card-tools">
-                        <span class="badge badge-success"><?= count($files) ?> Files</span>
+                        <span class="badge badge-success badge-lg"><?= count($files) ?> Files</span>
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-0">
                     <?php if (!empty($files)): ?>
-                        <div class="row">
-                            <?php foreach ($files as $file): ?>
-                                <div class="col-md-4 mb-3">
-                                    <div class="card h-100">
-                                        <div class="card-body text-center">
-                                            <?php
-                                            $fileExtension = pathinfo($file['original_name'], PATHINFO_EXTENSION);
-                                            $iconClass = 'fa-file';
-                                            $iconColor = 'text-secondary';
-                                            
-                                            if (in_array(strtolower($fileExtension), ['xls', 'xlsx'])) {
-                                                $iconClass = 'fa-file-excel';
-                                                $iconColor = 'text-success';
-                                            } elseif (in_array(strtolower($fileExtension), ['pdf'])) {
-                                                $iconClass = 'fa-file-pdf';
-                                                $iconColor = 'text-danger';
-                                            } elseif (in_array(strtolower($fileExtension), ['doc', 'docx'])) {
-                                                $iconClass = 'fa-file-word';
-                                                $iconColor = 'text-primary';
-                                            } elseif (in_array(strtolower($fileExtension), ['csv'])) {
-                                                $iconClass = 'fa-file-csv';
-                                                $iconColor = 'text-info';
-                                            }
-                                            ?>
-                                            
-                                            <div class="mb-3">
-                                                <i class="fas <?= $iconClass ?> fa-5x <?= $iconColor ?>"></i>
-                                            </div>
-                                            
-                                            <h5 class="card-title text-truncate" title="<?= esc($file['original_name']) ?>">
-                                                <?= esc($file['original_name']) ?>
-                                            </h5>
-                                            
-                                            <p class="card-text">
-                                                <small class="text-muted">
-                                                    <i class="fas fa-calendar"></i> 
-                                                    <?= date('M d, Y', strtotime($file['uploaded_at'])) ?>
-                                                </small>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover m-0">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50px;">S.No.</th>
+                                        <th style="width: 80px;">Type</th>
+                                        <th>File Name</th>
+                                        <th style="width: 120px;">Size</th>
+                                        <th style="width: 150px;">Uploaded</th>
+                                        <th style="width: 120px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php $sno = 1; ?>
+                                    <?php foreach ($files as $file): ?>
+                                        <?php
+                                        $fileExtension = strtolower(pathinfo($file['original_name'], PATHINFO_EXTENSION));
+                                        $iconClass = 'fa-file';
+                                        $iconColor = 'text-secondary';
+                                        $badgeClass = 'secondary';
+                                        
+                                        if (in_array($fileExtension, ['xls', 'xlsx'])) {
+                                            $iconClass = 'fa-file-excel';
+                                            $iconColor = 'text-success';
+                                            $badgeClass = 'success';
+                                        } elseif ($fileExtension == 'pdf') {
+                                            $iconClass = 'fa-file-pdf';
+                                            $iconColor = 'text-danger';
+                                            $badgeClass = 'danger';
+                                        } elseif (in_array($fileExtension, ['doc', 'docx'])) {
+                                            $iconClass = 'fa-file-word';
+                                            $iconColor = 'text-primary';
+                                            $badgeClass = 'primary';
+                                        } elseif ($fileExtension == 'csv') {
+                                            $iconClass = 'fa-file-csv';
+                                            $iconColor = 'text-info';
+                                            $badgeClass = 'info';
+                                        } elseif (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif', 'svg'])) {
+                                            $iconClass = 'fa-file-image';
+                                            $iconColor = 'text-warning';
+                                            $badgeClass = 'warning';
+                                        } elseif (in_array($fileExtension, ['zip', 'rar', '7z'])) {
+                                            $iconClass = 'fa-file-archive';
+                                            $iconColor = 'text-dark';
+                                            $badgeClass = 'dark';
+                                        }
+                                        ?>
+                                        <tr>
+                                            <td><?= $sno++ ?></td>
+                                            <td class="text-center">
+                                                <i class="fas <?= $iconClass ?> fa-2x <?= $iconColor ?>"></i>
+                                            </td>
+                                            <td>
+                                                <strong><?= esc($file['original_name']) ?></strong>
                                                 <br>
-                                                <small class="text-muted">
-                                                    <i class="fas fa-hdd"></i> 
-                                                    <?= number_format($file['file_size'] / 1024, 2) ?> KB
+                                                <span class="badge badge-<?= $badgeClass ?>">
+                                                    <?= strtoupper($fileExtension) ?>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <i class="fas fa-hdd text-muted"></i>
+                                                <?php
+                                                $sizeKB = $file['file_size'] / 1024;
+                                                if ($sizeKB > 1024) {
+                                                    echo number_format($sizeKB / 1024, 2) . ' MB';
+                                                } else {
+                                                    echo number_format($sizeKB, 2) . ' KB';
+                                                }
+                                                ?>
+                                            </td>
+                                            <td>
+                                                <small>
+                                                    <i class="far fa-calendar"></i>
+                                                    <?= date('M d, Y', strtotime($file['uploaded_at'])) ?>
+                                                    <br>
+                                                    <i class="far fa-clock"></i>
+                                                    <?= date('h:i A', strtotime($file['uploaded_at'])) ?>
                                                 </small>
-                                            </p>
-                                            
-                                            <a href="<?= base_url('download-file/' . $file['id']) ?>" 
-                                               class="btn btn-success btn-block">
-                                                <i class="fas fa-download"></i> Download
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
+                                            </td>
+                                            <td>
+                                                <a href="<?= base_url('download-file/' . $file['id']) ?>" 
+                                                   class="btn btn-success btn-sm btn-block"
+                                                   title="Download File">
+                                                    <i class="fas fa-download"></i> Download
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
                         </div>
                     <?php else: ?>
-                        <div class="alert alert-info text-center">
-                            <i class="fas fa-info-circle fa-3x mb-3"></i>
-                            <h5>No Files Available</h5>
-                            <p>There are no files uploaded for you yet. Files will appear here when the admin uploads them.</p>
+                        <div class="text-center p-5">
+                            <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+                            <h5 class="text-muted">No Files Available</h5>
+                            <p class="text-muted">Files will appear here when the admin uploads them for you.</p>
                         </div>
                     <?php endif; ?>
                 </div>

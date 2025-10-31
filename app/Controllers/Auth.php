@@ -59,7 +59,27 @@ class Auth extends Controller
             // 3. Verify the password hash
             if (password_verify($rawPassword, $user['password'])) {
 
-                // 4. Fetch the role name
+                // 4. Check if employee is active (for role_id = 2)
+                if ($user['role_id'] == 2 && !empty($user['employee_id'])) {
+                    $db = \Config\Database::connect();
+                    $employee = $db->table('employees')
+                        ->where('id', $user['employee_id'])
+                        ->get()
+                        ->getRow();
+
+                    // Block login if employee not found or inactive
+                    if (!$employee) {
+                        $session->setFlashdata('error', 'Employee record not found. Please contact administrator.');
+                        return redirect()->back()->withInput();
+                    }
+
+                    if ($employee->status == 'inactive') {
+                        $session->setFlashdata('error', 'Your account has been deactivated. Please contact administrator.');
+                        return redirect()->back()->withInput();
+                    }
+                }
+
+                // 5. Fetch the role name
                 $db = \Config\Database::connect();
                 $role = $db->table('roles')
                     ->select('name')

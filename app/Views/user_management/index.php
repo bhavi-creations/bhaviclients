@@ -33,9 +33,7 @@
                 <div class="card-header">
                     <h3 class="card-title">All Users</h3>
                     <div class="card-tools">
-                        <a href="<?= base_url('user-management/create') ?>" class="btn btn-primary btn-sm">
-                            <i class="fas fa-plus"></i> Create User
-                        </a>
+                     
                     </div>
                 </div>
                 <div class="card-body">
@@ -70,7 +68,7 @@
                                         <form action="<?= base_url('user-management/delete/' . $user['id']) ?>" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
                                             <?= csrf_field() ?>
                                             <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash"></i> Delete
+                                                <i class="fas fa-trash"></i>  
                                             </button>
                                         </form>
                                     </td>

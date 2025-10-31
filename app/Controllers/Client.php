@@ -1,4 +1,5 @@
 <?php
+// C:\xampp\htdocs\bhaviclients\app\Controllers\Client.php
 
 namespace App\Controllers;
 
@@ -18,8 +19,6 @@ class Client extends Controller
     protected $validation;
     protected $db;
     protected $clientRoleId = 3; // Client role ID
-
-
 
     public function __construct()
     {
@@ -41,7 +40,6 @@ class Client extends Controller
             }
         }
     }
-
 
     public function index()
     {
@@ -65,54 +63,58 @@ class Client extends Controller
             'name' => 'required|min_length[3]|max_length[255]',
             'owner_first_name' => 'required|min_length[2]|max_length[100]',
             'owner_last_name' => 'required|min_length[2]|max_length[100]',
-            'email' => 'required|valid_email|max_length[255]|validateUniqueEmail',
-            'phone' => 'required|min_length[10]|max_length[20]|validateUniquePhone',
+            'email' => 'required|valid_email|max_length[255]',
+            'phone' => 'required|min_length[10]|max_length[20]',
+            'manager_name' => 'permit_empty|max_length[100]',
+            'manager_phone' => 'permit_empty|max_length[20]',
+            'reference' => 'permit_empty|max_length[255]',
+            'started_date' => 'permit_empty',
+            'remarks' => 'permit_empty',
         ];
 
-        // Register custom validation callbacks (label is null, third param is callable)
-        $this->validation->setRule('validateUniqueEmail', null, [$this, 'validateUniqueEmail']);
-        $this->validation->setRule('validateUniquePhone', null, [$this, 'validateUniquePhone']);
-
-        $this->validation->setRules($rules);
-
-        // For creation, no IDs needed
-        $validationData = array_merge($input, [
-            'client_id' => null,
-            'user_id' => null,
-        ]);
-
-        if (!$this->validation->run($validationData)) {
+        if (!$this->validate($rules)) {
             return redirect()->back()
                 ->withInput()
-                ->with('validation', $this->validation);
+                ->with('errors', $this->validator->listErrors());
         }
 
         $this->db->transStart();
 
         try {
-            $userData = [
-                'role_id' => $this->clientRoleId,
+            // ==========================================
+            // 1. CREATE CLIENT USER (Role 3)
+            // ==========================================
+            $clientUserData = [
+                'role_id' => $this->clientRoleId, // Role 3 (Client)
                 'first_name' => $input['owner_first_name'],
                 'last_name' => $input['owner_last_name'],
                 'email' => $input['email'],
-                'username' => $input['email'],
+                'username' => $input['email'], // Email as username
                 'phone' => $input['phone'],
-                'password' => $input['phone'],  // Use hashing in production
+                'password' => $input['phone'], // Plain password - UserModel will hash it
             ];
 
-            $userId = $this->userModel->insert($userData);
-            if (!$userId) {
-                throw new \Exception('User insert failed: ' . json_encode($this->userModel->errors()));
+            $clientUserId = $this->userModel->insert($clientUserData);
+            if (!$clientUserId) {
+                throw new \Exception('Client user insert failed: ' . json_encode($this->userModel->errors()));
             }
-            $userId = (int)$userId;
+            $clientUserId = (int)$clientUserId;
 
+            // ==========================================
+            // 2. CREATE CLIENT RECORD
+            // ==========================================
             $clientData = [
-                'user_id' => $userId,
+                'user_id' => $clientUserId,
                 'name' => $input['name'],
                 'owner_first_name' => $input['owner_first_name'],
                 'owner_last_name' => $input['owner_last_name'],
                 'email' => $input['email'],
                 'phone' => $input['phone'],
+                'manager_name' => $input['manager_name'] ?? null,
+                'manager_phone' => $input['manager_phone'] ?? null,
+                'reference' => $input['reference'] ?? null,
+                'started_date' => !empty($input['started_date']) ? $input['started_date'] : null,
+                'remarks' => $input['remarks'] ?? null,
                 'role_id' => $this->clientRoleId,
             ];
 
@@ -122,14 +124,52 @@ class Client extends Controller
 
             $clientId = $this->clientModel->getInsertID();
 
-            $updateUserData = [
+            // Update client user with client_id and company_name
+            $updateClientUserData = [
                 'client_id' => $clientId,
                 'company_name' => $input['name'],
             ];
 
-            $updateResult = $this->userModel->update($userId, $updateUserData);
-            if ($updateResult === false) {
-                throw new \Exception('User update with client data failed: ' . json_encode($this->userModel->errors()));
+            if ($this->userModel->update($clientUserId, $updateClientUserData) === false) {
+                throw new \Exception('Client user update failed: ' . json_encode($this->userModel->errors()));
+            }
+
+            // ==========================================
+            // 3. CREATE CLIENT MANAGER USER (Role 4) - IF MANAGER DETAILS PROVIDED
+            // ==========================================
+            $clientManagerUserId = null;
+
+            if (!empty($input['manager_name']) && !empty($input['manager_phone'])) {
+                // Split manager name into first and last name
+                $managerName = trim($input['manager_name']);
+                $nameParts = explode(' ', $managerName, 2);
+                $managerFirstName = $nameParts[0] ?? 'Manager';
+                $managerLastName = $nameParts[1] ?? '';
+
+                // Create unique email for manager by prefixing with "manager."
+                $managerEmail = 'manager.' . $input['email'];
+                $managerUsername = 'manager_' . $input['email'];
+
+                $clientManagerUserData = [
+                    'role_id' => 4, // Role 4 (Client Manager)
+                    'first_name' => $managerFirstName,
+                    'last_name' => $managerLastName,
+                    'email' => $managerEmail, // Unique email
+                    'username' => $managerUsername, // Unique username
+                    'phone' => $input['manager_phone'],
+                    'password' => $input['manager_phone'], // Plain password - UserModel will hash it
+                    'client_id' => $clientId,
+                    'company_name' => $input['name'],
+                ];
+
+                $clientManagerUserId = $this->userModel->insert($clientManagerUserData);
+                if (!$clientManagerUserId) {
+                    throw new \Exception('Client Manager user insert failed: ' . json_encode($this->userModel->errors()));
+                }
+                $clientManagerUserId = (int)$clientManagerUserId;
+
+                // Update client table with client_manager_id
+                $this->clientModel->update($clientId, ['client_manager_id' => $clientManagerUserId]);
             }
 
             $this->db->transComplete();
@@ -138,7 +178,29 @@ class Client extends Controller
                 throw new \Exception('Transaction commit failed.');
             }
 
-            session()->setFlashdata('message', 'Client and user created successfully!');
+            // Build success message with credentials
+            $message = '<div class="alert alert-success">';
+            $message .= '<h5><i class="fas fa-check-circle"></i> Client Created Successfully!</h5><hr>';
+            $message .= '<strong>📋 Login Credentials:</strong><br><br>';
+
+            $message .= '<strong>Client Login:</strong><br>';
+            $message .= '<table class="table table-sm table-bordered" style="max-width: 500px;">';
+            $message .= '<tr><td><strong>Username:</strong></td><td><code>' . $input['email'] . '</code></td></tr>';
+            $message .= '<tr><td><strong>Password:</strong></td><td><code>' . $input['phone'] . '</code></td></tr>';
+            $message .= '</table>';
+
+            if ($clientManagerUserId) {
+                $message .= '<strong>Manager Login:</strong><br>';
+                $message .= '<table class="table table-sm table-bordered" style="max-width: 500px;">';
+                $message .= '<tr><td><strong>Username:</strong></td><td><code>manager_' . $input['email'] . '</code></td></tr>';
+                $message .= '<tr><td><strong>Password:</strong></td><td><code>' . $input['manager_phone'] . '</code></td></tr>';
+                $message .= '</table>';
+            }
+
+            $message .= '<small class="text-muted"><i class="fas fa-info-circle"></i> Users can change their passwords after first login.</small>';
+            $message .= '</div>';
+
+            session()->setFlashdata('message', $message);
             return redirect()->to(base_url('client'));
         } catch (\Exception $e) {
             $this->db->transRollback();
@@ -147,6 +209,10 @@ class Client extends Controller
             return redirect()->back()->withInput();
         }
     }
+
+
+
+
 
     public function edit($id = null)
     {
@@ -163,6 +229,7 @@ class Client extends Controller
 
         return view('client/edit', $data);
     }
+
     public function update($id = null)
     {
         $client = $this->clientModel->find($id);
@@ -173,21 +240,20 @@ class Client extends Controller
 
         $input = $this->request->getPost();
 
-        // Validation rules with proper IDs in params
         $rules = [
             'name' => 'required|min_length[3]|max_length[255]',
             'owner_first_name' => 'required|min_length[2]|max_length[100]',
             'owner_last_name' => 'required|min_length[2]|max_length[100]',
-            'email' => 'required|valid_email|max_length[255]|validateUniqueEmail[' . $id . ',' . $client['user_id'] . ']',
-            'phone' => 'required|min_length[10]|max_length[20]|validateUniquePhone[' . $client['user_id'] . ']',
+            'email' => 'required|valid_email|max_length[255]',
+            'phone' => 'required|min_length[10]|max_length[20]',
+            'manager_name' => 'permit_empty|max_length[100]',
+            'manager_phone' => 'permit_empty|max_length[20]',
+            'reference' => 'permit_empty|max_length[255]',
+            'started_date' => 'permit_empty',
+            'remarks' => 'permit_empty',
         ];
 
-        $validationData = array_merge($input, [
-            'client_id' => $id,
-            'user_id'   => $client['user_id'],
-        ]);
-
-        if (!$this->validate($rules, $validationData)) {
+        if (!$this->validate($rules)) {
             return view('client/edit', [
                 'title'      => 'Edit Client',
                 'client'     => $client,
@@ -204,6 +270,11 @@ class Client extends Controller
                 'owner_last_name' => $input['owner_last_name'],
                 'email' => $input['email'],
                 'phone' => $input['phone'],
+                'manager_name' => $input['manager_name'] ?? null,
+                'manager_phone' => $input['manager_phone'] ?? null,
+                'reference' => $input['reference'] ?? null,
+                'started_date' => !empty($input['started_date']) ? $input['started_date'] : null,
+                'remarks' => $input['remarks'] ?? null,
             ];
 
             $userData = [
@@ -212,16 +283,13 @@ class Client extends Controller
                 'email' => $input['email'],
                 'username' => $input['email'],
                 'phone' => $input['phone'],
-                'password' => $input['phone'], // hash in production
+                'password' => $input['phone'],
                 'client_id' => $id,
                 'company_name' => $input['name'],
             ];
 
             $userUpdate = $this->userModel->update($client['user_id'], $userData);
             $clientUpdate = $this->clientModel->update($id, $clientData);
-
-            log_message('debug', 'User update result: ' . var_export($userUpdate, true));
-            log_message('debug', 'Client update result: ' . var_export($clientUpdate, true));
 
             if (!$userUpdate || !$clientUpdate) {
                 throw new \Exception('Update failed: ' . json_encode(array_merge(
@@ -246,6 +314,22 @@ class Client extends Controller
         }
     }
 
+
+    public function view($id = null)
+    {
+        $client = $this->clientModel->find($id);
+
+        if (!$client) {
+            session()->setFlashdata('error', 'Client not found.');
+            return redirect()->to(base_url('client'));
+        }
+
+        $data['title'] = 'Client Details';
+        $data['client'] = $client;
+
+        return view('client/view', $data);
+    }
+
     public function delete($id)
     {
         $client = $this->clientModel->find($id);
@@ -259,7 +343,6 @@ class Client extends Controller
 
         return redirect()->to(base_url('client'))->with('message', 'Client deleted successfully.');
     }
-
 
     // Custom validation callbacks
 
@@ -290,7 +373,6 @@ class Client extends Controller
         return !$phoneExists;
     }
 
-
     public function files($clientId)
     {
         $client = $this->clientModel->find($clientId);
@@ -298,7 +380,13 @@ class Client extends Controller
             return redirect()->to(base_url('client'))->with('error', 'Client not found.');
         }
 
-        $clientFiles = $this->clientFileModel->where('client_id', $clientId)->findAll();
+        // Only show ADMIN-uploaded files (exclude client self-uploads)
+        $clientFiles = $this->clientFileModel
+            ->where('client_id', $clientId)
+            ->where('uploaded_by !=', 'client')
+            ->where('uploaded_by !=', $clientId)
+            ->orderBy('uploaded_at', 'DESC')
+            ->findAll();
 
         return view('client/files', [
             'title' => 'Client Files',
@@ -306,14 +394,6 @@ class Client extends Controller
             'clientFiles' => $clientFiles,
         ]);
     }
-
-
-
-
-
-
-
-
 
 
     public function upload($clientId)
@@ -360,12 +440,14 @@ class Client extends Controller
                 'original_name' => $file->getClientName(),
                 'file_type' => $file->getClientMimeType(),
                 'file_size' => $file->getSize(),
+                'uploaded_by' => 'admin', // Mark as admin upload
                 'uploaded_at' => date('Y-m-d H:i:s'),
             ];
 
             $this->clientFileModel->insert($fileData);
         }
     }
+
 
     // Download file by ID
     public function downloadFile($fileId)
@@ -383,7 +465,6 @@ class Client extends Controller
 
         return $this->response->download($filePath, null)->setFileName($file['original_name']);
     }
-
 
     public function deleteFile($fileId)
     {

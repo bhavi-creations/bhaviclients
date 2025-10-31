@@ -37,7 +37,25 @@
                 <div class="card-body">
                     <form method="get" action="<?= base_url('work-updates') ?>" id="filterForm">
                         <div class="row">
-                            <div class="col-md-4">
+                            <!-- Department Filter - NEW -->
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Department</label>
+                                    <select class="form-control live-filter" name="department">
+                                        <option value="">-- All Departments --</option>
+                                        <?php if (!empty($departments)): ?>
+                                            <?php foreach ($departments as $dept): ?>
+                                                <option value="<?= esc($dept['id']) ?>" 
+                                                    <?= (isset($_GET['department']) && $_GET['department'] == $dept['id']) ? 'selected' : '' ?>>
+                                                    <?= esc($dept['name']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Status</label>
                                     <select class="form-control live-filter" name="status">
@@ -49,7 +67,8 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <label>From Date</label>
                                     <input type="date" 
@@ -58,7 +77,8 @@
                                            value="<?= isset($_GET['from_date']) ? $_GET['from_date'] : '' ?>">
                                 </div>
                             </div>
-                            <div class="col-md-3">
+
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <label>To Date</label>
                                     <input type="date" 
@@ -67,6 +87,7 @@
                                            value="<?= isset($_GET['to_date']) ? $_GET['to_date'] : '' ?>">
                                 </div>
                             </div>
+
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label>&nbsp;</label>
@@ -111,7 +132,7 @@
                                         <tr>
                                             <td><?= $sno++ ?></td>
                                             <td>
-                                                <?= esc($task['title']) ?>
+                                                <strong><?= esc($task['title']) ?></strong>
                                                 <?php if (!empty($task['files_upload'])): ?>
                                                     <?php $files = json_decode($task['files_upload'], true); ?>
                                                     <?php if (is_array($files) && count($files) > 0): ?>
@@ -121,8 +142,19 @@
                                                     <?php endif; ?>
                                                 <?php endif; ?>
                                             </td>
-                                            <td><?= esc($task['emp_first_name'] . ' ' . $task['emp_last_name']) ?></td>
-                                            <td><?= esc($task['department_name'] ?? 'N/A') ?></td>
+                                            <td>
+                                                <i class="fas fa-user-tie text-primary"></i>
+                                                <?= esc($task['emp_first_name'] . ' ' . $task['emp_last_name']) ?>
+                                            </td>
+                                            <td>
+                                                <?php if (!empty($task['department_name'])): ?>
+                                                    <span class="badge badge-secondary">
+                                                        <i class="fas fa-building"></i> <?= esc($task['department_name']) ?>
+                                                    </span>
+                                                <?php else: ?>
+                                                    <span class="text-muted">N/A</span>
+                                                <?php endif; ?>
+                                            </td>
                                             <td>
                                                 <?php
                                                 $statusClass = [
@@ -139,8 +171,8 @@
                                             </td>
                                             <td>
                                                 <small>
-                                                    <?= date('M d, Y', strtotime($task['submitted_at'])) ?><br>
-                                                    <?= date('h:i A', strtotime($task['submitted_at'])) ?>
+                                                    <i class="far fa-calendar"></i> <?= date('M d, Y', strtotime($task['submitted_at'])) ?><br>
+                                                    <i class="far fa-clock"></i> <?= date('h:i A', strtotime($task['submitted_at'])) ?>
                                                 </small>
                                             </td>
                                             <td>
@@ -156,8 +188,16 @@
                             </table>
                         </div>
                     <?php else: ?>
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle"></i> No work updates found yet.
+                        <div class="alert alert-info text-center p-5">
+                            <i class="fas fa-info-circle fa-3x mb-3"></i>
+                            <h5>No work updates found</h5>
+                            <p class="text-muted">
+                                <?php if (!empty($_GET['status']) || !empty($_GET['department']) || !empty($_GET['from_date'])): ?>
+                                    Try adjusting your filters to see more results.
+                                <?php else: ?>
+                                    Work updates will appear here once employees submit work for you.
+                                <?php endif; ?>
+                            </p>
                         </div>
                     <?php endif; ?>
                 </div>

@@ -25,93 +25,80 @@
             <!-- Flash Messages -->
             <?php if (session()->getFlashdata('success')): ?>
                 <div class="alert alert-success alert-dismissible fade show">
-                    <?= session()->getFlashdata('success') ?>
+                    <i class="fas fa-check-circle"></i> <?= session()->getFlashdata('success') ?>
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                 </div>
             <?php endif; ?>
 
             <?php if (session()->getFlashdata('error')): ?>
                 <div class="alert alert-danger alert-dismissible fade show">
-                    <?= session()->getFlashdata('error') ?>
+                    <i class="fas fa-exclamation-triangle"></i> <?= session()->getFlashdata('error') ?>
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                 </div>
             <?php endif; ?>
 
-            <div class="row">
-                <div class="col-md-4">
-                    <!-- Profile Image Card -->
-                    <div class="card card-primary card-outline">
+            <div class="row justify-content-center">
+                <div class="col-md-5">
+                    <!-- Profile Card -->
+                    <div class="card card-primary card-outline shadow-sm">
                         <div class="card-body box-profile">
-                            <div class="text-center">
-                                <img class="profile-user-img img-fluid img-circle" 
-                                     src="https://ui-avatars.com/api/?name=<?= urlencode($user['first_name'] . ' ' . $user['last_name']) ?>&size=128&background=007bff&color=fff" 
-                                     alt="User profile picture">
+                            <!-- Profile Picture -->
+                            <div class="text-center mb-3">
+                                <img class="profile-user-img img-fluid img-circle elevation-2" 
+                                     src="https://ui-avatars.com/api/?name=<?= urlencode($user['first_name'] . ' ' . $user['last_name']) ?>&size=128&background=007bff&color=fff&bold=true" 
+                                     alt="User profile picture"
+                                     style="width: 128px; height: 128px;">
                             </div>
 
-                            <h3 class="profile-username text-center">
+                            <!-- User Name -->
+                            <h3 class="profile-username text-center mb-1">
                                 <?= esc($user['first_name'] . ' ' . $user['last_name']) ?>
                             </h3>
 
-                            <p class="text-muted text-center"><?= esc($user['role_name'] ?? 'N/A') ?></p>
-
-                            <ul class="list-group list-group-unbordered mb-3">
-                                <li class="list-group-item">
-                                    <b>Email</b> <a class="float-right"><?= esc($user['email']) ?></a>
-                                </li>
-                                <li class="list-group-item">
-                                    <b>Phone</b> <a class="float-right"><?= esc($user['phone']) ?></a>
-                                </li>
-                                <li class="list-group-item">
-                                    <b>Department</b> <a class="float-right"><?= esc($user['department_name'] ?? 'N/A') ?></a>
-                                </li>
-                            </ul>
-
-                            <a href="<?= base_url('profile/edit') ?>" class="btn btn-primary btn-block">
-                                <i class="fas fa-edit"></i> Edit Profile
-                            </a>
-                            <a href="<?= base_url('profile/change-password') ?>" class="btn btn-warning btn-block">
-                                <i class="fas fa-key"></i> Change Password
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-8">
-                    <!-- Profile Details Card -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Profile Details</h3>
-                        </div>
-                        <div class="card-body">
-                            <strong><i class="fas fa-user mr-1"></i> Full Name</strong>
-                            <p class="text-muted">
-                                <?= esc($user['first_name'] . ' ' . $user['last_name']) ?>
+                            <!-- Role Badge -->
+                            <p class="text-center mb-4">
+                                <span class="badge badge-primary badge-lg" style="font-size: 14px; padding: 8px 16px;">
+                                    <i class="fas fa-user-tag mr-1"></i> <?= esc($user['role_name'] ?? 'N/A') ?>
+                                </span>
                             </p>
-                            <hr>
 
-                            <strong><i class="fas fa-envelope mr-1"></i> Email</strong>
-                            <p class="text-muted"><?= esc($user['email']) ?></p>
-                            <hr>
+                            <!-- Profile Details -->
+                            <div class="card mb-3" style="background-color: #f8f9fa; border: none;">
+                                <div class="card-body p-0">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center" style="background: transparent; border: none; padding: 12px 20px;">
+                                            <span><i class="fas fa-phone text-primary mr-2"></i><strong>Phone</strong></span>
+                                            <span class="text-muted"><?= esc($user['phone']) ?></span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center" style="background: transparent; border-top: 1px solid #dee2e6; padding: 12px 20px;">
+                                            <span><i class="fas fa-id-badge text-info mr-2"></i><strong>Username</strong></span>
+                                            <span class="text-muted"><?= esc($user['username']) ?></span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center" style="background: transparent; border-top: 1px solid #dee2e6; padding: 12px 20px;">
+                                            <span><i class="fas fa-calendar text-success mr-2"></i><strong>Member Since</strong></span>
+                                            <span class="text-muted"><?= date('M d, Y', strtotime($user['created_at'])) ?></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
 
-                            <strong><i class="fas fa-phone mr-1"></i> Phone</strong>
-                            <p class="text-muted"><?= esc($user['phone']) ?></p>
-                            <hr>
+                            <!-- Action Buttons -->
+                            <div class="mt-4">
+                                <a href="<?= base_url('profile/edit-username') ?>" class="btn btn-info btn-block btn-lg shadow-sm">
+                                    <i class="fas fa-user-edit mr-2"></i> Change Username
+                                </a>
+                                <a href="<?= base_url('profile/change-password') ?>" class="btn btn-warning btn-block btn-lg shadow-sm">
+                                    <i class="fas fa-key mr-2"></i> Change Password
+                                </a>
+                            </div>
 
-                            <strong><i class="fas fa-id-badge mr-1"></i> Username</strong>
-                            <p class="text-muted"><?= esc($user['username']) ?></p>
-                            <hr>
-
-                            <strong><i class="fas fa-user-tag mr-1"></i> Role</strong>
-                            <p class="text-muted"><?= esc($user['role_name'] ?? 'N/A') ?></p>
-                            <hr>
-
-                            <strong><i class="fas fa-building mr-1"></i> Department</strong>
-                            <p class="text-muted"><?= esc($user['department_name'] ?? 'N/A') ?></p>
-                            <hr>
-
-                           
-                            <strong><i class="fas fa-calendar mr-1"></i> Member Since</strong>
-                            <p class="text-muted"><?= date('F d, Y', strtotime($user['created_at'])) ?></p>
+                            <!-- Security Notice -->
+                            <div class="alert alert-light mt-4 mb-0" style="border: 1px solid #e3e6f0;">
+                                <small class="text-muted">
+                                    <i class="fas fa-shield-alt mr-1"></i> 
+                                    Keep your login credentials secure. Never share your password with anyone.
+                                </small>
+                            </div>
                         </div>
                     </div>
                 </div>

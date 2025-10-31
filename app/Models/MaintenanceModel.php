@@ -8,7 +8,7 @@ class MaintenanceModel extends Model
     protected $table      = 'maintenance';
     protected $primaryKey = 'id';
     protected $allowedFields = [
-        'client_id', 'title', 'description'
+        'client_id', 'title', 'description', 'file_uploads', 'remarks'
     ];
     protected $useTimestamps = true;
     protected $createdField = 'created_at';

@@ -31,10 +31,22 @@ class ClientManager extends BaseController
             return redirect()->to(base_url('dashboard'))->with('error', 'No assigned client.');
         }
 
-        // Copy the logic from ClientDashboard for the assigned client:
+        // Get client details
         $client = $this->clientModel->find($clientId);
 
-        $totalFiles = $this->clientFileModel->where('client_id', $clientId)->countAllResults();
+        if (!$client) {
+            return redirect()->to(base_url('dashboard'))->with('error', 'Client not found.');
+        }
+
+        // Get statistics - FIXED: Count only admin uploaded Excel files
+        $totalFiles = $this->clientFileModel
+            ->where('client_id', $clientId)
+            ->where('uploaded_by', 'admin')
+            ->groupStart()
+            ->like('original_name', '.xls', 'both')
+            ->orLike('original_name', '.xlsx', 'both')
+            ->groupEnd()
+            ->countAllResults();
 
         $totalTasks = $this->taskModel->where('client_id', $clientId)->countAllResults();
 
@@ -48,6 +60,53 @@ class ClientManager extends BaseController
             ->whereIn('status', ['Pending', 'In Progress', 'Review'])
             ->countAllResults();
 
+        // NEW: Get total weekly schedules count
+        $db = \Config\Database::connect();
+        $totalSchedules = $db->table('client_weekly_schedules')
+            ->where('client_id', $clientId)
+            ->where('status', 'published')
+            ->countAllResults();
+
+        // Get current week's schedule
+        $today = new \DateTime();
+        $weekDay = $today->format('N');
+        $daysToSubtract = $weekDay - 1;
+        $monday = clone $today;
+        $monday->sub(new \DateInterval("P{$daysToSubtract}D"));
+        $weekStartDate = $monday->format('Y-m-d');
+
+        $sunday = clone $monday;
+        $sunday->add(new \DateInterval('P6D'));
+        $weekEndDate = $sunday->format('Y-m-d');
+
+        // Get weekly schedule from database
+        $weeklySchedule = $db->table('client_weekly_schedules')
+            ->where('client_id', $clientId)
+            ->where('week_start_date', $weekStartDate)
+            ->where('status', 'published')
+            ->get()
+            ->getRowArray();
+
+        // Prepare week schedule data
+        $weekScheduleData = null;
+        $departments = [];
+
+        if ($weeklySchedule) {
+            $departments = json_decode($weeklySchedule['department_columns'], true);
+            $scheduleData = json_decode($weeklySchedule['schedule_data'], true);
+            $currentDay = $today->format('l');
+
+            $weekScheduleData = [
+                'week_start' => $weekStartDate,
+                'week_end' => $weekEndDate,
+                'departments' => $departments,
+                'schedule' => $scheduleData,
+                'current_day' => $currentDay,
+                'notes' => $weeklySchedule['notes'] ?? null
+            ];
+        }
+
+        // Get recent tasks
         $recentTasks = $this->taskModel
             ->select('employee_tasks.*, employees.first_name as emp_first_name, employees.last_name as emp_last_name')
             ->join('employees', 'employees.id = employee_tasks.employee_id', 'left')
@@ -56,16 +115,10 @@ class ClientManager extends BaseController
             ->limit(5)
             ->findAll();
 
-        $recentFiles = $this->clientFileModel
+        // NEW: Get project details count
+        $totalProjects = $db->table('maintenance')
             ->where('client_id', $clientId)
-            ->where('uploaded_by', 'admin')
-            ->groupStart()
-            ->like('original_name', '.xls', 'both')
-            ->orLike('original_name', '.xlsx', 'both')
-            ->groupEnd()
-            ->orderBy('uploaded_at', 'DESC')
-            ->limit(5)
-            ->findAll();
+            ->countAllResults();
 
         $data = [
             'title' => 'Client Manager Dashboard',
@@ -74,13 +127,15 @@ class ClientManager extends BaseController
             'totalTasks' => $totalTasks,
             'completedTasks' => $completedTasks,
             'pendingTasks' => $pendingTasks,
+            'totalSchedules' => $totalSchedules, // NEW
+            'totalProjects' => $totalProjects, // NEW
             'recentTasks' => $recentTasks,
-            'recentFiles' => $recentFiles
+            'weekSchedule' => $weekScheduleData // NEW
         ];
 
-        // You can reuse the 'client_portal/dashboard' view to make it look identical
         return view('client_portal/dashboard', $data);
     }
+
 
 
     /**

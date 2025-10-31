@@ -23,7 +23,7 @@
 
             <!-- Statistics Cards -->
             <div class="row">
-                <div class="col-lg-4 col-6">
+                <div class="col-lg-3 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
                             <h3><?= $totalTasks ?></h3>
@@ -38,105 +38,140 @@
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-6">
+                <div class="col-lg-3 col-6">
                     <div class="small-box bg-success">
                         <div class="inner">
+                            <h3><?= $totalSchedules ?></h3>
+                            <p>Weekly Scheduales</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-calendar-week"></i>
+                        </div>
+                        <a href="<?= base_url('my-weekly-schedule') ?>" class="small-box-footer">
+                            View Schedules <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-warning">
+                        <div class="inner">
                             <h3><?= $totalFiles ?></h3>
-                            <p>Files Available</p>
+                            <p>Working Calendars</p>
                         </div>
                         <div class="icon">
                             <i class="fas fa-file-excel"></i>
                         </div>
                         <a href="<?= base_url('download-files') ?>" class="small-box-footer">
-                            Download <i class="fas fa-arrow-circle-right"></i>
+                            View Files <i class="fas fa-arrow-circle-right"></i>
                         </a>
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-6">
-                    <div class="small-box bg-warning">
-                        <div class="inner">
-                            <h3><i class="fas fa-cloud-upload-alt"></i></h3>
-                            <p>Upload Files</p>
+                <?php if (session()->get('role_id') == 3): ?>
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-danger">
+                            <div class="inner">
+                                <h3><?= $totalProjects ?></h3>
+                                <p>Project Details</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <a href="<?= base_url('client-maintenance') ?>" class="small-box-footer">
+                                View Projects <i class="fas fa-arrow-circle-right"></i>
+                            </a>
                         </div>
-                        <div class="icon">
-                            <i class="fas fa-upload"></i>
-                        </div>
-                        <a href="<?= base_url('upload-files') ?>" class="small-box-footer">
-                            Upload Now <i class="fas fa-arrow-circle-right"></i>
-                        </a>
                     </div>
-                </div>
+                <?php endif; ?>
+
             </div>
 
             <div class="row">
-                <!-- Recent Work Updates -->
+                <!-- Current Week Schedule -->
                 <div class="col-md-8">
-                    <div class="card">
+                    <div class="card card-primary card-outline shadow-lg">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fas fa-tasks"></i> Recent Work Updates
+                                <i class="fas fa-calendar-week"></i> This Week's Schedule
                             </h3>
                             <div class="card-tools">
-                                <a href="<?= base_url('work-updates') ?>" class="btn btn-sm btn-primary">View All</a>
+                                <?php if (!empty($weekSchedule)): ?>
+                                    <span class="badge badge-info">
+                                        <?= date('M d', strtotime($weekSchedule['week_start'])) ?> -
+                                        <?= date('M d, Y', strtotime($weekSchedule['week_end'])) ?>
+                                    </span>
+                                <?php endif; ?>
+                                <a href="<?= base_url('my-weekly-schedule') ?>" class="btn btn-sm btn-primary ml-2">
+                                    View All Schedules
+                                </a>
                             </div>
                         </div>
                         <div class="card-body p-0">
-                            <?php if (!empty($recentTasks)): ?>
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Employee</th>
-                                            <th>Status</th>
-                                            <th>Date</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($recentTasks as $task): ?>
+                            <?php if (!empty($weekSchedule)): ?>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover m-0">
+                                        <thead class="bg-light">
                                             <tr>
-                                                <td><?= esc($task['title']) ?></td>
-                                                <td><?= esc($task['emp_first_name'] . ' ' . $task['emp_last_name']) ?></td>
-                                                <td>
-                                                    <?php
-                                                    $statusClass = [
-                                                        'Pending' => 'warning',
-                                                        'In Progress' => 'info',
-                                                        'Completed' => 'success',
-                                                        'Review' => 'primary'
-                                                    ];
-                                                    $class = $statusClass[$task['status']] ?? 'secondary';
-                                                    ?>
-                                                    <span class="badge badge-<?= $class ?>">
-                                                        <?= esc($task['status']) ?>
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <small><?= date('M d, Y', strtotime($task['submitted_at'])) ?></small>
-                                                </td>
-                                                <td>
-                                                    <a href="<?= base_url('view-work/' . $task['id']) ?>" class="btn btn-sm btn-info">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                </td>
+                                                <th width="100">Day</th>
+                                                <?php foreach ($weekSchedule['departments'] as $dept): ?>
+                                                    <th><?= esc($dept) ?></th>
+                                                <?php endforeach; ?>
                                             </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                                            foreach ($days as $day):
+                                                $isToday = ($day === $weekSchedule['current_day']);
+                                            ?>
+                                                <tr <?= $isToday ? 'class="table-primary"' : '' ?>>
+                                                    <td class="font-weight-bold">
+                                                        <?= $day ?>
+                                                        <?php if ($isToday): ?>
+                                                            <span class="badge badge-success badge-sm ml-1">Today</span>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                    <?php foreach ($weekSchedule['departments'] as $dept): ?>
+                                                        <td>
+                                                            <?php
+                                                            $task = $weekSchedule['schedule'][$day][$dept] ?? '';
+                                                            if (!empty($task)) {
+                                                                echo '<span class="badge badge-info">' . nl2br(esc($task)) . '</span>';
+                                                            } else {
+                                                                echo '<span class="text-muted">-</span>';
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                    <?php endforeach; ?>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <?php if (!empty($weekSchedule['notes'])): ?>
+                                    <div class="alert alert-info m-3">
+                                        <strong><i class="fas fa-sticky-note"></i> Week Notes:</strong><br>
+                                        <?= nl2br(esc($weekSchedule['notes'])) ?>
+                                    </div>
+                                <?php endif; ?>
                             <?php else: ?>
-                                <div class="p-3 text-center text-muted">
-                                    <i class="fas fa-info-circle"></i> No work updates yet.
+                                <div class="p-5 text-center text-muted">
+                                    <i class="fas fa-calendar-times fa-3x mb-3"></i>
+                                    <h5>No Schedule for This Week</h5>
+                                    <p>Your weekly schedule will appear here once created by the admin.</p>
+                                    <a href="<?= base_url('my-weekly-schedule') ?>" class="btn btn-primary">
+                                        View All Schedules
+                                    </a>
                                 </div>
                             <?php endif; ?>
                         </div>
                     </div>
                 </div>
 
-                <!-- Company Info & Recent Files -->
+                <!-- Company Info -->
                 <div class="col-md-4">
-                    <!-- Company Info -->
-                    <div class="card card-primary card-outline">
+                    <div class="card card-primary card-outline shadow-lg">
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fas fa-building"></i> Company Information
@@ -146,57 +181,29 @@
                             <strong>Company Name</strong>
                             <p class="text-muted"><?= esc($client['name']) ?></p>
                             <hr>
-                            
+
                             <strong>Contact Person</strong>
                             <p class="text-muted">
                                 <?= esc($client['owner_first_name'] . ' ' . $client['owner_last_name']) ?>
                             </p>
                             <hr>
-                            
+
                             <strong>Email</strong>
                             <p class="text-muted"><?= esc($client['email']) ?></p>
                             <hr>
-                            
+
                             <strong>Phone</strong>
                             <p class="text-muted"><?= esc($client['phone']) ?></p>
-                        </div>
-                    </div>
+                            <hr>
 
-                    <!-- Recent Files -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-file"></i> Recent Files
-                            </h3>
-                            <div class="card-tools">
-                                <a href="<?= base_url('download-files') ?>" class="btn btn-sm btn-primary">View All</a>
-                            </div>
-                        </div>
-                        <div class="card-body p-0">
-                            <?php if (!empty($recentFiles)): ?>
-                                <ul class="list-group list-group-flush">
-                                    <?php foreach ($recentFiles as $file): ?>
-                                        <li class="list-group-item">
-                                            <i class="fas fa-file-excel mr-2 text-success"></i>
-                                            <small class="text-truncate d-inline-block" style="max-width: 150px;">
-                                                <?= esc($file['original_name']) ?>
-                                            </small>
-                                            <br>
-                                            <small class="text-muted">
-                                                <?= date('M d, Y', strtotime($file['uploaded_at'])) ?>
-                                            </small>
-                                            <a href="<?= base_url('download-file/' . $file['id']) ?>" 
-                                               class="btn btn-xs btn-success float-right">
-                                                <i class="fas fa-download"></i>
-                                            </a>
-                                        </li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            <?php else: ?>
-                                <div class="p-3 text-center text-muted">
-                                    <i class="fas fa-info-circle"></i> No files yet.
-                                </div>
-                            <?php endif; ?>
+                            <strong>Started Date</strong>
+                            <p class="text-muted">
+                                <?php if (!empty($client['started_date'])): ?>
+                                    <?= date('M d, Y', strtotime($client['started_date'])) ?>
+                                <?php else: ?>
+                                    <span class="text-muted">Not set</span>
+                                <?php endif; ?>
+                            </p>
                         </div>
                     </div>
                 </div>

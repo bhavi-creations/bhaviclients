@@ -1,8 +1,11 @@
+<?php
+// C:\xampp\htdocs\bhaviclients\app\Views\dashboard\index.php
+?>
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
+    <!-- Content Header -->
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -18,85 +21,190 @@
         </div>
     </section>
 
-    <!-- Main content: Widgets and overview -->
+    <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
 
             <!-- Stats Widgets -->
             <div class="row">
-                <div class="col-lg-3 col-6">
+                <!-- Total Clients -->
+                <div class="col-lg-4 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
                             <h3><?= esc($totalClients ?? 0) ?></h3>
                             <p>Total Clients</p>
                         </div>
-                        <div class="icon"><i class="ion ion-person-add"></i></div>
-                        <a href="<?= base_url('client') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <div class="icon"><i class="fas fa-handshake"></i></div>
+                        <a href="<?= base_url('client') ?>" class="small-box-footer">
+                            View All Clients <i class="fas fa-arrow-circle-right"></i>
+                        </a>
                     </div>
                 </div>
-                <div class="col-lg-3 col-6">
+
+                <!-- Total Employees -->
+                <div class="col-lg-4 col-6">
                     <div class="small-box bg-success">
                         <div class="inner">
                             <h3><?= esc($totalEmployees ?? 0) ?></h3>
                             <p>Total Employees</p>
                         </div>
-                        <div class="icon"><i class="ion ion-person"></i></div>
-                        <a href="<?= base_url('employee') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <div class="icon"><i class="fas fa-users"></i></div>
+                        <a href="<?= base_url('employee') ?>" class="small-box-footer">
+                            View All Employees <i class="fas fa-arrow-circle-right"></i>
+                        </a>
                     </div>
                 </div>
-                <div class="col-lg-3 col-6">
+
+                <!-- Pending Payments -->
+                <div class="col-lg-4 col-6">
                     <div class="small-box bg-warning">
                         <div class="inner">
-                            <h3><?= esc($totalTasks ?? 0) ?></h3>
-                            <p>Tasks</p>
+                            <h3><?= esc($pendingPaymentsCount ?? 0) ?></h3>
+                            <p>Pending Payments</p>
+                            <small>Total: ₹<?= number_format($pendingPaymentsAmount ?? 0, 2) ?></small>
                         </div>
-                        <div class="icon"><i class="fas fa-tasks"></i></div>
-                        <a href="<?= base_url('task-management') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-6">
-                    <div class="small-box bg-danger">
-                        <div class="inner">
-                            <h3><?= esc($totalFiles ?? 0) ?></h3>
-                            <p>Client Files</p>
-                        </div>
-                        <div class="icon"><i class="ion ion-ios-folder"></i></div>
-                        <a href="<?= base_url('client-uploads') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <div class="icon"><i class="fas fa-money-bill-wave"></i></div>
+                        <a href="<?= base_url('client-payment/list') ?>" class="small-box-footer">
+                            View Payments <i class="fas fa-arrow-circle-right"></i>
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Recent Clients Table -->
+            <!-- Recent Clients & Employees -->
             <div class="row">
-                <div class="col-12">
-                    <div class="card card-primary">
-                        <div class="card-header"><h3 class="card-title">Recent Clients</h3></div>
+                <!-- Recent Clients -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-info">
+                            <h3 class="card-title"><i class="fas fa-handshake mr-2"></i> Recent Clients</h3>
+                            <div class="card-tools">
+                                <a href="<?= base_url('client') ?>" class="btn btn-tool text-white">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                        </div>
                         <div class="card-body p-0">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>S.No.</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Created At</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php $sno = 1; foreach($recentClients ?? [] as $client): ?>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-sm mb-0">
+                                    <thead>
                                         <tr>
-                                            <td><?= $sno++ ?></td>
-                                            <td><?= esc($client['name']) ?></td>
-                                            <td><?= esc($client['email']) ?></td>
-                                            <td><?= esc($client['created_at']) ?></td>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
                                         </tr>
-                                    <?php endforeach ?>
-                                    <?php if (empty($recentClients)): ?>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (!empty($recentClients)): ?>
+                                            <?php foreach($recentClients as $client): ?>
+                                                <tr>
+                                                    <td><strong><?= esc($client['name']) ?></strong></td>
+                                                    <td><?= esc($client['email']) ?></td>
+                                                    <td><?= esc($client['phone']) ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="3" class="text-center py-3 text-muted">No clients found</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Employees -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-success">
+                            <h3 class="card-title"><i class="fas fa-users mr-2"></i> Recent Employees</h3>
+                            <div class="card-tools">
+                                <a href="<?= base_url('employee') ?>" class="btn btn-tool text-white">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-sm mb-0">
+                                    <thead>
                                         <tr>
-                                            <td colspan="4" class="text-center">No recent clients found.</td>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Department</th>
                                         </tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (!empty($recentEmployees)): ?>
+                                            <?php foreach($recentEmployees as $employee): ?>
+                                                <tr>
+                                                    <td><strong><?= esc($employee['first_name'] . ' ' . $employee['last_name']) ?></strong></td>
+                                                    <td><?= esc($employee['email']) ?></td>
+                                                    <td><?= esc($employee['department_name'] ?? 'N/A') ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="3" class="text-center py-3 text-muted">No employees found</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Payments -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header bg-warning">
+                            <h3 class="card-title"><i class="fas fa-money-bill-wave mr-2"></i> Upcoming Payments</h3>
+                            <div class="card-tools">
+                                <a href="<?= base_url('client-payment/list') ?>" class="btn btn-tool">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-sm mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Client</th>
+                                            <th>Expected Amount</th>
+                                            <th>Expected Date</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (!empty($upcomingPayments)): ?>
+                                            <?php foreach($upcomingPayments as $payment): ?>
+                                                <tr>
+                                                    <td><strong><?= esc($payment['client_name']) ?></strong></td>
+                                                    <td><strong>₹<?= number_format($payment['expected_amount'], 2) ?></strong></td>
+                                                    <td><?= date('M d, Y', strtotime($payment['expected_date'])) ?></td>
+                                                    <td>
+                                                        <?php if ($payment['status'] == 'overdue'): ?>
+                                                            <span class="badge badge-danger">Overdue</span>
+                                                        <?php else: ?>
+                                                            <span class="badge badge-warning">Pending</span>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="4" class="text-center py-3 text-muted">No pending payments</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

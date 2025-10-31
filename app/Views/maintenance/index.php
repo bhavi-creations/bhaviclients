@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 <h2><?= esc($title) ?></h2>
-<a href="<?= base_url('maintenance/create') ?>" class="btn btn-primary mb-2">Add Maintenance</a>
+<a href="<?= base_url('maintenance/create') ?>" class="btn btn-primary mb-2">Add Project Details</a>
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -10,7 +10,7 @@
             <th>Contact</th>
             <th>Email</th>
             <th>Phone</th>
-            <th>Maintenance Records</th>
+            <th>Project Records</th>
             <th>Action</th>
         </tr>
     </thead>

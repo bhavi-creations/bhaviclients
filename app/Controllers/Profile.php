@@ -235,4 +235,96 @@ class Profile extends BaseController
 
         return $result === 0;
     }
+
+
+    /**
+     * Show edit username form
+     */
+    public function editUsername()
+    {
+        $userId = session()->get('user_id');
+
+        if (!$userId) {
+            return redirect()->to(base_url('login'))->with('error', 'Please login first.');
+        }
+
+        $user = $this->userModel->find($userId);
+
+        if (!$user) {
+            return redirect()->to(base_url('dashboard'))->with('error', 'User not found.');
+        }
+
+        $data = [
+            'title' => 'Change Username',
+            'user' => $user,
+            'validation' => $this->validation
+        ];
+
+        return view('profile/edit_username', $data);
+    }
+
+    /**
+     * Update username only
+     */
+    public function updateUsername()
+    {
+        $userId = session()->get('user_id');
+
+        if (!$userId) {
+            return redirect()->to(base_url('login'))->with('error', 'Please login first.');
+        }
+
+        $user = $this->userModel->find($userId);
+
+        if (!$user) {
+            return redirect()->to(base_url('profile'))->with('error', 'User not found.');
+        }
+
+        // Validation rules for username
+        $rules = [
+            'username' => [
+                'label' => 'Username',
+                'rules' => [
+                    'required',
+                    'min_length[3]',
+                    'max_length[100]',
+                    function ($value) use ($userId) {
+                        $db = \Config\Database::connect();
+                        $builder = $db->table('users');
+                        $builder->where('username', $value);
+                        $builder->where('id !=', $userId);
+                        return $builder->countAllResults() === 0;
+                    }
+                ],
+                'errors' => [
+                    'required' => 'Username is required.',
+                    'min_length' => 'Username must be at least 3 characters.',
+                    'max_length' => 'Username cannot exceed 100 characters.'
+                ]
+            ]
+        ];
+
+        if (!$this->validate($rules)) {
+            session()->setFlashdata('error', 'This username is already taken. Please choose another one.');
+            return redirect()->back()->withInput()->with('validation', $this->validation);
+        }
+
+        $input = $this->request->getPost();
+
+        // Update username only
+        $updateData = [
+            'username' => trim($input['username'])
+        ];
+
+        try {
+            $this->userModel->update($userId, $updateData);
+
+            session()->setFlashdata('success', 'Username updated successfully! Use your new username on next login.');
+            return redirect()->to(base_url('profile'));
+        } catch (\Exception $e) {
+            log_message('error', 'Username Update Error: ' . $e->getMessage());
+            session()->setFlashdata('error', 'Failed to update username. Please try again.');
+            return redirect()->back()->withInput();
+        }
+    }
 }

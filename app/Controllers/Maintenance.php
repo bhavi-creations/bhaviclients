@@ -14,7 +14,7 @@ class Maintenance extends BaseController
     {
         $this->maintenanceModel = new MaintenanceModel();
         $this->clientModel = new ClientModel();
-        helper(['form', 'url']);
+        helper(['form', 'url', 'filesystem']);
     }
 
     // Admin: List all, Client: List their own
@@ -35,18 +35,17 @@ class Maintenance extends BaseController
         $clients = $builder->findAll();
 
         return view('maintenance/index', [
-            'title' => 'Maintenance',
+            'title' => 'Project Details',
             'clients' => $clients
         ]);
     }
-
 
     public function create()
     {
         $this->restrictAdmin();
         $clients = $this->clientModel->findAll();
         return view('maintenance/create', [
-            'title' => 'Create Maintenance Record',
+            'title' => 'Create Project Details',
             'clients' => $clients
         ]);
     }
@@ -54,20 +53,47 @@ class Maintenance extends BaseController
     public function store()
     {
         $this->restrictAdmin();
-        $data = $this->request->getPost();
+        
         if (!$this->validate([
             'client_id' => 'required|integer',
             'title' => 'required|min_length[2]|max_length[255]',
-            'description' => 'permit_empty'
+            'description' => 'permit_empty',
+            'remarks' => 'permit_empty',
+            'files' => [
+                'rules' => 'permit_empty',
+                'errors' => [
+                    'mime_in' => 'Invalid file type. Only images, PDFs, and documents allowed.',
+                    'max_size' => 'File size must not exceed 10MB.'
+                ]
+            ]
         ])) {
             return redirect()->back()->withInput()->with('error', implode(', ', $this->validator->getErrors()));
         }
+
+        $data = $this->request->getPost();
+        $uploadedFiles = [];
+
+        // Handle multiple file uploads
+        $files = $this->request->getFiles();
+        if (isset($files['files'])) {
+            foreach ($files['files'] as $file) {
+                if ($file->isValid() && !$file->hasMoved()) {
+                    $newName = $file->getRandomName();
+                    $file->move(FCPATH . 'uploads/maintenance/', $newName);
+                    $uploadedFiles[] = $newName;
+                }
+            }
+        }
+
         $this->maintenanceModel->save([
             'client_id' => $data['client_id'],
             'title' => $data['title'],
             'description' => $data['description'],
+            'remarks' => $data['remarks'] ?? null,
+            'file_uploads' => !empty($uploadedFiles) ? json_encode($uploadedFiles) : null,
         ]);
-        return redirect()->to(base_url('maintenance'))->with('success', 'Record added!');
+
+        return redirect()->to(base_url('maintenance'))->with('success', 'Project details added successfully!');
     }
 
     public function edit($id)
@@ -77,7 +103,7 @@ class Maintenance extends BaseController
         if (!$record) return redirect()->to(base_url('maintenance'))->with('error', 'Record not found');
         $clients = $this->clientModel->findAll();
         return view('maintenance/edit', [
-            'title' => 'Edit Maintenance',
+            'title' => 'Edit Project Details',
             'record' => $record,
             'clients' => $clients
         ]);
@@ -86,27 +112,124 @@ class Maintenance extends BaseController
     public function update($id)
     {
         $this->restrictAdmin();
-        $data = $this->request->getPost();
+        
+        $record = $this->maintenanceModel->find($id);
+        if (!$record) {
+            return redirect()->to(base_url('maintenance'))->with('error', 'Record not found');
+        }
+
         if (!$this->validate([
             'client_id' => 'required|integer',
             'title' => 'required|min_length[2]|max_length[255]',
-            'description' => 'permit_empty'
+            'description' => 'permit_empty',
+            'remarks' => 'permit_empty',
+            'files' => [
+                'rules' => 'permit_empty',
+                'errors' => [
+                    'mime_in' => 'Invalid file type. Only images, PDFs, and documents allowed.',
+                    'max_size' => 'File size must not exceed 10MB.'
+                ]
+            ]
         ])) {
             return redirect()->back()->withInput()->with('error', implode(', ', $this->validator->getErrors()));
         }
+
+        $data = $this->request->getPost();
+        
+        // Get existing files
+        $existingFiles = !empty($record['file_uploads']) ? json_decode($record['file_uploads'], true) : [];
+        $uploadedFiles = $existingFiles;
+
+        // Handle multiple file uploads
+        $files = $this->request->getFiles();
+        if (isset($files['files'])) {
+            foreach ($files['files'] as $file) {
+                if ($file->isValid() && !$file->hasMoved()) {
+                    $newName = $file->getRandomName();
+                    $file->move(FCPATH . 'uploads/maintenance/', $newName);
+                    $uploadedFiles[] = $newName;
+                }
+            }
+        }
+
         $this->maintenanceModel->update($id, [
             'client_id' => $data['client_id'],
             'title' => $data['title'],
             'description' => $data['description'],
+            'remarks' => $data['remarks'] ?? null,
+            'file_uploads' => !empty($uploadedFiles) ? json_encode($uploadedFiles) : null,
         ]);
-        return redirect()->to(base_url('maintenance'))->with('success', 'Record updated!');
+
+        return redirect()->to(base_url('maintenance/client/' . $data['client_id']))->with('success', 'Project details updated successfully!');
     }
 
     public function delete($id)
     {
         $this->restrictAdmin();
-        $this->maintenanceModel->delete($id);
-        return redirect()->to(base_url('maintenance'))->with('success', 'Deleted!');
+        
+        $record = $this->maintenanceModel->find($id);
+        if ($record) {
+            // Delete associated files
+            if (!empty($record['file_uploads'])) {
+                $files = json_decode($record['file_uploads'], true);
+                if (is_array($files)) {
+                    foreach ($files as $file) {
+                        $filePath = FCPATH . 'uploads/maintenance/' . $file;
+                        if (file_exists($filePath)) {
+                            unlink($filePath);
+                        }
+                    }
+                }
+            }
+            $this->maintenanceModel->delete($id);
+        }
+        
+        return redirect()->back()->with('success', 'Project details deleted successfully!');
+    }
+
+    public function deleteFile($id, $filename)
+    {
+        $this->restrictAdmin();
+        
+        $record = $this->maintenanceModel->find($id);
+        if (!$record) {
+            return redirect()->back()->with('error', 'Record not found');
+        }
+
+        $files = !empty($record['file_uploads']) ? json_decode($record['file_uploads'], true) : [];
+        
+        // Remove file from array
+        $files = array_filter($files, function($file) use ($filename) {
+            return $file !== $filename;
+        });
+
+        // Delete physical file
+        $filePath = FCPATH . 'uploads/maintenance/' . $filename;
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+
+        // Update database
+        $this->maintenanceModel->update($id, [
+            'file_uploads' => !empty($files) ? json_encode(array_values($files)) : null
+        ]);
+
+        return redirect()->back()->with('success', 'File deleted successfully!');
+    }
+
+    public function downloadFile($id, $filename)
+    {
+        $record = $this->maintenanceModel->find($id);
+        if (!$record) {
+            return redirect()->back()->with('error', 'Record not found');
+        }
+
+        $filePath = FCPATH . 'uploads/maintenance/' . $filename;
+        if (file_exists($filePath)) {
+            return $this->response->download($filePath, null);
+        }
+
+        return redirect()->back()->with('error', 'File not found');
     }
 
     private function restrictAdmin()
@@ -121,20 +244,27 @@ class Maintenance extends BaseController
         $roleId = session()->get('role_id');
         $user = session()->get();
         $record = $this->maintenanceModel->find($id);
+        
         if (!$record) return redirect()->to(base_url('maintenance'))->with('error', 'Not found');
+        
+        // Get client info
+        $client = $this->clientModel->find($record['client_id']);
+        
         if (
             $roleId == 1 ||
             ($roleId == 3 && $user['client_id'] == $record['client_id']) ||
             ($roleId == 4 && $user['client_id'] == $record['client_id'])
         ) {
             return view('maintenance/view', [
-                'title' => 'Maintenance Details',
-                'record' => $record
+                'title' => 'Project Details',
+                'record' => $record,
+                'client' => $client
             ]);
         } else {
             return redirect()->to(base_url('dashboard'))->with('error', 'Unauthorized.');
         }
     }
+
     public function client($clientId)
     {
         $roleId = session()->get('role_id');
@@ -151,7 +281,7 @@ class Maintenance extends BaseController
             ->findAll();
 
         return view('maintenance/client_detail', [
-            'title' => 'Maintenance for ' . $client['name'],
+            'title' => 'Project Details for ' . $client['name'],
             'client' => $client,
             'records' => $records
         ]);
@@ -175,7 +305,7 @@ class Maintenance extends BaseController
                 ->findAll();
 
             return view('maintenance/client_panel', [
-                'title' => 'My Maintenance Records',
+                'title' => 'My Project Details',
                 'client' => $client,
                 'records' => $records
             ]);

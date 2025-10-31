@@ -1,3 +1,6 @@
+<?php 
+// C:\xampp\htdocs\bhaviclients\app\Views\employee\index.php 
+?>
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
@@ -27,14 +30,18 @@
                     <?php if (session()->getFlashdata('success')): ?>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <?= session()->getFlashdata('success') ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
                     <?php endif; ?>
 
                     <?php if (session()->getFlashdata('error')): ?>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <?= session()->getFlashdata('error') ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
                     <?php endif; ?>
 
@@ -42,9 +49,12 @@
                         <div class="card-header border-0">
                             <h3 class="card-title">All Employees</h3>
                             <div class="card-tools">
-                                <a href="<?= base_url('employee/create') ?>" class="btn btn-success btn-sm">
-                                    <i class="fas fa-plus-circle"></i> Add New Employee
-                                </a>
+                                <?php if (session()->get('role_id') == 1): ?>
+                                    <!-- ONLY SHOW ADD BUTTON FOR SUPER ADMIN -->
+                                    <a href="<?= base_url('employee/create') ?>" class="btn btn-success btn-sm">
+                                        <i class="fas fa-plus-circle"></i> Add New Employee
+                                    </a>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div class="card-body p-0">
@@ -53,8 +63,8 @@
                                     <thead>
                                         <tr>
                                             <th>S.No.</th>
+                                            <th>Emp Code</th>
                                             <th>Employee Name</th>
-                                            <th>Email</th>
                                             <th>Phone</th>
                                             <th>Department</th>
                                             <th>Actions</th>
@@ -66,19 +76,38 @@
                                             <?php foreach ($employees as $employee): ?>
                                                 <tr>
                                                     <td><?= $sn++ ?></td>
+                                                    <td>
+                                                        <?php if (!empty($employee['employee_code'])): ?>
+                                                            <span class="badge badge-info"><?= esc($employee['employee_code']) ?></span>
+                                                        <?php else: ?>
+                                                            <span class="text-muted">-</span>
+                                                        <?php endif; ?>
+                                                    </td>
                                                     <td><?= esc($employee['first_name'] . ' ' . $employee['last_name']) ?></td>
-                                                    <td><?= esc($employee['email']) ?></td>
                                                     <td><?= esc($employee['phone']) ?></td>
                                                     <td><?= esc($employee['department_name'] ?? 'N/A') ?></td>
                                                     <td>
-                                                        <a href="<?= base_url('employee/edit/' . $employee['id']) ?>" class="btn btn-sm btn-info" title="Edit Employee">
-                                                            <i class="fas fa-edit"></i>
+                                                        <!-- VIEW BUTTON - VISIBLE TO ALL (Admin & Admin Manager) -->
+                                                        <a href="<?= base_url('employee/view/' . $employee['id']) ?>" 
+                                                           class="btn btn-sm btn-primary" 
+                                                           title="View Details">
+                                                            <i class="fas fa-eye"></i>
                                                         </a>
 
-                                                        <!-- Delete button with JS triggered modal -->
-                                                        <a href="#" onclick="confirmDelete(<?= $employee['id'] ?>)" class="btn btn-sm btn-danger" title="Delete Employee">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </a>
+                                                        <?php if (session()->get('role_id') == 1): ?>
+                                                            <!-- EDIT & DELETE - ONLY FOR SUPER ADMIN -->
+                                                            <a href="<?= base_url('employee/edit/' . $employee['id']) ?>" 
+                                                               class="btn btn-sm btn-info" 
+                                                               title="Edit Employee">
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
+                                                            <a href="#" 
+                                                               onclick="confirmDelete(<?= $employee['id'] ?>)" 
+                                                               class="btn btn-sm btn-danger" 
+                                                               title="Delete Employee">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </a>
+                                                        <?php endif; ?>
                                                     </td>
                                                 </tr>
                                             <?php endforeach; ?>
@@ -96,7 +125,7 @@
     </section>
 </div>
 
-<!-- Delete Confirmation Modal (Bootstrap 5 compatible) -->
+<!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <form id="deleteForm" method="post" action="">
@@ -104,13 +133,15 @@
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
-                  
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
-                    Are you sure you want to delete this employee? This action cannot be undone.
+                    Are you sure you want to delete this employee? This action cannot be undone and will remove all related data including salary history.
                 </div>
                 <div class="modal-footer">
-                 
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </div>
             </div>
@@ -121,8 +152,7 @@
 <script>
     function confirmDelete(id) {
         document.getElementById('deleteForm').action = '<?= base_url("employee/delete/") ?>' + id;
-        var modal = new bootstrap.Modal(document.getElementById('deleteModal'));
-        modal.show();
+        $('#deleteModal').modal('show');
     }
 </script>
 

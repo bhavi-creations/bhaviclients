@@ -1,3 +1,6 @@
+<?php 
+// C:\xampp\htdocs\bhaviclients\app\Views\task_management\view.php 
+?>
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
@@ -11,9 +14,9 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="<?= base_url('dashboard') ?>">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="<?= base_url('task-management') ?>">Employee Tasks</a></li>
-                        <li class="breadcrumb-item active">Task Details</li>
+                        <li class="breadcrumb-item"><a href="<?= base_url('dashboard') ?>">Home</a></li>
+                        <li class="breadcrumb-item"><a href="<?= base_url('task-management') ?>">Tasks</a></li>
+                        <li class="breadcrumb-item active">View</li>
                     </ol>
                 </div>
             </div>
@@ -22,139 +25,125 @@
 
     <section class="content">
         <div class="container-fluid">
-            
-            <!-- Flash Messages -->
+
             <?php if (session()->getFlashdata('success')): ?>
                 <div class="alert alert-success alert-dismissible fade show">
                     <?= session()->getFlashdata('success') ?>
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                </div>
-            <?php endif; ?>
-
-            <?php if (session()->getFlashdata('error')): ?>
-                <div class="alert alert-danger alert-dismissible fade show">
-                    <?= session()->getFlashdata('error') ?>
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
                 </div>
             <?php endif; ?>
 
             <div class="row">
-                <!-- Task Details Card -->
                 <div class="col-md-8">
+                    <!-- Task Details Card -->
                     <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-clipboard-list"></i> Task Information
-                            </h3>
+                        <div class="card-header bg-primary">
+                            <h3 class="card-title"><i class="fas fa-tasks"></i> Task Information</h3>
                             <div class="card-tools">
-                                <?php
-                                $statusClass = [
-                                    'Pending' => 'warning',
-                                    'In Progress' => 'info',
-                                    'Completed' => 'success',
-                                    'Review' => 'primary'
-                                ];
-                                $class = $statusClass[$task['status']] ?? 'secondary';
-                                ?>
-                                <span class="badge badge-<?= $class ?> badge-lg">
-                                    <?= esc($task['status']) ?>
-                                </span>
+                                <a href="<?= base_url('task-management/edit/' . $task['id']) ?>" class="btn btn-tool text-white">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
                             </div>
                         </div>
                         <div class="card-body">
                             <dl class="row">
-                                <dt class="col-sm-3">Task ID:</dt>
-                                <dd class="col-sm-9">#<?= esc($task['id']) ?></dd>
-
-                                <dt class="col-sm-3">Title:</dt>
+                                <dt class="col-sm-3">Task Title:</dt>
                                 <dd class="col-sm-9"><strong><?= esc($task['title']) ?></strong></dd>
 
                                 <dt class="col-sm-3">Description:</dt>
                                 <dd class="col-sm-9"><?= nl2br(esc($task['description'])) ?></dd>
 
-                                <dt class="col-sm-3">Client:</dt>
+                                <?php if (!empty($task['admin_remarks'])): ?>
+                                    <dt class="col-sm-3">Admin Notes:</dt>
+                                    <dd class="col-sm-9">
+                                        <div class="alert alert-info">
+                                            <?= nl2br(esc($task['admin_remarks'])) ?>
+                                        </div>
+                                    </dd>
+                                <?php endif; ?>
+
+                                <?php if (!empty($task['employee_remarks'])): ?>
+                                    <dt class="col-sm-3">Employee Notes:</dt>
+                                    <dd class="col-sm-9">
+                                        <div class="alert alert-warning">
+                                            <?= nl2br(esc($task['employee_remarks'])) ?>
+                                        </div>
+                                    </dd>
+                                <?php endif; ?>
+
+                                <dt class="col-sm-3">Priority:</dt>
                                 <dd class="col-sm-9">
-                                    <?php if (!empty($task['client_name'])): ?>
-                                        <?= esc($task['client_name']) ?>
-                                        <?php if (!empty($task['client_email'])): ?>
-                                            <br><small class="text-muted"><?= esc($task['client_email']) ?></small>
-                                        <?php endif; ?>
-                                    <?php else: ?>
-                                        <span class="text-muted">Not assigned to any client</span>
-                                    <?php endif; ?>
+                                    <?php
+                                    $priorityBadge = [
+                                        'Low' => 'secondary',
+                                        'Medium' => 'info',
+                                        'High' => 'warning',
+                                        'Urgent' => 'danger'
+                                    ];
+                                    $badge = $priorityBadge[$task['priority']] ?? 'secondary';
+                                    ?>
+                                    <span class="badge badge-<?= $badge ?> badge-lg"><?= esc($task['priority']) ?></span>
                                 </dd>
 
-                                <dt class="col-sm-3">Submitted At:</dt>
+                                <dt class="col-sm-3">Status:</dt>
                                 <dd class="col-sm-9">
-                                    <?= date('F d, Y', strtotime($task['submitted_at'])) ?> 
-                                    at <?= date('h:i A', strtotime($task['submitted_at'])) ?>
+                                    <?php
+                                    $statusBadge = [
+                                        'Pending' => 'warning',
+                                        'In Progress' => 'info',
+                                        'Completed' => 'success',
+                                        'Review' => 'primary'
+                                    ];
+                                    $badge = $statusBadge[$task['status']] ?? 'secondary';
+                                    ?>
+                                    <span class="badge badge-<?= $badge ?> badge-lg"><?= esc($task['status']) ?></span>
                                 </dd>
 
-                                <dt class="col-sm-3">Last Updated:</dt>
-                                <dd class="col-sm-9">
-                                    <?= date('F d, Y', strtotime($task['updated_at'])) ?> 
-                                    at <?= date('h:i A', strtotime($task['updated_at'])) ?>
-                                </dd>
+                                <?php if (!empty($task['due_date'])): ?>
+                                    <dt class="col-sm-3">Due Date:</dt>
+                                    <dd class="col-sm-9"><?= date('M d, Y', strtotime($task['due_date'])) ?></dd>
+                                <?php endif; ?>
+
+                                <dt class="col-sm-3">Created At:</dt>
+                                <dd class="col-sm-9"><?= date('M d, Y h:i A', strtotime($task['created_at'])) ?></dd>
+
+                                <?php if (!empty($task['submitted_at'])): ?>
+                                    <dt class="col-sm-3">Submitted At:</dt>
+                                    <dd class="col-sm-9"><?= date('M d, Y h:i A', strtotime($task['submitted_at'])) ?></dd>
+                                <?php endif; ?>
                             </dl>
+                        </div>
+                    </div>
 
-                            <!-- Attached Files Section -->
-                            <?php if (!empty($task['files_upload'])): ?>
-                                <?php $files = json_decode($task['files_upload'], true); ?>
-                                <?php if (is_array($files) && !empty($files)): ?>
-                                    <hr>
-                                    <h5><i class="fas fa-paperclip"></i> Attached Files (<?= count($files) ?>)</h5>
-                                    <div class="row mt-3">
-                                        <?php foreach ($files as $index => $file): ?>
+                    <!-- Admin Reference Files Card -->
+                    <?php if (!empty($task['admin_files'])): ?>
+                        <?php $adminFiles = json_decode($task['admin_files'], true); ?>
+                        <?php if (is_array($adminFiles) && !empty($adminFiles)): ?>
+                            <div class="card card-info">
+                                <div class="card-header">
+                                    <h3 class="card-title"><i class="fas fa-folder-open"></i> Reference Files (Admin Uploaded)</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <?php foreach ($adminFiles as $file): ?>
                                             <div class="col-md-4 mb-3">
                                                 <div class="card">
-                                                    <div class="card-body p-2 text-center">
-                                                        <?php 
-                                                        $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
-                                                        $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
-                                                        $isImage = in_array(strtolower($fileExtension), $imageExtensions);
+                                                    <div class="card-body text-center p-2">
+                                                        <?php
+                                                        $fileExt = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                                                        $imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
                                                         ?>
-                                                        
-                                                        <?php if ($isImage): ?>
-                                                            <!-- Image Preview -->
-                                                            <a href="<?= base_url('uploads/task_files/' . $file) ?>" target="_blank">
-                                                                <img src="<?= base_url('uploads/task_files/' . $file) ?>" 
-                                                                     class="img-fluid rounded mb-2" 
-                                                                     style="max-height: 150px; object-fit: cover;"
-                                                                     alt="<?= esc($file) ?>">
-                                                            </a>
+                                                        <?php if (in_array($fileExt, $imageExts)): ?>
+                                                            <img src="<?= base_url('uploads/task_files/' . $file) ?>" 
+                                                                 class="img-fluid mb-2" 
+                                                                 style="max-height: 100px;">
                                                         <?php else: ?>
-                                                            <!-- File Icon -->
-                                                            <div class="mb-2">
-                                                                <?php
-                                                                $iconClass = 'fa-file';
-                                                                $iconColor = 'text-secondary';
-                                                                
-                                                                if (in_array(strtolower($fileExtension), ['pdf'])) {
-                                                                    $iconClass = 'fa-file-pdf';
-                                                                    $iconColor = 'text-danger';
-                                                                } elseif (in_array(strtolower($fileExtension), ['doc', 'docx'])) {
-                                                                    $iconClass = 'fa-file-word';
-                                                                    $iconColor = 'text-primary';
-                                                                } elseif (in_array(strtolower($fileExtension), ['xls', 'xlsx'])) {
-                                                                    $iconClass = 'fa-file-excel';
-                                                                    $iconColor = 'text-success';
-                                                                } elseif (in_array(strtolower($fileExtension), ['zip', 'rar', '7z'])) {
-                                                                    $iconClass = 'fa-file-archive';
-                                                                    $iconColor = 'text-warning';
-                                                                }
-                                                                ?>
-                                                                <i class="fas <?= $iconClass ?> fa-4x <?= $iconColor ?>"></i>
-                                                            </div>
+                                                            <i class="fas fa-file fa-3x text-info mb-2"></i>
                                                         <?php endif; ?>
-                                                        
-                                                        <p class="mb-1 text-truncate" style="font-size: 12px;" title="<?= esc($file) ?>">
-                                                            <?= esc($file) ?>
-                                                        </p>
-                                                        
+                                                        <p class="mb-1 text-truncate small"><?= esc($file) ?></p>
                                                         <a href="<?= base_url('uploads/task_files/' . $file) ?>" 
-                                                           class="btn btn-sm btn-primary btn-block" 
-                                                           target="_blank"
-                                                           download>
+                                                           class="btn btn-sm btn-info btn-block" 
+                                                           target="_blank">
                                                             <i class="fas fa-download"></i> Download
                                                         </a>
                                                     </div>
@@ -162,163 +151,103 @@
                                             </div>
                                         <?php endforeach; ?>
                                     </div>
-                                <?php endif; ?>
-                            <?php else: ?>
-                                <hr>
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle"></i> No files attached to this task.
                                 </div>
-                            <?php endif; ?>
-                        </div>
-                        <div class="card-footer">
-                            <a href="<?= base_url('task-management') ?>" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left"></i> Back to Tasks
-                            </a>
-                            
-                            <?php if (session()->get('role_id') == 1): ?>
-                                <button type="button" 
-                                        class="btn btn-warning" 
-                                        data-toggle="modal" 
-                                        data-target="#statusModal">
-                                    <i class="fas fa-edit"></i> Update Status
-                                </button>
-                                
-                                <button type="button" 
-                                        class="btn btn-danger" 
-                                        onclick="confirmDelete()">
-                                    <i class="fas fa-trash"></i> Delete Task
-                                </button>
+                            </div>
+                        <?php endif; ?>
+                    <?php endif; ?>
 
-                                <!-- Hidden Delete Form -->
-                                <form id="deleteForm" 
-                                      action="<?= base_url('task-management/delete/' . $task['id']) ?>" 
-                                      method="post" 
-                                      style="display:none;">
-                                    <?= csrf_field() ?>
-                                </form>
-                            <?php endif; ?>
-                        </div>
-                    </div>
+                    <!-- Employee Work Files Card -->
+                    <?php if (!empty($task['employee_files'])): ?>
+                        <?php $employeeFiles = json_decode($task['employee_files'], true); ?>
+                        <?php if (is_array($employeeFiles) && !empty($employeeFiles)): ?>
+                            <div class="card card-success">
+                                <div class="card-header">
+                                    <h3 class="card-title"><i class="fas fa-paperclip"></i> Work Files (Employee Uploaded)</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <?php foreach ($employeeFiles as $file): ?>
+                                            <div class="col-md-4 mb-3">
+                                                <div class="card">
+                                                    <div class="card-body text-center p-2">
+                                                        <?php
+                                                        $fileExt = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                                                        $imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+                                                        ?>
+                                                        <?php if (in_array($fileExt, $imageExts)): ?>
+                                                            <img src="<?= base_url('uploads/task_files/' . $file) ?>" 
+                                                                 class="img-fluid mb-2" 
+                                                                 style="max-height: 100px;">
+                                                        <?php else: ?>
+                                                            <i class="fas fa-file fa-3x text-success mb-2"></i>
+                                                        <?php endif; ?>
+                                                        <p class="mb-1 text-truncate small"><?= esc($file) ?></p>
+                                                        <a href="<?= base_url('uploads/task_files/' . $file) ?>" 
+                                                           class="btn btn-sm btn-success btn-block" 
+                                                           target="_blank">
+                                                            <i class="fas fa-download"></i> Download
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </div>
 
-                <!-- Employee Info Card -->
                 <div class="col-md-4">
-                    <div class="card card-primary card-outline">
+                    <!-- Employee Info Card -->
+                    <div class="card card-success card-outline">
                         <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-user"></i> Employee Information
-                            </h3>
-                        </div>
-                        <div class="card-body box-profile">
-                            <div class="text-center">
-                                <img class="profile-user-img img-fluid img-circle" 
-                                     src="https://ui-avatars.com/api/?name=<?= urlencode($task['emp_first_name'] . ' ' . $task['emp_last_name']) ?>&size=128&background=007bff&color=fff" 
-                                     alt="Employee">
-                            </div>
-
-                            <h3 class="profile-username text-center mt-2">
-                                <?= esc($task['emp_first_name'] . ' ' . $task['emp_last_name']) ?>
-                            </h3>
-
-                            <ul class="list-group list-group-unbordered">
-                                <li class="list-group-item">
-                                    <b><i class="fas fa-envelope mr-2"></i>Email</b>
-                                    <p class="text-muted mb-0"><?= esc($task['emp_email'] ?? 'N/A') ?></p>
-                                </li>
-                                <li class="list-group-item">
-                                    <b><i class="fas fa-phone mr-2"></i>Phone</b>
-                                    <p class="text-muted mb-0"><?= esc($task['emp_phone'] ?? 'N/A') ?></p>
-                                </li>
-                                <li class="list-group-item">
-                                    <b><i class="fas fa-building mr-2"></i>Department</b>
-                                    <p class="text-muted mb-0"><?= esc($task['department_name'] ?? 'N/A') ?></p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Quick Stats Card -->
-                    <div class="card card-info card-outline">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-chart-bar"></i> Task Statistics
-                            </h3>
+                            <h3 class="card-title"><i class="fas fa-user"></i> Assigned To</h3>
                         </div>
                         <div class="card-body">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-info"><i class="fas fa-paperclip"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Attached Files</span>
-                                    <span class="info-box-number">
-                                        <?php
-                                        $fileCount = 0;
-                                        if (!empty($task['files_upload'])) {
-                                            $files = json_decode($task['files_upload'], true);
-                                            $fileCount = is_array($files) ? count($files) : 0;
-                                        }
-                                        echo $fileCount;
-                                        ?>
-                                    </span>
-                                </div>
-                            </div>
+                            <p><strong>Name:</strong> <?= esc($task['emp_first_name'] . ' ' . $task['emp_last_name']) ?></p>
+                            <p><strong>Email:</strong> <?= esc($task['emp_email']) ?></p>
+                            <p><strong>Phone:</strong> <?= esc($task['emp_phone']) ?></p>
+                            <p><strong>Department:</strong> <?= esc($task['department_name'] ?? 'N/A') ?></p>
                         </div>
                     </div>
+
+                    <!-- Client Info Card -->
+                    <?php if (!empty($task['client_name'])): ?>
+                        <div class="card card-info card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-handshake"></i> Client</h3>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Name:</strong> <?= esc($task['client_name']) ?></p>
+                                <?php if (!empty($task['client_email'])): ?>
+                                    <p><strong>Email:</strong> <?= esc($task['client_email']) ?></p>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Assigned By Card -->
+                    <?php if (!empty($task['assigned_by_name'])): ?>
+                        <div class="card card-warning card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-user-tie"></i> Assigned By</h3>
+                            </div>
+                            <div class="card-body">
+                                <p><?= esc($task['assigned_by_name'] . ' ' . $task['assigned_by_lastname']) ?></p>
+                            </div>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
+
+            <!-- Back Button -->
+            <a href="<?= base_url('task-management') ?>" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Tasks
+            </a>
 
         </div>
     </section>
 </div>
-
-<!-- Status Update Modal (Admin Only) -->
-<?php if (session()->get('role_id') == 1): ?>
-    <div class="modal fade" id="statusModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Update Task Status</h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
-                <form action="<?= base_url('task-management/update-status/' . $task['id']) ?>" method="post">
-                    <?= csrf_field() ?>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>Current Status: 
-                                <span class="badge badge-<?= $class ?>">
-                                    <?= esc($task['status']) ?>
-                                </span>
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <label>New Status <span class="text-danger">*</span></label>
-                            <select class="form-control" name="status" required>
-                                <option value="Pending" <?= $task['status'] == 'Pending' ? 'selected' : '' ?>>Pending</option>
-                                <option value="In Progress" <?= $task['status'] == 'In Progress' ? 'selected' : '' ?>>In Progress</option>
-                                <option value="Completed" <?= $task['status'] == 'Completed' ? 'selected' : '' ?>>Completed</option>
-                                <option value="Review" <?= $task['status'] == 'Review' ? 'selected' : '' ?>>Review</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Update Status
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-<?php endif; ?>
-
-<script>
-function confirmDelete() {
-    if (confirm('Are you sure you want to delete this task? All associated files will also be deleted. This action cannot be undone.')) {
-        document.getElementById('deleteForm').submit();
-    }
-}
-</script>
 
 <?= $this->endSection() ?>
