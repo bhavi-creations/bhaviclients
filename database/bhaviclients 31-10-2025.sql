@@ -692,7 +692,7 @@ INSERT INTO `users` (`id`, `role_id`, `first_name`, `last_name`, `email`, `usern
 --
 DROP TABLE IF EXISTS `employee_current_salary`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `employee_current_salary`  AS SELECT `e`.`id` AS `employee_id`, `e`.`employee_code` AS `employee_code`, `e`.`first_name` AS `first_name`, `e`.`last_name` AS `last_name`, `e`.`email` AS `email`, `sh`.`salary_amount` AS `current_salary`, `sh`.`effective_date` AS `salary_effective_date`, `sh`.`id` AS `salary_history_id` FROM (`employees` `e` left join `employee_salary_history` `sh` on(`e`.`id` = `sh`.`employee_id` and `sh`.`id` = (select `employee_salary_history`.`id` from `employee_salary_history` where `employee_salary_history`.`employee_id` = `e`.`id` order by `employee_salary_history`.`effective_date` desc,`employee_salary_history`.`id` desc limit 1))) ;
+CREATE ALGORITHM=UNDEFINED VIEW `employee_current_salary`  AS SELECT `e`.`id` AS `employee_id`, `e`.`employee_code` AS `employee_code`, `e`.`first_name` AS `first_name`, `e`.`last_name` AS `last_name`, `e`.`email` AS `email`, `sh`.`salary_amount` AS `current_salary`, `sh`.`effective_date` AS `salary_effective_date`, `sh`.`id` AS `salary_history_id` FROM (`employees` `e` left join `employee_salary_history` `sh` on(`e`.`id` = `sh`.`employee_id` and `sh`.`id` = (select `employee_salary_history`.`id` from `employee_salary_history` where `employee_salary_history`.`employee_id` = `e`.`id` order by `employee_salary_history`.`effective_date` desc,`employee_salary_history`.`id` desc limit 1))) ;
 
 --
 -- Indexes for dumped tables
