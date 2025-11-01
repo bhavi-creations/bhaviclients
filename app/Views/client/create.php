@@ -1,4 +1,4 @@
-<?php 
+<?php
 // C:\xampp\htdocs\bhaviclients\app\Views\client\create.php 
 ?>
 <!-- Load Layout Template -->
@@ -64,7 +64,7 @@
                         <div class="card-header border-0">
                             <h3 class="card-title">Client Details & User Credentials</h3>
                         </div>
-                        
+
                         <?= form_open('client/store') ?>
                         <div class="card-body">
 
@@ -141,29 +141,38 @@
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <!-- Manager Name -->
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="manager_name">Manager Name</label>
-                                        <input type="text" class="form-control <?= $validation->hasError('manager_name') ? 'is-invalid' : '' ?>" id="manager_name" name="manager_name" value="<?= old('manager_name') ?>" placeholder="Enter manager name (optional)">
-                                        <?php if ($validation->hasError('manager_name')): ?>
-                                            <div class="invalid-feedback"><?= $validation->getError('manager_name') ?></div>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
 
-                                <!-- Manager Phone -->
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="manager_phone">Manager Phone</label>
-                                        <input type="text" class="form-control <?= $validation->hasError('manager_phone') ? 'is-invalid' : '' ?>" id="manager_phone" name="manager_phone" value="<?= old('manager_phone') ?>" placeholder="Enter manager phone (optional)">
-                                        <?php if ($validation->hasError('manager_phone')): ?>
-                                            <div class="invalid-feedback"><?= $validation->getError('manager_phone') ?></div>
-                                        <?php endif; ?>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="manager_name">Manager Name <span class="text-danger">*</span></label>
+                                            <input type="text"
+                                                class="form-control <?= $validation->hasError('manager_name') ? 'is-invalid' : '' ?>"
+                                                id="manager_name"
+                                                name="manager_name"
+                                                value="<?= old('manager_name') ?>"
+                                                placeholder="Enter manager name "
+                                                required> <?php if ($validation->hasError('manager_name')): ?>
+                                                <div class="invalid-feedback"><?= $validation->getError('manager_name') ?></div>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="manager_phone">Manager Phone <span class="text-danger">*</span></label>
+                                            <input type="text"
+                                                class="form-control <?= $validation->hasError('manager_phone') ? 'is-invalid' : '' ?>"
+                                                id="manager_phone"
+                                                name="manager_phone"
+                                                value="<?= old('manager_phone') ?>"
+                                                placeholder="Enter manager phone "
+                                                required> <?php if ($validation->hasError('manager_phone')): ?>
+                                                <div class="invalid-feedback"><?= $validation->getError('manager_phone') ?></div>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
                             <div class="row">
                                 <!-- Started Date -->
