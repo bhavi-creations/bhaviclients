@@ -4,7 +4,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title><?= isset($title) ? $title : ' CI4' ?></title>
-    <link rel="icon" href="<?= base_url('public/assets/img/AdminLTELogo.png') ?>" type="image/jpeg">
+    <link rel="icon" href="<?= base_url('public/assets/img/bhavi_logo/title_logo.webp ') ?>" type="image/jpeg">
+  
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="Main Header Component | AdminLTE 4" />
     <meta name="author" content="ColorlibHQ" />
