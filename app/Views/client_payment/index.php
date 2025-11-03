@@ -1,4 +1,4 @@
-<?php 
+<?php
 // C:\xampp\htdocs\bhaviclients\app\Views\client_payment\index.php 
 ?>
 <?= $this->extend('layouts/main') ?>
@@ -100,18 +100,18 @@
                                 <i class="fas fa-edit"></i> Update Project Value
                             </h5>
                             <?= form_open('client-payment/update-project-value/' . $client['id']) ?>
-                                <div class="form-group">
-                                    <label>Project Value (₹)</label>
-                                    <input type="number" 
-                                           name="total_project_value" 
-                                           class="form-control" 
-                                           step="0.01" 
-                                           value="<?= $summary['total_project_value'] ?>" 
-                                           required>
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-block">
-                                    <i class="fas fa-save"></i> Update Value
-                                </button>
+                            <div class="form-group">
+                                <label>Project Value (₹)</label>
+                                <input type="number"
+                                    name="total_project_value"
+                                    class="form-control"
+                                    step="0.01"
+                                    value="<?= $summary['total_project_value'] ?>"
+                                    required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="fas fa-save"></i> Update Value
+                            </button>
                             <?= form_close() ?>
                         </div>
                     </div>
@@ -159,24 +159,24 @@
                                                     <td><?= esc($payment['payment_method'] ?? 'N/A') ?></td>
                                                     <td><small><?= esc($payment['transaction_reference'] ?? '-') ?></small></td>
                                                     <td>
-                                                        <button type="button" 
-                                                                class="btn btn-info btn-sm" 
-                                                                data-toggle="modal" 
-                                                                data-target="#viewPaymentModal<?= $payment['id'] ?>"
-                                                                title="View Details">
+                                                        <button type="button"
+                                                            class="btn btn-info btn-sm"
+                                                            data-toggle="modal"
+                                                            data-target="#viewPaymentModal<?= $payment['id'] ?>"
+                                                            title="View Details">
                                                             <i class="fas fa-eye"></i>
                                                         </button>
-                                                        <button type="button" 
-                                                                class="btn btn-warning btn-sm" 
-                                                                data-toggle="modal" 
-                                                                data-target="#editPaymentModal<?= $payment['id'] ?>"
-                                                                title="Edit">
+                                                        <button type="button"
+                                                            class="btn btn-warning btn-sm"
+                                                            data-toggle="modal"
+                                                            data-target="#editPaymentModal<?= $payment['id'] ?>"
+                                                            title="Edit">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
                                                         <?= form_open('client-payment/delete-payment/' . $payment['id'], ['class' => 'd-inline', 'onsubmit' => "return confirm('Delete this payment?')"]) ?>
-                                                            <button type="submit" class="btn btn-danger btn-sm" title="Delete">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
+                                                        <button type="submit" class="btn btn-danger btn-sm" title="Delete">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
                                                         <?= form_close() ?>
                                                     </td>
                                                 </tr>
@@ -275,7 +275,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
+
                                             <?php endforeach; ?>
                                         </tbody>
                                     </table>
@@ -326,7 +326,8 @@
                                                             'pending' => 'warning',
                                                             'paid' => 'success',
                                                             'overdue' => 'danger',
-                                                            'cancelled' => 'secondary'
+                                                            'cancelled' => 'secondary',
+                                                            'received' => 'info'
                                                         ];
                                                         $badgeColor = $statusColors[$schedule['status']] ?? 'secondary';
                                                         ?>
@@ -335,25 +336,64 @@
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <?php if ($schedule['status'] != 'paid'): ?>
-                                                            <button type="button" 
-                                                                    class="btn btn-warning btn-sm" 
-                                                                    data-toggle="modal" 
-                                                                    data-target="#editScheduleModal<?= $schedule['id'] ?>"
-                                                                    title="Edit">
-                                                                <i class="fas fa-edit"></i>
-                                                            </button>
-                                                            <?= form_open('client-payment/delete-schedule/' . $schedule['id'], ['class' => 'd-inline', 'onsubmit' => "return confirm('Delete this schedule?')"]) ?>
-                                                                <button type="submit" class="btn btn-danger btn-sm">
-                                                                    <i class="fas fa-trash"></i>
-                                                                </button>
-                                                            <?= form_close() ?>
-                                                        <?php endif; ?>
+                                                        <!-- View Button -->
+                                                        <button type="button"
+                                                            class="btn btn-info btn-sm"
+                                                            data-toggle="modal"
+                                                            data-target="#viewScheduleModal<?= $schedule['id'] ?>"
+                                                            title="View">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+
+                                                        <!-- Edit Button - Always visible -->
+                                                        <button type="button"
+                                                            class="btn btn-warning btn-sm"
+                                                            data-toggle="modal"
+                                                            data-target="#editScheduleModal<?= $schedule['id'] ?>"
+                                                            title="Edit">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+
+                                                        <!-- Delete Button - Always visible -->
+                                                        <?= form_open('client-payment/delete-schedule/' . $schedule['id'], ['class' => 'd-inline', 'onsubmit' => "return confirm('Delete this schedule? This will also delete any linked payment.')"]) ?>
+                                                        <button type="submit" class="btn btn-danger btn-sm">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                        <?= form_close() ?>
                                                     </td>
                                                 </tr>
 
-                                                <!-- Edit Schedule Modal -->
-                                                <?php if ($schedule['status'] != 'paid'): ?>
+                                                <!-- View Schedule Modal -->
+                                                <div class="modal fade" id="viewScheduleModal<?= $schedule['id'] ?>">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header bg-info">
+                                                                <h4 class="modal-title text-white">Schedule Details</h4>
+                                                                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p><strong>Expected Date:</strong> <?= date('F d, Y', strtotime($schedule['expected_date'])) ?></p>
+                                                                <p><strong>Expected Amount:</strong> ₹<?= number_format($schedule['expected_amount'], 2) ?></p>
+                                                                <p><strong>Status:</strong>
+                                                                    <span class="badge badge-<?= $badgeColor ?>">
+                                                                        <?= ucfirst($schedule['status']) ?>
+                                                                    </span>
+                                                                </p>
+                                                                <?php if ($schedule['status'] === 'received' && !empty($schedule['received_date'])): ?>
+                                                                    <p><strong>Received Date:</strong> <?= date('F d, Y', strtotime($schedule['received_date'])) ?></p>
+                                                                <?php endif; ?>
+                                                                <?php if (!empty($schedule['remarks'])): ?>
+                                                                    <p><strong>Remarks:</strong><br><?= nl2br(esc($schedule['remarks'])) ?></p>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Edit Schedule Modal - Always available -->
                                                 <div class="modal fade" id="editScheduleModal<?= $schedule['id'] ?>">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
@@ -375,17 +415,31 @@
 
                                                                 <div class="form-group">
                                                                     <label>Status <span class="text-danger">*</span></label>
-                                                                    <select name="status" class="form-control" required>
+                                                                    <select name="status" id="scheduleStatus<?= $schedule['id'] ?>" class="form-control" required onchange="toggleReceivedDate(<?= $schedule['id'] ?>)">
                                                                         <option value="pending" <?= $schedule['status'] == 'pending' ? 'selected' : '' ?>>Pending</option>
+                                                                        <option value="received" <?= $schedule['status'] == 'received' ? 'selected' : '' ?>>Received</option>
                                                                         <option value="overdue" <?= $schedule['status'] == 'overdue' ? 'selected' : '' ?>>Overdue</option>
                                                                         <option value="cancelled" <?= $schedule['status'] == 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
                                                                     </select>
+                                                                </div>
+
+                                                                <!-- Received Date Field - Shows when status is "Received" -->
+                                                                <div class="form-group" id="receivedDateField<?= $schedule['id'] ?>" style="display: <?= $schedule['status'] == 'received' ? 'block' : 'none' ?>;">
+                                                                    <label>Received Date <span class="text-danger">*</span></label>
+                                                                    <input type="date" name="received_date" class="form-control" value="<?= $schedule['received_date'] ?? date('Y-m-d') ?>">
                                                                 </div>
 
                                                                 <div class="form-group">
                                                                     <label>Remarks</label>
                                                                     <textarea name="remarks" class="form-control" rows="2"><?= esc($schedule['remarks'] ?? '') ?></textarea>
                                                                 </div>
+
+                                                                <?php if ($schedule['status'] === 'received'): ?>
+                                                                    <div class="alert alert-warning">
+                                                                        <i class="fas fa-exclamation-triangle"></i>
+                                                                        <strong>Note:</strong> Changing status from "Received" will automatically delete the linked payment record.
+                                                                    </div>
+                                                                <?php endif; ?>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="submit" class="btn btn-warning">
@@ -397,10 +451,10 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <?php endif; ?>
 
                                             <?php endforeach; ?>
                                         </tbody>
+
                                     </table>
                                 </div>
                             <?php else: ?>
@@ -547,4 +601,21 @@
     </div>
 </div>
 
+<?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
+<script>
+    function toggleReceivedDate(scheduleId) {
+        const statusSelect = document.getElementById('scheduleStatus' + scheduleId);
+        const receivedDateField = document.getElementById('receivedDateField' + scheduleId);
+
+        if (statusSelect.value === 'received') {
+            receivedDateField.style.display = 'block';
+            receivedDateField.querySelector('input').setAttribute('required', 'required');
+        } else {
+            receivedDateField.style.display = 'none';
+            receivedDateField.querySelector('input').removeAttribute('required');
+        }
+    }
+</script>
 <?= $this->endSection() ?>

@@ -18,7 +18,8 @@ class ClientPaymentScheduleModel extends Model
         'expected_date',
         'status',
         'remarks',
-        'payment_id'
+        'payment_id',
+        'received_date'    // ← MAKE SURE THIS IS HERE
     ];
 
     protected $useTimestamps = true;
@@ -29,9 +30,10 @@ class ClientPaymentScheduleModel extends Model
         'client_id' => 'required|integer',
         'expected_amount' => 'required|decimal|greater_than[0]',
         'expected_date' => 'required',
-        'status' => 'required|in_list[pending,paid,overdue,cancelled]',
+        'status' => 'required|in_list[pending,paid,overdue,cancelled,received]',  // ← MAKE SURE "received" IS HERE
         'remarks' => 'permit_empty',
-        'payment_id' => 'permit_empty|integer'
+        'payment_id' => 'permit_empty|integer',
+        'received_date' => 'permit_empty|valid_date'  // ← MAKE SURE THIS IS HERE
     ];
 
     /**

@@ -332,30 +332,112 @@ class ClientPayment extends Controller
 
         $input = $this->request->getPost();
 
+        // Validation rules
         $rules = [
             'expected_amount' => 'required|decimal|greater_than[0]',
-            'expected_date' => 'required',
-            'status' => 'required|in_list[pending,paid,overdue,cancelled]',
+            'expected_date' => 'required|valid_date',
+            'status' => 'required|in_list[pending,paid,overdue,cancelled,received]',
             'remarks' => 'permit_empty'
         ];
+
+        // If status is "received", make received_date required
+        if (isset($input['status']) && $input['status'] === 'received') {
+            $rules['received_date'] = 'required|valid_date';
+        }
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('error', 'Validation failed: ' . implode(', ', $this->validator->getErrors()));
         }
 
-        $scheduleData = [
-            'expected_amount' => $input['expected_amount'],
-            'expected_date' => $input['expected_date'],
-            'status' => $input['status'],
-            'remarks' => $input['remarks'] ?? null
-        ];
+        $this->db->transStart();
 
-        if ($this->scheduleModel->update($scheduleId, $scheduleData)) {
-            return redirect()->back()->with('message', 'Schedule updated successfully!');
-        } else {
-            return redirect()->back()->withInput()->with('error', 'Failed to update schedule.');
+        try {
+            $oldStatus = $schedule['status'];
+            $newStatus = $input['status'];
+
+            // Prepare schedule update data
+            $scheduleData = [
+                'expected_amount' => $input['expected_amount'],
+                'expected_date' => $input['expected_date'],
+                'status' => $newStatus,
+                'remarks' => $input['remarks'] ?? null
+            ];
+
+            // Handle status change FROM "received" TO something else
+            if ($oldStatus === 'received' && $newStatus !== 'received') {
+                // Delete the auto-created payment
+                if (!empty($schedule['payment_id'])) {
+                    $this->paymentModel->delete($schedule['payment_id']);
+                    $scheduleData['payment_id'] = null;
+                }
+                $scheduleData['received_date'] = null;
+            }
+
+            // Handle status change TO "received"
+            if ($newStatus === 'received') {
+                $scheduleData['received_date'] = $input['received_date'];
+
+                // Create payment only if it doesn't exist
+                if (empty($schedule['payment_id'])) {
+                    $paymentData = [
+                        'client_id' => $schedule['client_id'],
+                        'payment_type' => 'installment',
+                        'amount' => $input['expected_amount'],
+                        'payment_date' => $input['received_date'],
+                        'payment_method' => 'Schedule Payment',
+                        'transaction_reference' => 'Schedule #' . $scheduleId,
+                        'remarks' => 'Auto-created from payment schedule' . (!empty($input['remarks']) ? ': ' . $input['remarks'] : '')
+                    ];
+
+                    $paymentId = $this->paymentModel->insert($paymentData);
+
+                    if (!$paymentId) {
+                        $paymentErrors = $this->paymentModel->errors();
+                        log_message('error', 'Payment insert failed: ' . json_encode($paymentErrors));
+                        throw new \Exception('Failed to create payment record: ' . json_encode($paymentErrors));
+                    }
+
+                    $scheduleData['payment_id'] = $paymentId;
+                }
+            } else {
+                // Clear received_date if status is not "received"
+                $scheduleData['received_date'] = null;
+            }
+
+            // Update schedule
+            $updateResult = $this->scheduleModel->update($scheduleId, $scheduleData);
+
+            if ($updateResult === false) {
+                $scheduleErrors = $this->scheduleModel->errors();
+                log_message('error', 'Schedule update failed: ' . json_encode($scheduleErrors));
+                throw new \Exception('Failed to update schedule: ' . json_encode($scheduleErrors));
+            }
+
+            // Recalculate project summary
+            $this->summaryModel->recalculateTotals($schedule['client_id']);
+
+            $this->db->transComplete();
+
+            if ($this->db->transStatus() === false) {
+                throw new \Exception('Transaction failed.');
+            }
+
+            $successMsg = 'Schedule updated successfully!';
+            if ($newStatus === 'received' && $oldStatus !== 'received') {
+                $successMsg .= ' Payment record created automatically.';
+            } elseif ($oldStatus === 'received' && $newStatus !== 'received') {
+                $successMsg .= ' Payment record deleted automatically.';
+            }
+
+            return redirect()->back()->with('message', $successMsg);
+        } catch (\Exception $e) {
+            $this->db->transRollback();
+            log_message('error', 'Schedule edit error: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Failed to update schedule: ' . $e->getMessage());
         }
     }
+
+
 
     /**
      * Display list of all clients for payment management
