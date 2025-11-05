@@ -408,3 +408,11 @@ $routes->get('notifications/mark-all-read', 'Notifications::markAllAsRead', ['fi
 
 // Holidays (public view for all users)
 $routes->get('holidays-list', 'HolidayManagement::index', ['filter' => 'auth']);
+
+
+
+// FORGOT PASSWORD
+$routes->get('forgot-password', 'ForgotPassword::index');
+$routes->post('forgot-password/send', 'ForgotPassword::sendResetLink');
+$routes->get('reset-password/(:any)', 'ForgotPassword::resetForm/$1');
+$routes->post('reset-password/update', 'ForgotPassword::resetPassword');
