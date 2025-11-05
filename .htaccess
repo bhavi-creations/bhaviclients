@@ -16,10 +16,10 @@ Options -Indexes
     # http://httpd.apache.org/docs/current/mod/mod_rewrite.html#rewritebase
 
     # uncomment this below line in local 
-    RewriteBase /bhaviclients/  
+    # RewriteBase /bhaviclients/  
 
     # uncomment this below line in live server 
-    # RewriteBase /
+    RewriteBase /
  
     # Redirect Trailing Slashes...
     # IMPORTANT: Added condition to skip this redirect for POST requests
