@@ -74,20 +74,30 @@ $routes->group('/', ['filter' => 'auth:1,5'], function ($routes) {
     });
 
 
-
     // CLIENT PAYMENT MANAGEMENT
     $routes->group('client-payment', function ($routes) {
         $routes->get('list', 'ClientPayment::list');
         $routes->get('(:num)', 'ClientPayment::index/$1');
+
+        // Project Management
+        $routes->post('add-project/(:num)', 'ClientPayment::addProject/$1');
         $routes->post('update-project-value/(:num)', 'ClientPayment::updateProjectValue/$1');
+        $routes->post('update-timeline/(:num)', 'ClientPayment::updateTimeline/$1');
+
+        // Payment Management
         $routes->post('add-payment/(:num)', 'ClientPayment::addPayment/$1');
         $routes->post('edit-payment/(:num)', 'ClientPayment::editPayment/$1');
-        $routes->post('delete-payment/(:num)', 'ClientPayment::deletePayment/$1');
+        $routes->get('delete-payment/(:num)', 'ClientPayment::deletePayment/$1');
+        $routes->get('download-payment-file/(:num)', 'ClientPayment::downloadPaymentFile/$1');
+
+        // Schedule Management
         $routes->post('add-schedule/(:num)', 'ClientPayment::addSchedule/$1');
         $routes->post('edit-schedule/(:num)', 'ClientPayment::editSchedule/$1');
-        $routes->post('delete-schedule/(:num)', 'ClientPayment::deleteSchedule/$1');
+        $routes->get('delete-schedule/(:num)', 'ClientPayment::deleteSchedule/$1');
+        $routes->get('download-schedule-file/(:num)', 'ClientPayment::downloadScheduleFile/$1');
         $routes->post('update-schedule-status/(:num)', 'ClientPayment::updateScheduleStatus/$1');
     });
+
 
 
     // ROLES
@@ -274,6 +284,13 @@ $routes->group('/', ['filter' => 'auth:3,4'], function ($routes) {
     // CLIENT WEEKLY SCHEDULE VIEW
     $routes->get('my-weekly-schedule', 'ClientDashboard::myWeeklySchedule');
     $routes->get('view-weekly-schedule/(:num)', 'ClientDashboard::viewWeeklySchedule/$1');
+
+    // CLIENT PAYMENT VIEW (Read-Only for Clients - Role ID 3)
+    $routes->group('my-payments', function ($routes) {
+        $routes->get('/', 'ClientPaymentView::index');
+        $routes->get('download-payment-file/(:num)', 'ClientPaymentView::downloadPaymentFile/$1');
+        $routes->get('download-schedule-file/(:num)', 'ClientPaymentView::downloadScheduleFile/$1');
+    });
 });
 
 // 6. CLIENT UPLOADS (ALL LOGGED-IN ROLES, UI/SECURITY IN CONTROLLER)

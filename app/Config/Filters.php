@@ -31,7 +31,7 @@ class Filters extends BaseFilters
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
         // Authentication filter for all users
-        'auth'          => \App\Filters\AuthFilter::class, 
+        'auth'          => \App\Filters\AuthFilter::class,
     ];
 
     /**
@@ -84,7 +84,11 @@ class Filters extends BaseFilters
      */
     public array $filters = [
         // 1. General Authentication (Requires any user to be logged in)
-        'auth' => ['before' => ['dashboard']],
+        'auth' => ['before' => [
+            'dashboard',
+            'my-payments',       // ADD THIS - Allow clients to access their payments
+            'my-payments/*'      // ADD THIS - Allow all payment sub-routes
+        ]],
 
         // 2. Role-Based Authorization (Requires the 'admin' role)
         // FIX: Use the defined alias 'auth' with the argument ':admin'

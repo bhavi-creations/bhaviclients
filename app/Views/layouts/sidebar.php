@@ -318,7 +318,16 @@
                                 <p>Project Details</p>
                             </a>
                         </li>
+
+                        <!-- NEW: PAYMENT INFORMATION -->
+                        <li class="nav-item">
+                            <a href="<?= base_url('my-payments') ?>" class="nav-link <?= url_is('my-payments*') ? 'active' : '' ?>">
+                                <i class="nav-icon fas fa-rupee-sign"></i>
+                                <p>Payment Information</p>
+                            </a>
+                        </li>
                     <?php endif; ?>
+
                 <?php endif; ?>
 
 
