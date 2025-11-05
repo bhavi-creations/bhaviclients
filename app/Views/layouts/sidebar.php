@@ -157,6 +157,15 @@
                         </a>
                     </li>
 
+
+                    <!-- Holiday Management -->
+                    <li class="nav-item">
+                        <a href="<?= base_url('holidays') ?>" class="nav-link <?= url_is('holidays*') ? 'active' : '' ?>">
+                            <i class="nav-icon fas fa-calendar-day"></i>
+                            <p>Holiday Management</p>
+                        </a>
+                    </li>
+
                     <!-- 9. Company Assets (Dropdown Menu) -->
                     <!-- <?php
                             $isCompanyAssetsActive = url_is('department*') || url_is('roles*') || url_is('user-management*');
@@ -317,6 +326,15 @@
                             <p>Apply for Leave</p>
                         </a>
                     </li>
+
+
+                    <!-- View Holidays -->
+                    <li class="nav-item">
+                        <a href="<?= base_url('holidays-list') ?>" class="nav-link <?= url_is('holidays-list*') ? 'active' : '' ?>">
+                            <i class="nav-icon fas fa-calendar-day"></i>
+                            <p>Holidays</p>
+                        </a>
+                    </li>
                 <?php endif; ?>
 
                 <!-- CLIENT + CLIENT MANAGER -->
@@ -355,6 +373,13 @@
                         <a href="<?= base_url('upload-files') ?>" class="nav-link <?= url_is('upload-files*') ? 'active' : '' ?>">
                             <i class="nav-icon fas fa-cloud-upload-alt"></i>
                             <p>Upload Files</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="<?= base_url('holidays-list') ?>" class="nav-link <?= url_is('holidays-list*') ? 'active' : '' ?>">
+                            <i class="nav-icon fas fa-calendar-day"></i>
+                            <p>Company Holidays</p>
                         </a>
                     </li>
 

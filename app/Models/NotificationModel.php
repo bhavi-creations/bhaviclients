@@ -15,6 +15,8 @@ class NotificationModel extends Model
     protected $allowedFields = [
         'user_id',
         'type',
+        'related_id',      // NEW
+        'related_type',    // NEW
         'title',
         'message',
         'link',
@@ -31,10 +33,10 @@ class NotificationModel extends Model
     public function getUnreadNotifications($userId, $limit = 10)
     {
         return $this->where('user_id', $userId)
-                    ->where('is_read', 0)
-                    ->orderBy('created_at', 'DESC')
-                    ->limit($limit)
-                    ->findAll();
+            ->where('is_read', 0)
+            ->orderBy('created_at', 'DESC')
+            ->limit($limit)
+            ->findAll();
     }
 
     /**
@@ -43,8 +45,8 @@ class NotificationModel extends Model
     public function getUnreadCount($userId)
     {
         return $this->where('user_id', $userId)
-                    ->where('is_read', 0)
-                    ->countAllResults();
+            ->where('is_read', 0)
+            ->countAllResults();
     }
 
     /**
@@ -61,8 +63,8 @@ class NotificationModel extends Model
     public function markAllAsRead($userId)
     {
         return $this->where('user_id', $userId)
-                    ->set('is_read', 1)
-                    ->update();
+            ->set('is_read', 1)
+            ->update();
     }
 
     /**
@@ -101,25 +103,28 @@ class NotificationModel extends Model
         ]);
     }
 
+
     /**
      * Create holiday notification for all employees and clients
      */
-    public function notifyHoliday($holidayName, $holidayDate)
+    public function notifyHoliday($holidayId, $holidayName, $holidayDate)
     {
         $db = \Config\Database::connect();
         // Get all employees, clients, and client managers
         $users = $db->table('users')
-                   ->whereIn('role_id', [2, 3, 4])
-                   ->get()
-                   ->getResultArray();
+            ->whereIn('role_id', [2, 3, 4])
+            ->get()
+            ->getResultArray();
 
         foreach ($users as $user) {
             $this->insert([
                 'user_id' => $user['id'],
                 'type' => 'holiday_added',
+                'related_id' => $holidayId,
+                'related_type' => 'holiday',
                 'title' => 'New Holiday Announced',
                 'message' => $holidayName . ' on ' . date('d M Y', strtotime($holidayDate)),
-                'link' => 'holidays'
+                'link' => 'holidays-list'
             ]);
         }
     }

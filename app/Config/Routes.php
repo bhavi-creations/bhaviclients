@@ -19,6 +19,23 @@ $routes->get('dashboard', 'Dashboard::index', ['filter' => 'auth']);
 
 // 3. ADMIN + ADMIN MANAGER (role_id = 1, 5) - FULL ACCESS
 $routes->group('/', ['filter' => 'auth:1,5'], function ($routes) {
+
+
+
+    // HOLIDAY MANAGEMENT (Admins and Managers)
+    $routes->group('holidays', ['filter' => 'auth:1,5'], function ($routes) {
+        $routes->get('', 'HolidayManagement::index');
+        $routes->get('create', 'HolidayManagement::create');
+        $routes->post('store', 'HolidayManagement::store');
+        $routes->get('edit/(:num)', 'HolidayManagement::edit/$1');
+        $routes->post('update/(:num)', 'HolidayManagement::update/$1');
+        $routes->get('delete/(:num)', 'HolidayManagement::delete/$1');
+    });
+
+
+
+
+
     // DEPARTMENTS
     $routes->group('department', function ($routes) {
         $routes->get('', 'Department::index');
@@ -383,3 +400,11 @@ $routes->get('client-maintenance', 'Maintenance::clientView', ['filter' => 'auth
 $routes->get('notifications', 'Notifications::index', ['filter' => 'auth']);
 $routes->get('notifications/mark-read/(:num)', 'Notifications::markAsRead/$1', ['filter' => 'auth']);
 $routes->get('notifications/mark-all-read', 'Notifications::markAllAsRead', ['filter' => 'auth']);
+
+
+
+
+
+
+// Holidays (public view for all users)
+$routes->get('holidays-list', 'HolidayManagement::index', ['filter' => 'auth']);

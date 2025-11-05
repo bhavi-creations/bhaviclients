@@ -6,6 +6,7 @@ $notifications = $notificationModel->getUnreadNotifications($userId, 5);
 $unreadCount = $notificationModel->getUnreadCount($userId);
 ?>
 
+<?php if (!empty($notifications)): ?>
 <div class="card card-warning">
     <div class="card-header">
         <h3 class="card-title"><i class="fas fa-bell"></i> Notifications</h3>
@@ -16,44 +17,36 @@ $unreadCount = $notificationModel->getUnreadCount($userId);
         </div>
     </div>
     <div class="card-body p-0">
-        <?php if (!empty($notifications)): ?>
-            <ul class="list-group list-group-flush">
-                <?php foreach ($notifications as $notif): ?>
-                    <li class="list-group-item">
-                        <a href="<?= base_url($notif['link']) ?>" class="text-dark">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>
-                                        <?php if ($notif['type'] == 'leave_request'): ?>
-                                            <i class="fas fa-calendar-plus text-warning"></i>
-                                        <?php elseif ($notif['type'] == 'leave_approved'): ?>
-                                            <i class="fas fa-check-circle text-success"></i>
-                                        <?php elseif ($notif['type'] == 'leave_rejected'): ?>
-                                            <i class="fas fa-times-circle text-danger"></i>
-                                        <?php else: ?>
-                                            <i class="fas fa-calendar-day text-info"></i>
-                                        <?php endif; ?>
-                                        <?= esc($notif['title']) ?>
-                                    </strong>
-                                    <br>
-                                    <small class="text-muted"><?= esc($notif['message']) ?></small>
-                                </div>
-                                <small class="text-muted"><?= timeAgo($notif['created_at']) ?></small>
+        <ul class="list-group list-group-flush">
+            <?php foreach ($notifications as $notif): ?>
+                <li class="list-group-item">
+                    <a href="<?= base_url($notif['link']) ?>" class="text-dark">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>
+                                    <?php if ($notif['type'] == 'leave_request'): ?>
+                                        <i class="fas fa-calendar-plus text-warning"></i>
+                                    <?php elseif ($notif['type'] == 'leave_approved'): ?>
+                                        <i class="fas fa-check-circle text-success"></i>
+                                    <?php elseif ($notif['type'] == 'leave_rejected'): ?>
+                                        <i class="fas fa-times-circle text-danger"></i>
+                                    <?php else: ?>
+                                        <i class="fas fa-calendar-day text-info"></i>
+                                    <?php endif; ?>
+                                    <?= esc($notif['title']) ?>
+                                </strong>
+                                <br>
+                                <small class="text-muted"><?= esc($notif['message']) ?></small>
                             </div>
-                        </a>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-            <div class="card-footer text-center">
-                <?php if ($unreadCount > 5): ?>
-                    <a href="<?= base_url('my-leaves') ?>" class="btn btn-sm btn-primary">View More</a>
-                <?php endif; ?>
-            </div>
-        <?php else: ?>
-            <div class="p-4 text-center text-muted">
-                <i class="fas fa-bell-slash fa-2x mb-2"></i>
-                <p class="mb-0">No new notifications</p>
-            </div>
-        <?php endif; ?>
+                            <small class="text-muted"><?= timeAgo($notif['created_at']) ?></small>
+                        </div>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+        <div class="card-footer text-center">
+            <a href="<?= base_url('notifications') ?>" class="btn btn-sm btn-primary">View All Notifications</a>
+        </div>
     </div>
 </div>
+<?php endif; ?>

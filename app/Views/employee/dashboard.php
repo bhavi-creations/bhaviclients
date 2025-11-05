@@ -12,7 +12,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>
-                        <i class="fas fa-tachometer-alt"></i> 
+                        <i class="fas fa-tachometer-alt"></i>
                         <?= esc($title ?? 'Employee Dashboard') ?>
                     </h1>
                 </div>
@@ -37,7 +37,7 @@
                             <div class="row align-items-center">
                                 <div class="col-md-8">
                                     <h3 class="mb-2">
-                                        <i class="fas fa-hand-wave text-warning"></i> 
+                                        <i class="fas fa-hand-wave text-warning"></i>
                                         Welcome back, <strong><?= esc($employee['first_name'] . ' ' . $employee['last_name']) ?></strong>!
                                     </h3>
                                     <p class="text-muted mb-0">
@@ -57,6 +57,13 @@
                 </div>
             </div>
 
+
+            <!-- NEW: Notifications Widget Row (Top) -->
+            <div class="row">
+                <div class="col-md-12">
+                    <?= view('components/notifications_widget') ?>
+                </div>
+            </div>
             <!-- Stats Widgets Row 1 -->
             <div class="row">
                 <div class="col-lg-3 col-6">
@@ -168,15 +175,11 @@
                 </div>
             </div>
 
-            <!-- NEW: Notifications and Recent Tasks Row -->
-            <div class="row">
-                <!-- Notifications Widget (Left Column) -->
-                <div class="col-lg-4">
-                    <?= view('components/notifications_widget') ?>
-                </div>
 
-                <!-- Recent Tasks Section (Right Column) -->
-                <div class="col-lg-8">
+
+            <!-- Recent Tasks Section -->
+            <div class="row">
+                <div class="col-12">
                     <div class="card card-primary card-outline shadow-lg">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -204,7 +207,7 @@
                                         </thead>
                                         <tbody>
                                             <?php $sno = 1; ?>
-                                            <?php foreach($recentTasks as $task): ?>
+                                            <?php foreach ($recentTasks as $task): ?>
                                                 <tr>
                                                     <td><?= $sno++ ?></td>
                                                     <td>
@@ -251,9 +254,9 @@
                                                         <?php endif; ?>
                                                     </td>
                                                     <td>
-                                                        <a href="<?= base_url('my-tasks/view/' . $task['id']) ?>" 
-                                                           class="btn btn-sm btn-info" 
-                                                           title="View Task">
+                                                        <a href="<?= base_url('my-tasks/view/' . $task['id']) ?>"
+                                                            class="btn btn-sm btn-info"
+                                                            title="View Task">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
                                                     </td>
@@ -318,7 +321,7 @@
                                     </a>
                                 </div>
                                 <div class="col-md-2 col-sm-4 mb-3">
-                                    <a href="<?= base_url('holidays') ?>" class="btn btn-app btn-block">
+                                    <a href="<?= base_url('holidays-list') ?>" class="btn btn-app btn-block">
                                         <i class="fas fa-calendar-day"></i> Holidays
                                     </a>
                                 </div>

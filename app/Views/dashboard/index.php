@@ -25,9 +25,19 @@
     <section class="content">
         <div class="container-fluid">
 
+
+
+            <!-- NEW: Notifications Widget Row (Top) -->
+            <div class="row">
+                <div class="col-md-12">
+                    <?= view('components/notifications_widget') ?>
+                </div>
+            </div>
+
+            <!-- Stats Widgets -->
             <div class="row">
                 <!-- Total Clients -->
-                <div class="col-lg-3 col-6">
+                <div class="col-lg-4 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
                             <h3><?= esc($totalClients ?? 0) ?></h3>
@@ -41,7 +51,7 @@
                 </div>
 
                 <!-- Total Employees -->
-                <div class="col-lg-3 col-6">
+                <div class="col-lg-4 col-6">
                     <div class="small-box bg-success">
                         <div class="inner">
                             <h3><?= esc($totalEmployees ?? 0) ?></h3>
@@ -55,7 +65,7 @@
                 </div>
 
                 <!-- Pending Payments -->
-                <div class="col-lg-3 col-6">
+                <div class="col-lg-4 col-6">
                     <div class="small-box bg-warning">
                         <div class="inner">
                             <h3><?= esc($pendingPaymentsCount ?? 0) ?></h3>
@@ -70,7 +80,7 @@
                 </div>
 
                 <!-- Pending Leave Requests -->
-                <div class="col-lg-3 col-6">
+                <!-- <div class="col-lg-4 col-6">
                     <div class="small-box bg-danger">
                         <div class="inner">
                             <?php
@@ -85,7 +95,7 @@
                             View Leave Requests <i class="fas fa-arrow-circle-right"></i>
                         </a>
                     </div>
-                </div>
+                </div> -->
             </div>
 
 

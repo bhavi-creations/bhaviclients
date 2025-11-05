@@ -21,71 +21,78 @@
     <section class="content">
         <div class="container-fluid">
 
-                <!-- Statistics Cards -->
-                <div class="row">
-                    <div class="col-lg-3 col-6">
-                        <div class="small-box bg-info">
-                            <div class="inner">
-                                <h3><?= $totalTasks ?></h3>
-                                <p>Work Updates</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-tasks"></i>
-                            </div>
-                            <a href="<?= base_url('work-updates') ?>" class="small-box-footer">
-                                View All <i class="fas fa-arrow-circle-right"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-6">
-                        <div class="small-box bg-success">
-                            <div class="inner">
-                                <h3><?= $totalSchedules ?></h3>
-                                <p>Weekly Schedules</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-calendar-week"></i>
-                            </div>
-                            <a href="<?= base_url('my-weekly-schedule') ?>" class="small-box-footer">
-                                View Schedules <i class="fas fa-arrow-circle-right"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-6">
-                        <div class="small-box bg-warning">
-                            <div class="inner">
-                                <h3><?= $totalFiles ?></h3>
-                                <p>Working Calendars</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-file-excel"></i>
-                            </div>
-                            <a href="<?= base_url('download-files') ?>" class="small-box-footer">
-                                View Files <i class="fas fa-arrow-circle-right"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <?php if (session()->get('role_id') == 3): ?>
-                        <div class="col-lg-3 col-6">
-                            <div class="small-box bg-danger">
-                                <div class="inner">
-                                    <h3><?= $totalProjects ?></h3>
-                                    <p>Project Details</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="fas fa-project-diagram"></i>
-                                </div>
-                                <a href="<?= base_url('client-maintenance') ?>" class="small-box-footer">
-                                    View Projects <i class="fas fa-arrow-circle-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-
+            <!-- NEW: Notifications Widget Row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <?= view('components/notifications_widget') ?>
                 </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row">
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3><?= $totalTasks ?></h3>
+                            <p>Work Updates</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <a href="<?= base_url('work-updates') ?>" class="small-box-footer">
+                            View All <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3><?= $totalSchedules ?></h3>
+                            <p>Weekly Schedules</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-calendar-week"></i>
+                        </div>
+                        <a href="<?= base_url('my-weekly-schedule') ?>" class="small-box-footer">
+                            View Schedules <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-warning">
+                        <div class="inner">
+                            <h3><?= $totalFiles ?></h3>
+                            <p>Working Calendars</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-file-excel"></i>
+                        </div>
+                        <a href="<?= base_url('download-files') ?>" class="small-box-footer">
+                            View Files <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <?php if (session()->get('role_id') == 3): ?>
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-danger">
+                            <div class="inner">
+                                <h3><?= $totalProjects ?></h3>
+                                <p>Project Details</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <a href="<?= base_url('client-maintenance') ?>" class="small-box-footer">
+                                View Projects <i class="fas fa-arrow-circle-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+            </div>
 
             <div class="row">
                 <!-- Current Week Schedule -->
@@ -209,12 +216,7 @@
                 </div>
             </div>
 
-            <!-- NEW: Notifications Widget Row -->
-            <div class="row">
-                <div class="col-md-12">
-                    <?= view('components/notifications_widget') ?>
-                </div>
-            </div>
+
 
         </div>
     </section>

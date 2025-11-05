@@ -13,7 +13,7 @@ class Notifications extends Controller
     public function __construct()
     {
         $this->notificationModel = new NotificationModel();
-        helper(['form', 'url']);
+        helper(['form', 'url','common']);  
     }
 
     /**
