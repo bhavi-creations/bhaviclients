@@ -71,6 +71,7 @@ $routes->group('/', ['filter' => 'auth:1,5'], function ($routes) {
         $routes->get('client/(:num)', 'SocialMediaCalendar::clientCalendars/$1');
         $routes->get('download/(:num)', 'SocialMediaCalendar::download/$1');
         $routes->get('delete/(:num)', 'SocialMediaCalendar::delete/$1');
+        $routes->get('view/(:num)', 'SocialMediaCalendar::view/$1', ['filter' => 'auth']);
     });
 
     // EMPLOYEE
@@ -314,11 +315,10 @@ $routes->group('/', ['filter' => 'auth:3,4'], function ($routes) {
     // SOCIAL MEDIA CALENDAR (Client Read-Only)
     $routes->get('my-social-media-calendar', 'ClientSocialMediaCalendar::index');
     $routes->get('my-social-media-calendar/download/(:num)', 'ClientSocialMediaCalendar::download/$1');
+    $routes->get('my-social-media-calendar/view/(:num)', 'ClientSocialMediaCalendar::view/$1');
 
 
-
-
-
+ 
 
 
 

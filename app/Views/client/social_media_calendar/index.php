@@ -53,7 +53,7 @@ use App\Models\SocialMediaCalendarModel;
                 </div>
             </div>
 
-            <!-- Calendars in Card Format -->
+            <!-- Calendars in Card Format -->   
             <?php if (!empty($calendars)): ?>
                 <div class="row">
                     <?php foreach ($calendars as $calendar): ?>
@@ -114,12 +114,23 @@ use App\Models\SocialMediaCalendarModel;
                                         </small>
                                     </p>
                                 </div>
-                                <div class="card-footer text-center">
-                                    <a href="<?= base_url('my-social-media-calendar/download/' . $calendar['id']) ?>" 
-                                       class="btn btn-primary btn-block" 
-                                       title="Download Calendar">
-                                        <i class="fas fa-download"></i> Download Calendar
-                                    </a>
+                                <div class="card-footer">
+                                    <div class="btn-group-vertical d-flex" role="group">
+                                        <!-- View Button -->
+                                        <a href="<?= base_url('my-social-media-calendar/view/' . $calendar['id']) ?>" 
+                                           class="btn btn-info btn-sm"
+                                           target="_blank"
+                                           title="View Calendar">
+                                            <i class="fas fa-eye"></i> View Calendar
+                                        </a>
+                                        
+                                        <!-- Download Button -->
+                                        <a href="<?= base_url('my-social-media-calendar/download/' . $calendar['id']) ?>" 
+                                           class="btn btn-primary btn-sm mt-1" 
+                                           title="Download Calendar">
+                                            <i class="fas fa-download"></i> Download Calendar
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -118,24 +118,34 @@ use App\Models\SocialMediaCalendarModel;
                                     </p>
                                 </div>
                                 <div class="card-footer">
-                                    <div class="btn-group d-flex" role="group">
-                                        <a href="<?= base_url('social-media-calendar/download/' . $calendar['id']) ?>"
-                                            class="btn btn-primary btn-sm flex-fill"
-                                            title="Download">
-                                            <i class="fas fa-download"></i> Download
+                                    <div class="btn-group-vertical d-flex" role="group">
+                                        <!-- View Button -->
+                                        <a href="<?= base_url('social-media-calendar/view/' . $calendar['id']) ?>"
+                                            class="btn btn-info btn-sm"
+                                            target="_blank"
+                                            title="View File">
+                                            <i class="fas fa-eye"></i> View
                                         </a>
-                                        <button type="button"
-                                            class="btn btn-warning btn-sm flex-fill"
-                                            onclick="editCalendar(<?= $calendar['id'] ?>, '<?= esc($calendar['calendar_month']) ?>', '<?= esc($calendar['calendar_year']) ?>', '<?= esc($calendar['remarks'] ?? '') ?>')"
-                                            title="Edit">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </button>
-                                        <a href="<?= base_url('social-media-calendar/delete/' . $calendar['id']) ?>"
-                                            class="btn btn-danger btn-sm flex-fill"
-                                            onclick="return confirm('Delete this calendar permanently?')"
-                                            title="Delete">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </a>
+                                        
+                                        <div class="btn-group d-flex mt-1" role="group">
+                                            <a href="<?= base_url('social-media-calendar/download/' . $calendar['id']) ?>"
+                                                class="btn btn-primary btn-sm flex-fill"
+                                                title="Download">
+                                                <i class="fas fa-download"></i> Download
+                                            </a>
+                                            <button type="button"
+                                                class="btn btn-warning btn-sm flex-fill"
+                                                onclick="editCalendar(<?= $calendar['id'] ?>, '<?= esc($calendar['calendar_month']) ?>', '<?= esc($calendar['calendar_year']) ?>', '<?= esc($calendar['remarks'] ?? '') ?>')"
+                                                title="Edit">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </button>
+                                            <a href="<?= base_url('social-media-calendar/delete/' . $calendar['id']) ?>"
+                                                class="btn btn-danger btn-sm flex-fill"
+                                                onclick="return confirm('Delete this calendar permanently?')"
+                                                title="Delete">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -158,7 +168,6 @@ use App\Models\SocialMediaCalendarModel;
     </section>
 </div>
 
-<!-- Edit Calendar Modal -->
 <!-- Edit Calendar Modal -->
 <div class="modal fade" id="editCalendarModal" tabindex="-1">
     <div class="modal-dialog">
@@ -247,7 +256,6 @@ use App\Models\SocialMediaCalendarModel;
     </div>
 </div>
 
-
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
@@ -289,6 +297,3 @@ use App\Models\SocialMediaCalendarModel;
     });
 </script>
 <?= $this->endSection() ?>
-
-
- 

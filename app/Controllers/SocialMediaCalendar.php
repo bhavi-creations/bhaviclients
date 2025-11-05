@@ -272,7 +272,49 @@ class SocialMediaCalendar extends Controller
             return redirect()->back()->with('error', 'Failed to update calendar.');
         }
     }
-    
+
+
+    /**
+     * View file in browser
+     */
+    public function view($calendarId)
+    {
+        $calendar = $this->calendarModel->find($calendarId);
+
+        if (!$calendar) {
+            return redirect()->back()->with('error', 'Calendar not found.');
+        }
+
+        // Correct path: Root uploads folder
+        $filePath = ROOTPATH . 'uploads/social_media_calendars/' . $calendar['file_name'];
+
+        if (!file_exists($filePath)) {
+            return redirect()->back()->with('error', 'File not found: ' . $calendar['file_name']);
+        }
+
+        // Set appropriate content type based on extension
+        $ext = strtolower($calendar['file_extension']);
+        $mimeTypes = [
+            'pdf' => 'application/pdf',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'doc' => 'application/msword',
+            'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'xls' => 'application/vnd.ms-excel',
+            'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        ];
+
+        $mimeType = $mimeTypes[$ext] ?? 'application/octet-stream';
+
+        // Output file to browser
+        return $this->response
+            ->setHeader('Content-Type', $mimeType)
+            ->setHeader('Content-Disposition', 'inline; filename="' . $calendar['original_name'] . '"')
+            ->setBody(file_get_contents($filePath));
+    }
+
+
 
     /**
      * Download calendar file
