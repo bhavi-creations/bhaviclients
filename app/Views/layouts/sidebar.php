@@ -122,10 +122,18 @@
                         </a>
                     </li>
 
+                    <!-- 9. Client Uploads -->
+                    <li class="nav-item">
+                        <a href="<?= base_url('client-uploads') ?>" class="nav-link <?= url_is('client-uploads*') ? 'active' : '' ?>">
+                            <i class="nav-icon fas fa-cloud-download-alt"></i>
+                            <p>Client Uploads</p>
+                        </a>
+                    </li>
+
                     <!-- 9. Company Assets (Dropdown Menu) -->
                     <!-- <?php
-                    $isCompanyAssetsActive = url_is('department*') || url_is('roles*') || url_is('user-management*');
-                    ?>
+                            $isCompanyAssetsActive = url_is('department*') || url_is('roles*') || url_is('user-management*');
+                            ?>
                     <li class="nav-item <?= $isCompanyAssetsActive ? 'menu-open' : '' ?>">
                         <a href="#" class="nav-link <?= $isCompanyAssetsActive ? 'active' : '' ?>">
                             <i class="nav-icon fas fa-building"></i>
@@ -156,8 +164,8 @@
                         </ul>
                     </li> -->
 
-           
-                     
+
+
 
 
                 <?php endif; ?>
@@ -313,7 +321,7 @@
                     <?php endif; ?>
                 <?php endif; ?>
 
-                
+
                 <!-- <li class="nav-item mt-3">
                     <a href="<?= base_url('logout') ?>" class="nav-link">
                         <i class="nav-icon fas fa-sign-out-alt"></i>

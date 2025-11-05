@@ -1,0 +1,796 @@
+ERROR - 2025-11-05 09:15:31 --> Error connecting to the database: mysqli_sql_exception: No connection could be made because the target machine actively refused it in C:\xampp\htdocs\bhaviclients\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\xampp\htdocs\bhaviclients\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'bhaviclients', 3306, '', 0)
+#1 C:\xampp\htdocs\bhaviclients\system\Database\BaseConnection.php(421): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\xampp\htdocs\bhaviclients\system\Session\Handlers\DatabaseHandler.php(100): CodeIgniter\Database\BaseConnection->initialize()
+#3 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->open('ci_sessions', 'ci_session')
+#4 C:\xampp\htdocs\bhaviclients\system\Session\Session.php(912): session_start()
+#5 C:\xampp\htdocs\bhaviclients\system\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+#6 C:\xampp\htdocs\bhaviclients\system\Config\Services.php(710): CodeIgniter\Session\Session->start()
+#7 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+#8 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#9 C:\xampp\htdocs\bhaviclients\system\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', NULL)
+#10 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+#11 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#12 C:\xampp\htdocs\bhaviclients\system\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+#13 C:\xampp\htdocs\bhaviclients\system\Common.php(973): service('session')
+#14 C:\xampp\htdocs\bhaviclients\app\Filters\AuthFilter.php(15): session()
+#15 C:\xampp\htdocs\bhaviclients\system\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), NULL)
+#16 C:\xampp\htdocs\bhaviclients\system\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore(Array)
+#17 C:\xampp\htdocs\bhaviclients\system\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/...', 'before')
+#18 C:\xampp\htdocs\bhaviclients\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#19 C:\xampp\htdocs\bhaviclients\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#20 C:\xampp\htdocs\bhaviclients\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#21 C:\xampp\htdocs\bhaviclients\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#22 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: No connection could be made because the target machine actively refused it in C:\xampp\htdocs\bhaviclients\system\Database\MySQLi\Connection.php:246
+Stack trace:
+#0 C:\xampp\htdocs\bhaviclients\system\Database\BaseConnection.php(421): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\xampp\htdocs\bhaviclients\system\Session\Handlers\DatabaseHandler.php(100): CodeIgniter\Database\BaseConnection->initialize()
+#2 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->open('ci_sessions', 'ci_session')
+#3 C:\xampp\htdocs\bhaviclients\system\Session\Session.php(912): session_start()
+#4 C:\xampp\htdocs\bhaviclients\system\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+#5 C:\xampp\htdocs\bhaviclients\system\Config\Services.php(710): CodeIgniter\Session\Session->start()
+#6 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+#7 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#8 C:\xampp\htdocs\bhaviclients\system\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', NULL)
+#9 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+#10 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#11 C:\xampp\htdocs\bhaviclients\system\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+#12 C:\xampp\htdocs\bhaviclients\system\Common.php(973): service('session')
+#13 C:\xampp\htdocs\bhaviclients\app\Filters\AuthFilter.php(15): session()
+#14 C:\xampp\htdocs\bhaviclients\system\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), NULL)
+#15 C:\xampp\htdocs\bhaviclients\system\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore(Array)
+#16 C:\xampp\htdocs\bhaviclients\system\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/...', 'before')
+#17 C:\xampp\htdocs\bhaviclients\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#18 C:\xampp\htdocs\bhaviclients\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#19 C:\xampp\htdocs\bhaviclients\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#20 C:\xampp\htdocs\bhaviclients\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#21 {main}
+CRITICAL - 2025-11-05 09:15:31 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: No connection could be made because the target machine actively refused it
+[Method: GET, Route: client-uploads/by-client/19]
+in SYSTEMPATH\Database\BaseConnection.php on line 467.
+ 1 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(100): CodeIgniter\Database\BaseConnection->initialize()
+ 2 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->open('ci_sessions', 'ci_session')
+ 3 SYSTEMPATH\Session\Session.php(912): session_start()
+ 4 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 5 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+ 6 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+ 7 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+ 8 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+ 9 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+10 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+11 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+12 SYSTEMPATH\Common.php(973): service('session')
+13 APPPATH\Filters\AuthFilter.php(15): session()
+14 SYSTEMPATH\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+15 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+16 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/by-client/19', 'before')
+17 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+18 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+19 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+20 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-11-05 09:16:03 --> mysqli_sql_exception: Got error 168 "Unknown (generic) error from engine" from storage engine InnoDB in C:\xampp\htdocs\bhaviclients\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\bhaviclients\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `data`\nF...', 0)
+#1 C:\xampp\htdocs\bhaviclients\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `data`\nF...')
+#2 C:\xampp\htdocs\bhaviclients\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `data`\nF...')
+#3 C:\xampp\htdocs\bhaviclients\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`\nF...', Array, false)
+#4 C:\xampp\htdocs\bhaviclients\system\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+#5 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f4...')
+#6 C:\xampp\htdocs\bhaviclients\system\Session\Session.php(912): session_start()
+#7 C:\xampp\htdocs\bhaviclients\system\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+#8 C:\xampp\htdocs\bhaviclients\system\Config\Services.php(710): CodeIgniter\Session\Session->start()
+#9 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+#10 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#11 C:\xampp\htdocs\bhaviclients\system\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', NULL)
+#12 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+#13 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#14 C:\xampp\htdocs\bhaviclients\system\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+#15 C:\xampp\htdocs\bhaviclients\system\Common.php(973): service('session')
+#16 C:\xampp\htdocs\bhaviclients\app\Filters\AuthFilter.php(15): session()
+#17 C:\xampp\htdocs\bhaviclients\system\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), NULL)
+#18 C:\xampp\htdocs\bhaviclients\system\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore(Array)
+#19 C:\xampp\htdocs\bhaviclients\system\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/...', 'before')
+#20 C:\xampp\htdocs\bhaviclients\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#21 C:\xampp\htdocs\bhaviclients\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#22 C:\xampp\htdocs\bhaviclients\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#23 C:\xampp\htdocs\bhaviclients\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#24 {main}
+CRITICAL - 2025-11-05 09:16:03 --> CodeIgniter\Database\Exceptions\DatabaseException: Got error 168 "Unknown (generic) error from engine" from storage engine InnoDB
+[Method: GET, Route: client-uploads/by-client/19]
+in SYSTEMPATH\Database\BaseConnection.php on line 692.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = :id:', [...], false)
+ 2 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+ 3 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f424a2d4ef0d8c2f03d')
+ 4 SYSTEMPATH\Session\Session.php(912): session_start()
+ 5 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 6 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+ 7 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+ 8 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+ 9 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+10 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+11 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+12 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+13 SYSTEMPATH\Common.php(973): service('session')
+14 APPPATH\Filters\AuthFilter.php(15): session()
+15 SYSTEMPATH\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+16 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+17 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/by-client/19', 'before')
+18 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+19 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+20 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+21 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-11-05 09:16:03 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Got error 168 "Unknown (generic) error from engine" from storage engine InnoDB
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = :id:', [...], false)
+ 4 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+ 5 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f424a2d4ef0d8c2f03d')
+ 6 SYSTEMPATH\Session\Session.php(912): session_start()
+ 7 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 8 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+ 9 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+10 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+11 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+12 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+13 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+14 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+15 SYSTEMPATH\Common.php(973): service('session')
+16 APPPATH\Filters\AuthFilter.php(15): session()
+17 SYSTEMPATH\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+18 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+19 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/by-client/19', 'before')
+20 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+21 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+22 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+23 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-11-05 09:16:03 --> [Caused by] mysqli_sql_exception: Got error 168 "Unknown (generic) error from engine" from storage engine InnoDB
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = :id:', [...], false)
+ 5 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+ 6 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f424a2d4ef0d8c2f03d')
+ 7 SYSTEMPATH\Session\Session.php(912): session_start()
+ 8 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 9 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+10 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+11 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+12 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+13 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+14 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+15 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+16 SYSTEMPATH\Common.php(973): service('session')
+17 APPPATH\Filters\AuthFilter.php(15): session()
+18 SYSTEMPATH\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+19 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+20 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/by-client/19', 'before')
+21 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+22 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+23 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+24 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-11-05 09:16:08 --> mysqli_sql_exception: Got error 1877 "Unknown error" from storage engine InnoDB in C:\xampp\htdocs\bhaviclients\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\bhaviclients\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `data`\nF...', 0)
+#1 C:\xampp\htdocs\bhaviclients\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `data`\nF...')
+#2 C:\xampp\htdocs\bhaviclients\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `data`\nF...')
+#3 C:\xampp\htdocs\bhaviclients\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`\nF...', Array, false)
+#4 C:\xampp\htdocs\bhaviclients\system\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+#5 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f4...')
+#6 C:\xampp\htdocs\bhaviclients\system\Session\Session.php(912): session_start()
+#7 C:\xampp\htdocs\bhaviclients\system\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+#8 C:\xampp\htdocs\bhaviclients\system\Config\Services.php(710): CodeIgniter\Session\Session->start()
+#9 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+#10 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#11 C:\xampp\htdocs\bhaviclients\system\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', NULL)
+#12 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+#13 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#14 C:\xampp\htdocs\bhaviclients\system\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+#15 C:\xampp\htdocs\bhaviclients\system\Common.php(973): service('session')
+#16 C:\xampp\htdocs\bhaviclients\app\Filters\AuthFilter.php(15): session()
+#17 C:\xampp\htdocs\bhaviclients\system\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), NULL)
+#18 C:\xampp\htdocs\bhaviclients\system\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore(Array)
+#19 C:\xampp\htdocs\bhaviclients\system\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/...', 'before')
+#20 C:\xampp\htdocs\bhaviclients\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#21 C:\xampp\htdocs\bhaviclients\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#22 C:\xampp\htdocs\bhaviclients\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#23 C:\xampp\htdocs\bhaviclients\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#24 {main}
+CRITICAL - 2025-11-05 09:16:08 --> CodeIgniter\Database\Exceptions\DatabaseException: Got error 1877 "Unknown error" from storage engine InnoDB
+[Method: GET, Route: client-uploads/by-client/19]
+in SYSTEMPATH\Database\BaseConnection.php on line 692.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = :id:', [...], false)
+ 2 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+ 3 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f424a2d4ef0d8c2f03d')
+ 4 SYSTEMPATH\Session\Session.php(912): session_start()
+ 5 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 6 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+ 7 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+ 8 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+ 9 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+10 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+11 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+12 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+13 SYSTEMPATH\Common.php(973): service('session')
+14 APPPATH\Filters\AuthFilter.php(15): session()
+15 SYSTEMPATH\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+16 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+17 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/by-client/19', 'before')
+18 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+19 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+20 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+21 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-11-05 09:16:08 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Got error 1877 "Unknown error" from storage engine InnoDB
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = :id:', [...], false)
+ 4 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+ 5 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f424a2d4ef0d8c2f03d')
+ 6 SYSTEMPATH\Session\Session.php(912): session_start()
+ 7 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 8 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+ 9 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+10 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+11 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+12 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+13 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+14 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+15 SYSTEMPATH\Common.php(973): service('session')
+16 APPPATH\Filters\AuthFilter.php(15): session()
+17 SYSTEMPATH\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+18 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+19 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/by-client/19', 'before')
+20 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+21 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+22 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+23 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-11-05 09:16:08 --> [Caused by] mysqli_sql_exception: Got error 1877 "Unknown error" from storage engine InnoDB
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = :id:', [...], false)
+ 5 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+ 6 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f424a2d4ef0d8c2f03d')
+ 7 SYSTEMPATH\Session\Session.php(912): session_start()
+ 8 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 9 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+10 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+11 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+12 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+13 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+14 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+15 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+16 SYSTEMPATH\Common.php(973): service('session')
+17 APPPATH\Filters\AuthFilter.php(15): session()
+18 SYSTEMPATH\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+19 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+20 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/by-client/19', 'before')
+21 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+22 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+23 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+24 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-11-05 09:16:09 --> mysqli_sql_exception: Got error 1877 "Unknown error" from storage engine InnoDB in C:\xampp\htdocs\bhaviclients\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\bhaviclients\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `data`\nF...', 0)
+#1 C:\xampp\htdocs\bhaviclients\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `data`\nF...')
+#2 C:\xampp\htdocs\bhaviclients\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `data`\nF...')
+#3 C:\xampp\htdocs\bhaviclients\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`\nF...', Array, false)
+#4 C:\xampp\htdocs\bhaviclients\system\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+#5 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f4...')
+#6 C:\xampp\htdocs\bhaviclients\system\Session\Session.php(912): session_start()
+#7 C:\xampp\htdocs\bhaviclients\system\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+#8 C:\xampp\htdocs\bhaviclients\system\Config\Services.php(710): CodeIgniter\Session\Session->start()
+#9 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+#10 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#11 C:\xampp\htdocs\bhaviclients\system\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', NULL)
+#12 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+#13 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#14 C:\xampp\htdocs\bhaviclients\system\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+#15 C:\xampp\htdocs\bhaviclients\system\Common.php(973): service('session')
+#16 C:\xampp\htdocs\bhaviclients\app\Filters\AuthFilter.php(15): session()
+#17 C:\xampp\htdocs\bhaviclients\system\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), NULL)
+#18 C:\xampp\htdocs\bhaviclients\system\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore(Array)
+#19 C:\xampp\htdocs\bhaviclients\system\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/...', 'before')
+#20 C:\xampp\htdocs\bhaviclients\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#21 C:\xampp\htdocs\bhaviclients\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#22 C:\xampp\htdocs\bhaviclients\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#23 C:\xampp\htdocs\bhaviclients\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#24 {main}
+CRITICAL - 2025-11-05 09:16:09 --> CodeIgniter\Database\Exceptions\DatabaseException: Got error 1877 "Unknown error" from storage engine InnoDB
+[Method: GET, Route: client-uploads/by-client/19]
+in SYSTEMPATH\Database\BaseConnection.php on line 692.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = :id:', [...], false)
+ 2 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+ 3 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f424a2d4ef0d8c2f03d')
+ 4 SYSTEMPATH\Session\Session.php(912): session_start()
+ 5 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 6 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+ 7 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+ 8 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+ 9 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+10 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+11 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+12 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+13 SYSTEMPATH\Common.php(973): service('session')
+14 APPPATH\Filters\AuthFilter.php(15): session()
+15 SYSTEMPATH\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+16 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+17 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/by-client/19', 'before')
+18 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+19 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+20 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+21 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-11-05 09:16:09 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Got error 1877 "Unknown error" from storage engine InnoDB
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = :id:', [...], false)
+ 4 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+ 5 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f424a2d4ef0d8c2f03d')
+ 6 SYSTEMPATH\Session\Session.php(912): session_start()
+ 7 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 8 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+ 9 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+10 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+11 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+12 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+13 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+14 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+15 SYSTEMPATH\Common.php(973): service('session')
+16 APPPATH\Filters\AuthFilter.php(15): session()
+17 SYSTEMPATH\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+18 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+19 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/by-client/19', 'before')
+20 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+21 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+22 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+23 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-11-05 09:16:09 --> [Caused by] mysqli_sql_exception: Got error 1877 "Unknown error" from storage engine InnoDB
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = :id:', [...], false)
+ 5 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+ 6 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f424a2d4ef0d8c2f03d')
+ 7 SYSTEMPATH\Session\Session.php(912): session_start()
+ 8 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 9 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+10 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+11 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+12 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+13 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+14 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+15 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+16 SYSTEMPATH\Common.php(973): service('session')
+17 APPPATH\Filters\AuthFilter.php(15): session()
+18 SYSTEMPATH\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+19 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+20 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/by-client/19', 'before')
+21 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+22 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+23 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+24 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-11-05 09:16:11 --> mysqli_sql_exception: Got error 1877 "Unknown error" from storage engine InnoDB in C:\xampp\htdocs\bhaviclients\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\bhaviclients\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `data`\nF...', 0)
+#1 C:\xampp\htdocs\bhaviclients\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `data`\nF...')
+#2 C:\xampp\htdocs\bhaviclients\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `data`\nF...')
+#3 C:\xampp\htdocs\bhaviclients\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`\nF...', Array, false)
+#4 C:\xampp\htdocs\bhaviclients\system\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+#5 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f4...')
+#6 C:\xampp\htdocs\bhaviclients\system\Session\Session.php(912): session_start()
+#7 C:\xampp\htdocs\bhaviclients\system\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+#8 C:\xampp\htdocs\bhaviclients\system\Config\Services.php(710): CodeIgniter\Session\Session->start()
+#9 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+#10 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#11 C:\xampp\htdocs\bhaviclients\system\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', NULL)
+#12 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+#13 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#14 C:\xampp\htdocs\bhaviclients\system\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+#15 C:\xampp\htdocs\bhaviclients\system\Common.php(973): service('session')
+#16 C:\xampp\htdocs\bhaviclients\app\Filters\AuthFilter.php(15): session()
+#17 C:\xampp\htdocs\bhaviclients\system\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), NULL)
+#18 C:\xampp\htdocs\bhaviclients\system\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore(Array)
+#19 C:\xampp\htdocs\bhaviclients\system\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/...', 'before')
+#20 C:\xampp\htdocs\bhaviclients\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#21 C:\xampp\htdocs\bhaviclients\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#22 C:\xampp\htdocs\bhaviclients\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#23 C:\xampp\htdocs\bhaviclients\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#24 {main}
+CRITICAL - 2025-11-05 09:16:11 --> CodeIgniter\Database\Exceptions\DatabaseException: Got error 1877 "Unknown error" from storage engine InnoDB
+[Method: GET, Route: client-uploads/by-client/19]
+in SYSTEMPATH\Database\BaseConnection.php on line 692.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = :id:', [...], false)
+ 2 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+ 3 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f424a2d4ef0d8c2f03d')
+ 4 SYSTEMPATH\Session\Session.php(912): session_start()
+ 5 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 6 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+ 7 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+ 8 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+ 9 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+10 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+11 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+12 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+13 SYSTEMPATH\Common.php(973): service('session')
+14 APPPATH\Filters\AuthFilter.php(15): session()
+15 SYSTEMPATH\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+16 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+17 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/by-client/19', 'before')
+18 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+19 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+20 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+21 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-11-05 09:16:11 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Got error 1877 "Unknown error" from storage engine InnoDB
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = :id:', [...], false)
+ 4 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+ 5 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f424a2d4ef0d8c2f03d')
+ 6 SYSTEMPATH\Session\Session.php(912): session_start()
+ 7 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 8 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+ 9 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+10 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+11 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+12 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+13 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+14 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+15 SYSTEMPATH\Common.php(973): service('session')
+16 APPPATH\Filters\AuthFilter.php(15): session()
+17 SYSTEMPATH\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+18 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+19 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/by-client/19', 'before')
+20 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+21 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+22 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+23 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-11-05 09:16:11 --> [Caused by] mysqli_sql_exception: Got error 1877 "Unknown error" from storage engine InnoDB
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = :id:', [...], false)
+ 5 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+ 6 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f424a2d4ef0d8c2f03d')
+ 7 SYSTEMPATH\Session\Session.php(912): session_start()
+ 8 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 9 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+10 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+11 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+12 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+13 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+14 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+15 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+16 SYSTEMPATH\Common.php(973): service('session')
+17 APPPATH\Filters\AuthFilter.php(15): session()
+18 SYSTEMPATH\Filters\Filters.php(241): App\Filters\AuthFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+19 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+20 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('client-uploads/by-client/19', 'before')
+21 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+22 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+23 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+24 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-11-05 09:16:14 --> mysqli_sql_exception: Got error 1877 "Unknown error" from storage engine InnoDB in C:\xampp\htdocs\bhaviclients\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\bhaviclients\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `data`\nF...', 0)
+#1 C:\xampp\htdocs\bhaviclients\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `data`\nF...')
+#2 C:\xampp\htdocs\bhaviclients\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `data`\nF...')
+#3 C:\xampp\htdocs\bhaviclients\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`\nF...', Array, false)
+#4 C:\xampp\htdocs\bhaviclients\system\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+#5 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f4...')
+#6 C:\xampp\htdocs\bhaviclients\system\Session\Session.php(912): session_start()
+#7 C:\xampp\htdocs\bhaviclients\system\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+#8 C:\xampp\htdocs\bhaviclients\system\Config\Services.php(710): CodeIgniter\Session\Session->start()
+#9 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+#10 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#11 C:\xampp\htdocs\bhaviclients\system\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', NULL)
+#12 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+#13 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#14 C:\xampp\htdocs\bhaviclients\system\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+#15 C:\xampp\htdocs\bhaviclients\system\Common.php(973): service('session')
+#16 C:\xampp\htdocs\bhaviclients\app\Controllers\Auth.php(23): session()
+#17 C:\xampp\htdocs\bhaviclients\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#18 C:\xampp\htdocs\bhaviclients\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#19 C:\xampp\htdocs\bhaviclients\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#20 C:\xampp\htdocs\bhaviclients\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#21 C:\xampp\htdocs\bhaviclients\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#22 C:\xampp\htdocs\bhaviclients\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#23 {main}
+CRITICAL - 2025-11-05 09:16:14 --> CodeIgniter\Database\Exceptions\DatabaseException: Got error 1877 "Unknown error" from storage engine InnoDB
+[Method: GET, Route: /]
+in SYSTEMPATH\Database\BaseConnection.php on line 692.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = :id:', [...], false)
+ 2 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+ 3 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f424a2d4ef0d8c2f03d')
+ 4 SYSTEMPATH\Session\Session.php(912): session_start()
+ 5 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 6 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+ 7 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+ 8 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+ 9 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+10 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+11 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+12 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+13 SYSTEMPATH\Common.php(973): service('session')
+14 APPPATH\Controllers\Auth.php(23): session()
+15 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->login()
+16 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+17 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+18 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+19 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+20 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-11-05 09:16:14 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Got error 1877 "Unknown error" from storage engine InnoDB
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = :id:', [...], false)
+ 4 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+ 5 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f424a2d4ef0d8c2f03d')
+ 6 SYSTEMPATH\Session\Session.php(912): session_start()
+ 7 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 8 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+ 9 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+10 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+11 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+12 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+13 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+14 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+15 SYSTEMPATH\Common.php(973): service('session')
+16 APPPATH\Controllers\Auth.php(23): session()
+17 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->login()
+18 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+19 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+20 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+21 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+22 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-11-05 09:16:14 --> [Caused by] mysqli_sql_exception: Got error 1877 "Unknown error" from storage engine InnoDB
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = :id:', [...], false)
+ 5 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+ 6 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f424a2d4ef0d8c2f03d')
+ 7 SYSTEMPATH\Session\Session.php(912): session_start()
+ 8 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 9 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+10 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+11 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+12 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+13 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+14 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+15 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+16 SYSTEMPATH\Common.php(973): service('session')
+17 APPPATH\Controllers\Auth.php(23): session()
+18 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->login()
+19 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+20 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+21 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+22 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+23 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-11-05 09:16:14 --> mysqli_sql_exception: Got error 1877 "Unknown error" from storage engine InnoDB in C:\xampp\htdocs\bhaviclients\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\bhaviclients\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `data`\nF...', 0)
+#1 C:\xampp\htdocs\bhaviclients\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `data`\nF...')
+#2 C:\xampp\htdocs\bhaviclients\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `data`\nF...')
+#3 C:\xampp\htdocs\bhaviclients\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`\nF...', Array, false)
+#4 C:\xampp\htdocs\bhaviclients\system\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+#5 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f4...')
+#6 C:\xampp\htdocs\bhaviclients\system\Session\Session.php(912): session_start()
+#7 C:\xampp\htdocs\bhaviclients\system\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+#8 C:\xampp\htdocs\bhaviclients\system\Config\Services.php(710): CodeIgniter\Session\Session->start()
+#9 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+#10 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#11 C:\xampp\htdocs\bhaviclients\system\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', NULL)
+#12 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+#13 C:\xampp\htdocs\bhaviclients\system\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', Array)
+#14 C:\xampp\htdocs\bhaviclients\system\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+#15 C:\xampp\htdocs\bhaviclients\system\Common.php(973): service('session')
+#16 C:\xampp\htdocs\bhaviclients\app\Controllers\Auth.php(23): session()
+#17 C:\xampp\htdocs\bhaviclients\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#18 C:\xampp\htdocs\bhaviclients\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#19 C:\xampp\htdocs\bhaviclients\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#20 C:\xampp\htdocs\bhaviclients\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#21 C:\xampp\htdocs\bhaviclients\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#22 C:\xampp\htdocs\bhaviclients\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#23 {main}
+CRITICAL - 2025-11-05 09:16:14 --> CodeIgniter\Database\Exceptions\DatabaseException: Got error 1877 "Unknown error" from storage engine InnoDB
+[Method: GET, Route: /]
+in SYSTEMPATH\Database\BaseConnection.php on line 692.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = :id:', [...], false)
+ 2 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+ 3 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f424a2d4ef0d8c2f03d')
+ 4 SYSTEMPATH\Session\Session.php(912): session_start()
+ 5 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 6 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+ 7 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+ 8 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+ 9 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+10 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+11 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+12 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+13 SYSTEMPATH\Common.php(973): service('session')
+14 APPPATH\Controllers\Auth.php(23): session()
+15 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->login()
+16 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+17 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+18 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+19 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+20 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-11-05 09:16:14 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Got error 1877 "Unknown error" from storage engine InnoDB
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = :id:', [...], false)
+ 4 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+ 5 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f424a2d4ef0d8c2f03d')
+ 6 SYSTEMPATH\Session\Session.php(912): session_start()
+ 7 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 8 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+ 9 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+10 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+11 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+12 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+13 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+14 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+15 SYSTEMPATH\Common.php(973): service('session')
+16 APPPATH\Controllers\Auth.php(23): session()
+17 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->login()
+18 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+19 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+20 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+21 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+22 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-11-05 09:16:14 --> [Caused by] mysqli_sql_exception: Got error 1877 "Unknown error" from storage engine InnoDB
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = \'ci_session:1b8b8843563e9f424a2d4ef0d8c2f03d\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = :id:', [...], false)
+ 5 SYSTEMPATH\Session\Handlers\DatabaseHandler.php(135): CodeIgniter\Database\BaseBuilder->get()
+ 6 [internal function]: CodeIgniter\Session\Handlers\DatabaseHandler->read('1b8b8843563e9f424a2d4ef0d8c2f03d')
+ 7 SYSTEMPATH\Session\Session.php(912): session_start()
+ 8 SYSTEMPATH\Session\Session.php(243): CodeIgniter\Session\Session->startSession()
+ 9 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+10 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+11 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+12 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+13 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+14 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+15 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+16 SYSTEMPATH\Common.php(973): service('session')
+17 APPPATH\Controllers\Auth.php(23): session()
+18 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->login()
+19 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+20 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+21 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+22 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+23 FCPATH\index.php(46): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2025-11-05 09:16:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:16:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:16:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:26:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:26:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:26:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:27:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:27:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:28:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:28:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:28:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:28:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:45:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:45:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:48:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:48:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:48:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:48:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:48:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:48:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:48:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.
+DEBUG - 2025-11-05 09:48:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\DatabaseHandler' driver.

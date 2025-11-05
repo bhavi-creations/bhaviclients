@@ -49,7 +49,7 @@
                         <?= form_open_multipart(base_url('store-files')) ?>
                         <div class="card-body">
                             <div class="alert alert-info">
-                                <i class="fas fa-info-circle"></i> 
+                                <i class="fas fa-info-circle"></i>
                                 <strong>Upload Instructions:</strong>
                                 <ul class="mb-0 mt-2">
                                     <li>You can upload images, videos, and raw footage</li>
@@ -61,15 +61,67 @@
 
                             <div class="form-group">
                                 <label>Select Files <span class="text-danger">*</span></label>
-                                <div class="custom-file">
-                                    <input type="file" 
-                                           class="custom-file-input" 
-                                           id="client_files" 
-                                           name="client_files[]" 
-                                           multiple 
-                                           required>
-                                    <label class="custom-file-label" for="client_files">Choose files...</label>
+                                <style>
+                                    .file-upload-wrapper {
+                                        position: relative;
+                                        display: inline-block;
+                                        width: 100%;
+                                    }
+
+                                    .file-upload-wrapper input[type=file] {
+                                        position: absolute;
+                                        left: 0;
+                                        top: 0;
+                                        opacity: 0;
+                                        width: 100%;
+                                        height: 100%;
+                                        cursor: pointer;
+                                    }
+
+                                    .upload-button {
+                                        display: inline-block;
+                                        padding: 8px 20px;
+                                        background: #007bff;
+                                        color: white;
+                                        border-radius: 4px;
+                                        cursor: pointer;
+                                        font-weight: 500;
+                                    }
+
+                                    .upload-button:hover {
+                                        background: #0056b3;
+                                    }
+
+                                    .file-name-display {
+                                        margin-left: 10px;
+                                        color: #666;
+                                    }
+                                </style>
+
+                                <div class="file-upload-wrapper">
+                                    <span class="upload-button">Upload Files</span>
+                                    <span class="file-name-display" id="fileNameDisplay">No file chosen</span>
+                                    <input type="file"
+                                        id="client_files"
+                                        name="client_files[]"
+                                        multiple
+                                        required
+                                        onchange="updateFileName(this)">
                                 </div>
+
+                                <script>
+                                    function updateFileName(input) {
+                                        const display = document.getElementById('fileNameDisplay');
+                                        if (input.files.length === 1) {
+                                            display.textContent = input.files[0].name;
+                                        } else if (input.files.length > 1) {
+                                            display.textContent = input.files.length + ' files selected';
+                                        } else {
+                                            display.textContent = 'No file chosen';
+                                        }
+                                    }
+                                </script>
+
                                 <small class="form-text text-muted">
                                     You can select multiple files by holding Ctrl (Windows) or Cmd (Mac)
                                 </small>
@@ -79,7 +131,7 @@
                         </div>
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-upload"></i> Upload Files
+                                <i class="fas fa-upload"></i> Sent Files
                             </button>
                             <a href="<?= base_url('client-dashboard') ?>" class="btn btn-secondary">
                                 <i class="fas fa-times"></i> Cancel
@@ -135,30 +187,30 @@
 </div>
 
 <script>
-// Update file input label and show preview
-document.getElementById('client_files').addEventListener('change', function(e) {
-    var fileCount = this.files.length;
-    var label = document.querySelector('.custom-file-label');
-    
-    if (fileCount > 0) {
-        label.textContent = fileCount + ' file(s) selected';
-        
-        // Show file preview
-        var previewDiv = document.getElementById('filePreview');
-        previewDiv.innerHTML = '<h6>Selected Files:</h6><ul class="list-group">';
-        
-        for (var i = 0; i < fileCount; i++) {
-            var file = this.files[i];
-            var fileSize = (file.size / 1024).toFixed(2);
-            previewDiv.innerHTML += '<li class="list-group-item"><i class="fas fa-file mr-2"></i>' + file.name + ' <span class="badge badge-info float-right">' + fileSize + ' KB</span></li>';
+    // Update file input label and show preview
+    document.getElementById('client_files').addEventListener('change', function(e) {
+        var fileCount = this.files.length;
+        var label = document.querySelector('.custom-file-label');
+
+        if (fileCount > 0) {
+            label.textContent = fileCount + ' file(s) selected';
+
+            // Show file preview
+            var previewDiv = document.getElementById('filePreview');
+            previewDiv.innerHTML = '<h6>Selected Files:</h6><ul class="list-group">';
+
+            for (var i = 0; i < fileCount; i++) {
+                var file = this.files[i];
+                var fileSize = (file.size / 1024).toFixed(2);
+                previewDiv.innerHTML += '<li class="list-group-item"><i class="fas fa-file mr-2"></i>' + file.name + ' <span class="badge badge-info float-right">' + fileSize + ' KB</span></li>';
+            }
+
+            previewDiv.innerHTML += '</ul>';
+        } else {
+            label.textContent = 'Choose files...';
+            document.getElementById('filePreview').innerHTML = '';
         }
-        
-        previewDiv.innerHTML += '</ul>';
-    } else {
-        label.textContent = 'Choose files...';
-        document.getElementById('filePreview').innerHTML = '';
-    }
-});
+    });
 </script>
 
 <?= $this->endSection() ?>

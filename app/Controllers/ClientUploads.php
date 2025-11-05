@@ -96,20 +96,28 @@ class ClientUploads extends BaseController
     {
         $file = $this->clientFileModel->find($fileId);
 
-        // Block download if file isn't uploaded by client
-        if (!$file || $file['uploaded_by'] !== 'client') {
-            session()->setFlashdata('error', 'File not found or access denied.');
-            return redirect()->back();
+        if (!$file) {
+            return redirect()->back()->with('error', 'File not found.');
         }
 
         $filePath = FCPATH . 'uploads/client_uploads/' . $file['file_name'];
+
         if (!file_exists($filePath)) {
-            session()->setFlashdata('error', 'File not found on server.');
-            return redirect()->back();
+            return redirect()->back()->with('error', 'File not found on server.');
         }
 
-        return $this->response->download($filePath, null)->setFileName($file['original_name']);
+        // Return the file as download response
+        $binary = readfile($filePath);
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/octet-stream')
+            ->setHeader('Content-disposition', 'attachment; filename="' . $file['original_name'] . '"')
+            ->setHeader('Content-Length', filesize($filePath))
+            ->setBody($binary);
     }
+
+
+
 
     /**
      * Delete a client-uploaded file (allowed for admin, admin manager - role checks should be at controller/route)
