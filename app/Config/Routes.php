@@ -34,6 +34,15 @@ $routes->group('/', ['filter' => 'auth:1,5'], function ($routes) {
         $routes->post('delete/(:num)', 'UserManagement::delete/$1');
     });
 
+    // LEAVE MANAGEMENT (Admin)
+    $routes->group('leave-management', function ($routes) {
+        $routes->get('', 'LeaveManagement::index');
+        $routes->get('employee/(:num)', 'LeaveManagement::employeeLeaves/$1');
+        $routes->get('view/(:num)', 'LeaveManagement::viewLeave/$1');
+        $routes->post('update-status/(:num)', 'LeaveManagement::updateStatus/$1');
+        $routes->get('delete/(:num)', 'LeaveManagement::delete/$1');
+    });
+
 
     // SOCIAL MEDIA CALENDAR (Admin)
     $routes->group('social-media-calendar', function ($routes) {
@@ -249,6 +258,19 @@ $routes->group('/', ['filter' => 'auth:2'], function ($routes) {
     $routes->post('update-task/(:num)', 'EmployeeDashboard::updateTask/$1');
     $routes->post('delete-task/(:num)', 'EmployeeDashboard::deleteTask/$1');
     $routes->get('delete-file/(:num)/(:num)', 'EmployeeDashboard::deleteFile/$1/$2');
+
+
+
+    // MY LEAVES (Employee)
+    $routes->group('my-leaves', function ($routes) {
+        $routes->get('', 'EmployeeLeave::index');
+        $routes->get('apply', 'EmployeeLeave::apply');
+        $routes->post('store', 'EmployeeLeave::store');
+        $routes->get('edit/(:num)', 'EmployeeLeave::edit/$1');
+        $routes->post('update/(:num)', 'EmployeeLeave::update/$1');
+        $routes->get('delete/(:num)', 'EmployeeLeave::delete/$1');
+        $routes->get('view/(:num)', 'EmployeeLeave::view/$1');
+    });
 });
 
 
@@ -350,3 +372,14 @@ $routes->get('maintenance/edit/(:num)', 'Maintenance::edit/$1', ['filter' => 'au
 $routes->post('maintenance/update/(:num)', 'Maintenance::update/$1', ['filter' => 'auth:1']);
 $routes->post('maintenance/delete/(:num)', 'Maintenance::delete/$1', ['filter' => 'auth:1']);
 $routes->get('client-maintenance', 'Maintenance::clientView', ['filter' => 'auth:3,4']);
+
+
+
+
+
+
+
+// NOTIFICATIONS (All authenticated users)
+$routes->get('notifications', 'Notifications::index', ['filter' => 'auth']);
+$routes->get('notifications/mark-read/(:num)', 'Notifications::markAsRead/$1', ['filter' => 'auth']);
+$routes->get('notifications/mark-all-read', 'Notifications::markAllAsRead', ['filter' => 'auth']);

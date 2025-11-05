@@ -38,7 +38,7 @@ abstract class BaseController extends Controller
      *
      * @var list<string>
      */
-    protected $helpers = ['url', 'form']; // Added 'url' and 'form' helpers, commonly useful
+     protected $helpers = ['url', 'form', 'common']; // Added 'common' helper
 
     /**
      * Be sure to declare properties for any property fetch you initialized.
@@ -69,7 +69,7 @@ abstract class BaseController extends Controller
             // Ensure public routes (like login, register) do not extend BaseController or bypass this check.
             // FIX: Correctly access the URI path
             if ($request->getUri()->getPath() !== 'login' && $request->getUri()->getPath() !== 'register') { // Adjust paths as needed
-                 return redirect()->to(site_url('login'))->with('error', 'Please log in to access this page.');
+                return redirect()->to(site_url('login'))->with('error', 'Please log in to access this page.');
             }
         } else {
             // User is logged in, now check roles for pharmacy access

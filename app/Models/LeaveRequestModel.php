@@ -48,10 +48,10 @@ class LeaveRequestModel extends Model
                             users.last_name,
                             users.email,
                             employees.employee_code')
-                    ->join('users', 'users.id = leave_requests.employee_id', 'left')
-                    ->join('employees', 'employees.user_id = leave_requests.employee_id', 'left')
-                    ->orderBy('leave_requests.created_at', 'DESC')
-                    ->findAll();
+            ->join('users', 'users.id = leave_requests.employee_id', 'left')
+            ->join('employees', 'employees.user_id = leave_requests.employee_id', 'left')
+            ->orderBy('leave_requests.created_at', 'DESC')
+            ->findAll();
     }
 
     /**
@@ -60,8 +60,8 @@ class LeaveRequestModel extends Model
     public function getEmployeeLeaves($employeeId)
     {
         return $this->where('employee_id', $employeeId)
-                    ->orderBy('created_at', 'DESC')
-                    ->findAll();
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
     }
 
     /**
@@ -72,26 +72,28 @@ class LeaveRequestModel extends Model
         return $this->where('status', 'pending')->countAllResults();
     }
 
+     
     /**
      * Get employees with leave statistics
      */
     public function getEmployeesWithLeaveStats()
     {
         return $this->select('users.id as employee_id,
-                            users.first_name,
-                            users.last_name,
-                            employees.employee_code,
-                            COUNT(leave_requests.id) as total_leaves,
-                            SUM(CASE WHEN leave_requests.status = "pending" THEN 1 ELSE 0 END) as pending_leaves,
-                            SUM(CASE WHEN leave_requests.status = "approved" THEN 1 ELSE 0 END) as approved_leaves,
-                            SUM(CASE WHEN leave_requests.status = "rejected" THEN 1 ELSE 0 END) as rejected_leaves,
-                            SUM(CASE WHEN leave_requests.status = "approved" THEN leave_requests.total_days ELSE 0 END) as total_approved_days')
-                    ->join('users', 'users.id = leave_requests.employee_id', 'left')
-                    ->join('employees', 'employees.user_id = leave_requests.employee_id', 'left')
-                    ->groupBy('users.id, users.first_name, users.last_name, employees.employee_code')
-                    ->orderBy('pending_leaves', 'DESC')
-                    ->findAll();
+                        users.first_name,
+                        users.last_name,
+                        employees.employee_code,
+                        COUNT(leave_requests.id) as total_leaves,
+                        SUM(CASE WHEN leave_requests.status = "pending" THEN 1 ELSE 0 END) as pending_leaves,
+                        SUM(CASE WHEN leave_requests.status = "approved" THEN 1 ELSE 0 END) as approved_leaves,
+                        SUM(CASE WHEN leave_requests.status = "rejected" THEN 1 ELSE 0 END) as rejected_leaves,
+                        SUM(CASE WHEN leave_requests.status = "approved" THEN leave_requests.total_days ELSE 0 END) as total_approved_days')
+            ->join('users', 'users.id = leave_requests.employee_id', 'left')
+            ->join('employees', 'employees.user_id = leave_requests.employee_id', 'left')
+            ->groupBy('users.id, users.first_name, users.last_name, employees.employee_code')
+            ->orderBy('pending_leaves', 'DESC')
+            ->findAll();
     }
+
 
     /**
      * Get leave types

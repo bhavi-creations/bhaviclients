@@ -25,10 +25,9 @@
     <section class="content">
         <div class="container-fluid">
 
-            <!-- Stats Widgets -->
             <div class="row">
                 <!-- Total Clients -->
-                <div class="col-lg-4 col-6">
+                <div class="col-lg-3 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
                             <h3><?= esc($totalClients ?? 0) ?></h3>
@@ -42,7 +41,7 @@
                 </div>
 
                 <!-- Total Employees -->
-                <div class="col-lg-4 col-6">
+                <div class="col-lg-3 col-6">
                     <div class="small-box bg-success">
                         <div class="inner">
                             <h3><?= esc($totalEmployees ?? 0) ?></h3>
@@ -56,7 +55,7 @@
                 </div>
 
                 <!-- Pending Payments -->
-                <div class="col-lg-4 col-6">
+                <div class="col-lg-3 col-6">
                     <div class="small-box bg-warning">
                         <div class="inner">
                             <h3><?= esc($pendingPaymentsCount ?? 0) ?></h3>
@@ -69,7 +68,26 @@
                         </a>
                     </div>
                 </div>
+
+                <!-- Pending Leave Requests -->
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <?php
+                            $leaveModel = new \App\Models\LeaveRequestModel();
+                            $pendingLeaves = $leaveModel->getPendingCount();
+                            ?>
+                            <h3><?= $pendingLeaves ?></h3>
+                            <p>Pending Leave Requests</p>
+                        </div>
+                        <div class="icon"><i class="fas fa-calendar-check"></i></div>
+                        <a href="<?= base_url('leave-management') ?>" class="small-box-footer">
+                            View Leave Requests <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
+
 
             <!-- Recent Clients & Employees -->
             <div class="row">
@@ -96,7 +114,7 @@
                                     </thead>
                                     <tbody>
                                         <?php if (!empty($recentClients)): ?>
-                                            <?php foreach($recentClients as $client): ?>
+                                            <?php foreach ($recentClients as $client): ?>
                                                 <tr>
                                                     <td><strong><?= esc($client['name']) ?></strong></td>
                                                     <td><?= esc($client['email']) ?></td>
@@ -138,7 +156,7 @@
                                     </thead>
                                     <tbody>
                                         <?php if (!empty($recentEmployees)): ?>
-                                            <?php foreach($recentEmployees as $employee): ?>
+                                            <?php foreach ($recentEmployees as $employee): ?>
                                                 <tr>
                                                     <td><strong><?= esc($employee['first_name'] . ' ' . $employee['last_name']) ?></strong></td>
                                                     <td><?= esc($employee['email']) ?></td>
@@ -183,7 +201,7 @@
                                     </thead>
                                     <tbody>
                                         <?php if (!empty($upcomingPayments)): ?>
-                                            <?php foreach($upcomingPayments as $payment): ?>
+                                            <?php foreach ($upcomingPayments as $payment): ?>
                                                 <tr>
                                                     <td><strong><?= esc($payment['client_name']) ?></strong></td>
                                                     <td><strong>₹<?= number_format($payment['expected_amount'], 2) ?></strong></td>

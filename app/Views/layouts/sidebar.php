@@ -139,6 +139,24 @@
                     </li>
 
 
+                    <!-- NEW: Leave Management -->
+                    <li class="nav-item">
+                        <a href="<?= base_url('leave-management') ?>" class="nav-link <?= url_is('leave-management*') ? 'active' : '' ?>">
+                            <i class="nav-icon fas fa-calendar-check"></i>
+                            <p>
+                                Leave Management
+                                <?php
+                                // Get pending leave count
+                                $leaveModel = new \App\Models\LeaveRequestModel();
+                                $pendingCount = $leaveModel->getPendingCount();
+                                if ($pendingCount > 0):
+                                ?>
+                                    <span class="badge badge-warning right"><?= $pendingCount ?></span>
+                                <?php endif; ?>
+                            </p>
+                        </a>
+                    </li>
+
                     <!-- 9. Company Assets (Dropdown Menu) -->
                     <!-- <?php
                             $isCompanyAssetsActive = url_is('department*') || url_is('roles*') || url_is('user-management*');
@@ -177,7 +195,11 @@
 
 
 
+
+
                 <?php endif; ?>
+
+
 
 
                 <!-- ADMIN MANAGER PANEL (role_id = 5) - LIMITED ACCESS -->
@@ -278,6 +300,23 @@
                             <p>My Details</p>
                         </a>
                     </li>
+
+
+                    <!-- NEW: My Leaves -->
+                    <li class="nav-item">
+                        <a href="<?= base_url('my-leaves') ?>" class="nav-link <?= url_is('my-leaves*') ? 'active' : '' ?>">
+                            <i class="nav-icon fas fa-calendar-check"></i>
+                            <p>My Leave Requests</p>
+                        </a>
+                    </li>
+
+                    <!-- Quick Apply Button (Optional) -->
+                    <li class="nav-item">
+                        <a href="<?= base_url('my-leaves/apply') ?>" class="nav-link">
+                            <i class="nav-icon fas fa-plus-circle"></i>
+                            <p>Apply for Leave</p>
+                        </a>
+                    </li>
                 <?php endif; ?>
 
                 <!-- CLIENT + CLIENT MANAGER -->
@@ -341,7 +380,7 @@
                                 <i class="nav-icon fas fa-calendar-alt"></i>
                                 <p>Social Media Calendar</p>
                             </a>
-                        </li>   
+                        </li>
                     <?php endif; ?>
 
                 <?php endif; ?>

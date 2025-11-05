@@ -168,9 +168,15 @@
                 </div>
             </div>
 
-            <!-- Recent Tasks Section -->
+            <!-- NEW: Notifications and Recent Tasks Row -->
             <div class="row">
-                <div class="col-12">
+                <!-- Notifications Widget (Left Column) -->
+                <div class="col-lg-4">
+                    <?= view('components/notifications_widget') ?>
+                </div>
+
+                <!-- Recent Tasks Section (Right Column) -->
+                <div class="col-lg-8">
                     <div class="card card-primary card-outline shadow-lg">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -286,24 +292,34 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="col-md-2 col-sm-4 mb-3">
                                     <a href="<?= base_url('my-tasks') ?>" class="btn btn-app btn-block">
                                         <i class="fas fa-tasks"></i> My Tasks
                                     </a>
                                 </div>
-                                <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="col-md-2 col-sm-4 mb-3">
+                                    <a href="<?= base_url('my-leaves') ?>" class="btn btn-app btn-block">
+                                        <i class="fas fa-calendar-check"></i> My Leaves
+                                    </a>
+                                </div>
+                                <div class="col-md-2 col-sm-4 mb-3">
                                     <a href="<?= base_url('my-payslips') ?>" class="btn btn-app btn-block">
                                         <i class="fas fa-file-invoice-dollar"></i> Payslips
                                     </a>
                                 </div>
-                                <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="col-md-2 col-sm-4 mb-3">
                                     <a href="<?= base_url('my-details') ?>" class="btn btn-app btn-block">
                                         <i class="fas fa-id-card"></i> My Details
                                     </a>
                                 </div>
-                                <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="col-md-2 col-sm-4 mb-3">
                                     <a href="<?= base_url('employee-client-assets') ?>" class="btn btn-app btn-block">
-                                        <i class="fas fa-folder-open"></i> Client Assets
+                                        <i class="fas fa-folder-open"></i> Assets
+                                    </a>
+                                </div>
+                                <div class="col-md-2 col-sm-4 mb-3">
+                                    <a href="<?= base_url('holidays') ?>" class="btn btn-app btn-block">
+                                        <i class="fas fa-calendar-day"></i> Holidays
                                     </a>
                                 </div>
                             </div>
