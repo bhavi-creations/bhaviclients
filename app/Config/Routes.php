@@ -35,6 +35,17 @@ $routes->group('/', ['filter' => 'auth:1,5'], function ($routes) {
     });
 
 
+    // SOCIAL MEDIA CALENDAR (Admin)
+    $routes->group('social-media-calendar', function ($routes) {
+        $routes->get('', 'SocialMediaCalendar::index');
+        $routes->get('upload', 'SocialMediaCalendar::upload');
+        $routes->get('upload/(:num)', 'SocialMediaCalendar::upload/$1');
+        $routes->post('store', 'SocialMediaCalendar::store');
+        $routes->post('update', 'SocialMediaCalendar::update');
+        $routes->get('client/(:num)', 'SocialMediaCalendar::clientCalendars/$1');
+        $routes->get('download/(:num)', 'SocialMediaCalendar::download/$1');
+        $routes->get('delete/(:num)', 'SocialMediaCalendar::delete/$1');
+    });
 
     // EMPLOYEE
     $routes->group('employee', function ($routes) {
@@ -258,6 +269,20 @@ $routes->group('/', ['filter' => 'auth:3,4'], function ($routes) {
     $routes->get('download-file/(:num)', 'ClientDashboard::downloadFile/$1');
     $routes->get('upload-files', 'ClientDashboard::uploadFiles');
     $routes->post('store-files', 'ClientDashboard::storeFiles');
+
+
+
+    // SOCIAL MEDIA CALENDAR (Client Read-Only)
+    $routes->get('my-social-media-calendar', 'ClientSocialMediaCalendar::index');
+    $routes->get('my-social-media-calendar/download/(:num)', 'ClientSocialMediaCalendar::download/$1');
+
+
+
+
+
+
+
+
     // CLIENT MANAGER
 
 

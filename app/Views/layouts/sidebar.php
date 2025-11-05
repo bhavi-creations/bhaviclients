@@ -130,6 +130,15 @@
                         </a>
                     </li>
 
+
+                    <li class="nav-item">
+                        <a href="<?= base_url('social-media-calendar') ?>" class="nav-link <?= url_is('social-media-calendar*') ? 'active' : '' ?>">
+                            <i class="nav-icon fas fa-calendar-alt"></i>
+                            <p>Social Media Calendars</p>
+                        </a>
+                    </li>
+
+
                     <!-- 9. Company Assets (Dropdown Menu) -->
                     <!-- <?php
                             $isCompanyAssetsActive = url_is('department*') || url_is('roles*') || url_is('user-management*');
@@ -326,6 +335,13 @@
                                 <p>Payment Information</p>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a href="<?= base_url('my-social-media-calendar') ?>" class="nav-link <?= url_is('my-social-media-calendar*') ? 'active' : '' ?>">
+                                <i class="nav-icon fas fa-calendar-alt"></i>
+                                <p>Social Media Calendar</p>
+                            </a>
+                        </li>   
                     <?php endif; ?>
 
                 <?php endif; ?>
