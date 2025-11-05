@@ -79,34 +79,113 @@ $hasValidationErrors = isset($validation) && is_object($validation);
                                 <?php endif; ?>
                             </div>
 
-                            <!-- Logo Upload -->
-                            <h5 class="text-warning mb-3 mt-4"><i class="fas fa-image"></i> Client Logo</h5>
+                            <!-- Logo Upload - Separate Fields -->
+                            <h5 class="text-warning mb-3 mt-4"><i class="fas fa-image"></i> Client Logos</h5>
 
-                            <?php if (!empty($asset['logo_file'])): ?>
-                                <div class="alert alert-info">
-                                    <strong>Current Logo:</strong> <?= esc($asset['logo_file']) ?>
-                                    <br>
-                                    <img src="<?= base_url('uploads/client_assets/logos/' . $asset['logo_file']) ?>" 
-                                         alt="Current Logo" 
-                                         class="img-thumbnail mt-2" 
-                                         style="max-height: 100px;">
+                            <div class="row">
+                                <!-- PNG Logo -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="logo_png">PNG Logo</label>
+                                    <?php if (!empty($asset['logo_png'])): ?>
+                                        <div class="alert alert-info p-2 mb-2">
+                                            <small><strong>Current:</strong> <?= esc($asset['logo_png']) ?></small>
+                                            <br>
+                                            <label class="custom-control custom-checkbox mt-1">
+                                                <input type="checkbox" name="delete_logo_png" value="1" class="custom-control-input">
+                                                <span class="custom-control-label text-danger">Delete this file</span>
+                                            </label>
+                                        </div>
+                                    <?php endif; ?>
+                                    <div class="custom-file">
+                                        <input type="file" 
+                                               name="logo_png" 
+                                               class="custom-file-input" 
+                                               id="logo_png"
+                                               accept=".png">
+                                        <label class="custom-file-label" for="logo_png">
+                                            <?= !empty($asset['logo_png']) ? 'Replace PNG' : 'Upload PNG format' ?>
+                                        </label>
+                                    </div>
+                                    <small class="form-text text-muted">PNG format only (Max: 5MB)</small>
                                 </div>
-                            <?php endif; ?>
 
-                            <div class="form-group">
-                                <label for="logo_file">Upload New Logo (Optional)</label>
-                                <div class="custom-file">
-                                    <input type="file" 
-                                           name="logo_file" 
-                                           class="custom-file-input" 
-                                           id="logo_file"
-                                           accept="image/png,image/jpeg,image/jpg,image/svg+xml">
-                                    <label class="custom-file-label" for="logo_file">Choose logo file...</label>
+                                <!-- JPG Logo -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="logo_jpg">JPG Logo</label>
+                                    <?php if (!empty($asset['logo_jpg'])): ?>
+                                        <div class="alert alert-info p-2 mb-2">
+                                            <small><strong>Current:</strong> <?= esc($asset['logo_jpg']) ?></small>
+                                            <br>
+                                            <label class="custom-control custom-checkbox mt-1">
+                                                <input type="checkbox" name="delete_logo_jpg" value="1" class="custom-control-input">
+                                                <span class="custom-control-label text-danger">Delete this file</span>
+                                            </label>
+                                        </div>
+                                    <?php endif; ?>
+                                    <div class="custom-file">
+                                        <input type="file" 
+                                               name="logo_jpg" 
+                                               class="custom-file-input" 
+                                               id="logo_jpg"
+                                               accept=".jpg,.jpeg">
+                                        <label class="custom-file-label" for="logo_jpg">
+                                            <?= !empty($asset['logo_jpg']) ? 'Replace JPG' : 'Upload JPG format' ?>
+                                        </label>
+                                    </div>
+                                    <small class="form-text text-muted">JPG/JPEG format only (Max: 5MB)</small>
                                 </div>
-                                <small class="form-text text-muted">
-                                    <i class="fas fa-info-circle"></i> 
-                                    Upload a new file to replace the current logo
-                                </small>
+
+                                <!-- PSD Logo -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="logo_psd">PSD Logo</label>
+                                    <?php if (!empty($asset['logo_psd'])): ?>
+                                        <div class="alert alert-info p-2 mb-2">
+                                            <small><strong>Current:</strong> <?= esc($asset['logo_psd']) ?></small>
+                                            <br>
+                                            <label class="custom-control custom-checkbox mt-1">
+                                                <input type="checkbox" name="delete_logo_psd" value="1" class="custom-control-input">
+                                                <span class="custom-control-label text-danger">Delete this file</span>
+                                            </label>
+                                        </div>
+                                    <?php endif; ?>
+                                    <div class="custom-file">
+                                        <input type="file" 
+                                               name="logo_psd" 
+                                               class="custom-file-input" 
+                                               id="logo_psd"
+                                               accept=".psd">
+                                        <label class="custom-file-label" for="logo_psd">
+                                            <?= !empty($asset['logo_psd']) ? 'Replace PSD' : 'Upload PSD format' ?>
+                                        </label>
+                                    </div>
+                                    <small class="form-text text-muted">PSD format only (Max: 50MB)</small>
+                                </div>
+
+                                <!-- PDF Logo -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="logo_pdf">PDF Logo</label>
+                                    <?php if (!empty($asset['logo_pdf'])): ?>
+                                        <div class="alert alert-info p-2 mb-2">
+                                            <small><strong>Current:</strong> <?= esc($asset['logo_pdf']) ?></small>
+                                            <br>
+                                            <label class="custom-control custom-checkbox mt-1">
+                                                <input type="checkbox" name="delete_logo_pdf" value="1" class="custom-control-input">
+                                                <span class="custom-control-label text-danger">Delete this file</span>
+                                            </label>
+                                        </div>
+                                    <?php endif; ?>
+                                    <div class="custom-file">
+                                        <input type="file" 
+                                               name="logo_pdf" 
+                                               class="custom-file-input" 
+                                               id="logo_pdf"
+                                               accept=".pdf">
+                                        <label class="custom-file-label" for="logo_pdf">
+                                            <?= !empty($asset['logo_pdf']) ? 'Replace PDF' : 'Upload PDF format' ?>
+                                        </label>
+                                    </div>
+                                    <small class="form-text text-muted">PDF format only (Max: 5MB)</small>
+                                </div>
                             </div>
 
                             <!-- Template Files -->
@@ -157,64 +236,72 @@ $hasValidationErrors = isset($validation) && is_object($validation);
                                 </small>
                             </div>
 
-                            <!-- Social Media Links (Dynamic) -->
-                            <h5 class="text-warning mb-3 mt-4"><i class="fas fa-share-alt"></i> Social Media Links</h5>
+                            <!-- Social Media Accounts (Fixed Platforms) -->
+                            <h5 class="text-warning mb-3 mt-4"><i class="fas fa-share-alt"></i> Social Media Accounts</h5>
 
-                            <div id="socialMediaContainer">
-                                <?php if (!empty($asset['social_media_array'])): ?>
-                                    <?php foreach ($asset['social_media_array'] as $index => $social): ?>
-                                        <div class="social-media-row mb-3">
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <input type="text" 
-                                                           name="social_platform[]" 
-                                                           class="form-control" 
-                                                           placeholder="Platform"
-                                                           value="<?= esc($social['platform']) ?>">
-                                                </div>
-                                                <div class="col-md-7">
-                                                    <input type="url" 
-                                                           name="social_link[]" 
-                                                           class="form-control" 
-                                                           placeholder="Link"
-                                                           value="<?= esc($social['link']) ?>">
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <button type="button" class="btn btn-danger btn-block remove-social" <?= $index == 0 ? 'disabled' : '' ?>>
-                                                        <i class="fas fa-minus"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <div class="social-media-row mb-3">
+                            <?php
+                            $platforms = [
+                                'facebook' => ['name' => 'Facebook', 'icon' => 'fab fa-facebook'],
+                                'instagram' => ['name' => 'Instagram', 'icon' => 'fab fa-instagram'],
+                                'youtube' => ['name' => 'YouTube', 'icon' => 'fab fa-youtube'],
+                                'twitter' => ['name' => 'Twitter', 'icon' => 'fab fa-twitter'],
+                                'quora' => ['name' => 'Quora', 'icon' => 'fab fa-quora'],
+                                'website' => ['name' => 'Website', 'icon' => 'fas fa-globe'],
+                                'linkedin' => ['name' => 'LinkedIn', 'icon' => 'fab fa-linkedin'],
+                                'pinterest' => ['name' => 'Pinterest', 'icon' => 'fab fa-pinterest'],
+                                'gmb' => ['name' => 'Google My Business', 'icon' => 'fab fa-google']
+                            ];
+
+                            // Decode existing social media data
+                            $existingSocial = !empty($asset['social_media_array']) ? $asset['social_media_array'] : [];
+                            ?>
+
+                            <?php foreach ($platforms as $key => $platform): ?>
+                                <?php
+                                $existingData = $existingSocial[$key] ?? ['link' => '', 'username' => '', 'password' => ''];
+                                ?>
+                                <div class="card mb-3">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">
+                                            <i class="<?= $platform['icon'] ?>"></i> <?= $platform['name'] ?>
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input type="text" 
-                                                       name="social_platform[]" 
-                                                       class="form-control" 
-                                                       placeholder="Platform (e.g., Instagram)">
+                                                <div class="form-group">
+                                                    <label><?= $platform['name'] ?> Link</label>
+                                                    <input type="url" 
+                                                           name="<?= $key ?>_link" 
+                                                           class="form-control" 
+                                                           placeholder="https://<?= $key ?>.com/yourprofile"
+                                                           value="<?= esc($existingData['link'] ?? '') ?>">
+                                                </div>
                                             </div>
-                                            <div class="col-md-7">
-                                                <input type="url" 
-                                                       name="social_link[]" 
-                                                       class="form-control" 
-                                                       placeholder="Link (e.g., https://instagram.com/username)">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label><?= $platform['name'] ?> Username</label>
+                                                    <input type="text" 
+                                                           name="<?= $key ?>_username" 
+                                                           class="form-control" 
+                                                           placeholder="Username"
+                                                           value="<?= esc($existingData['username'] ?? '') ?>">
+                                                </div>
                                             </div>
-                                            <div class="col-md-1">
-                                                <button type="button" class="btn btn-danger btn-block remove-social" disabled>
-                                                    <i class="fas fa-minus"></i>
-                                                </button>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label><?= $platform['name'] ?> Password</label>
+                                                    <input type="text" 
+                                                           name="<?= $key ?>_password" 
+                                                           class="form-control" 
+                                                           placeholder="Password"
+                                                           value="<?= esc($existingData['password'] ?? '') ?>">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                <?php endif; ?>
-                            </div>
-
-                            <button type="button" id="addSocialMedia" class="btn btn-success btn-sm mb-3">
-                                <i class="fas fa-plus"></i> Add Another Social Media
-                            </button>
+                                </div>
+                            <?php endforeach; ?>
 
                             <!-- Remarks -->
                             <h5 class="text-warning mb-3 mt-4"><i class="fas fa-comment"></i> Additional Information</h5>
@@ -258,9 +345,24 @@ $(document).ready(function() {
         placeholder: '-- Select Client --'
     });
 
-    // Update logo file label
-    $('#logo_file').on('change', function(e) {
-        var fileName = e.target.files[0]?.name || 'Choose logo file...';
+    // Update file labels for all logo inputs
+    $('#logo_png').on('change', function(e) {
+        var fileName = e.target.files[0]?.name || 'Upload PNG format';
+        $(this).next('.custom-file-label').text(fileName);
+    });
+
+    $('#logo_jpg').on('change', function(e) {
+        var fileName = e.target.files[0]?.name || 'Upload JPG format';
+        $(this).next('.custom-file-label').text(fileName);
+    });
+
+    $('#logo_psd').on('change', function(e) {
+        var fileName = e.target.files[0]?.name || 'Upload PSD format';
+        $(this).next('.custom-file-label').text(fileName);
+    });
+
+    $('#logo_pdf').on('change', function(e) {
+        var fileName = e.target.files[0]?.name || 'Upload PDF format';
         $(this).next('.custom-file-label').text(fileName);
     });
 
@@ -269,41 +371,6 @@ $(document).ready(function() {
         var fileCount = e.target.files.length;
         var label = fileCount > 0 ? fileCount + ' file(s) selected' : 'Choose template files...';
         $(this).next('.custom-file-label').text(label);
-    });
-
-    // Add social media field
-    $('#addSocialMedia').on('click', function() {
-        var newRow = `
-            <div class="social-media-row mb-3">
-                <div class="row">
-                    <div class="col-md-4">
-                        <input type="text" 
-                               name="social_platform[]" 
-                               class="form-control" 
-                               placeholder="Platform (e.g., YouTube)">
-                    </div>
-                    <div class="col-md-7">
-                        <input type="url" 
-                               name="social_link[]" 
-                               class="form-control" 
-                               placeholder="Link (e.g., https://youtube.com/@channel)">
-                    </div>
-                    <div class="col-md-1">
-                        <button type="button" class="btn btn-danger btn-block remove-social">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-        $('#socialMediaContainer').append(newRow);
-    });
-
-    // Remove social media field
-    $(document).on('click', '.remove-social', function() {
-        if (!$(this).prop('disabled')) {
-            $(this).closest('.social-media-row').remove();
-        }
     });
 });
 </script>

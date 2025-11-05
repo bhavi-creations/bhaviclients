@@ -88,7 +88,7 @@ class EmployeeClientAssets extends BaseController
     public function downloadFile($type, $filename)
     {
         $basePath = FCPATH . 'uploads/client_assets/';
-        
+
         if ($type == 'logo') {
             $filePath = $basePath . 'logos/' . $filename;
         } elseif ($type == 'template') {
@@ -103,6 +103,12 @@ class EmployeeClientAssets extends BaseController
             return redirect()->back();
         }
 
-        return $this->response->download($filePath, null)->setFileName($filename);
+        // Fixed download method
+        $binary = file_get_contents($filePath);
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/octet-stream')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setBody($binary);
     }
 }

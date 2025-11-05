@@ -42,70 +42,152 @@
 
             <div class="row">
                 <!-- Client Information -->
-                <div class="col-md-4">
+                <div class="col-md-12">
                     <div class="card card-primary">
                         <div class="card-header">
                             <h3 class="card-title"><i class="fas fa-user-tie"></i> Client Information</h3>
+                            <div class="card-tools">
+                                <a href="<?= base_url('employee-client-assets') ?>" class="btn btn-light btn-sm">
+                                    <i class="fas fa-arrow-left"></i> Back to List
+                                </a>
+                            </div>
                         </div>
                         <div class="card-body">
-                            <dl class="row">
-                                <dt class="col-sm-5">Client Name:</dt>
-                                <dd class="col-sm-7"><strong><?= esc($asset['client_name']) ?></strong></dd>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <strong>Client Name:</strong>
+                                    <p><?= esc($asset['client_name']) ?></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <strong>Email:</strong>
+                                    <p><?= esc($asset['client_email']) ?></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <strong>Uploaded By:</strong>
+                                    <p><?= esc($asset['uploaded_by_name'] . ' ' . $asset['uploaded_by_lastname']) ?></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <strong>Uploaded On:</strong>
+                                    <p><?= date('M d, Y', strtotime($asset['created_at'])) ?></p>
+                                </div>
+                            </div>
 
-                                <dt class="col-sm-5">Email:</dt>
-                                <dd class="col-sm-7"><?= esc($asset['client_email']) ?></dd>
-
-                                <dt class="col-sm-5">Uploaded By:</dt>
-                                <dd class="col-sm-7"><?= esc($asset['uploaded_by_name'] . ' ' . $asset['uploaded_by_lastname']) ?></dd>
-
-                                <dt class="col-sm-5">Uploaded On:</dt>
-                                <dd class="col-sm-7"><?= date('M d, Y', strtotime($asset['created_at'])) ?></dd>
-
-                                <?php if (!empty($asset['updated_at']) && $asset['updated_at'] != $asset['created_at']): ?>
-                                    <dt class="col-sm-5">Last Updated:</dt>
-                                    <dd class="col-sm-7"><?= date('M d, Y', strtotime($asset['updated_at'])) ?></dd>
-                                <?php endif; ?>
-
-                                <?php if (!empty($asset['remarks'])): ?>
-                                    <dt class="col-sm-12 mt-2">Remarks:</dt>
-                                    <dd class="col-sm-12">
-                                        <div class="alert alert-info mb-0">
+                            <?php if (!empty($asset['remarks'])): ?>
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <strong>Remarks:</strong>
+                                        <div class="alert alert-info mb-0 mt-2">
                                             <?= nl2br(esc($asset['remarks'])) ?>
                                         </div>
-                                    </dd>
-                                <?php endif; ?>
-                            </dl>
-                        </div>
-                        <div class="card-footer">
-                            <a href="<?= base_url('employee-client-assets') ?>" class="btn btn-secondary btn-block">
-                                <i class="fas fa-arrow-left"></i> Back to List
-                            </a>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Logo -->
-                <div class="col-md-8">
-                    <div class="card card-success">
-                        <div class="card-header">
-                            <h3 class="card-title"><i class="fas fa-image"></i> Client Logo</h3>
-                        </div>
-                        <div class="card-body text-center">
-                            <?php if (!empty($asset['logo_file'])): ?>
-                                <img src="<?= base_url('uploads/client_assets/logos/' . $asset['logo_file']) ?>" 
-                                     alt="Client Logo" 
-                                     class="img-fluid mb-3" 
-                                     style="max-height: 250px; border: 2px solid #ddd; padding: 15px; background: white; border-radius: 8px;">
-                                <br>
-                                <a href="<?= base_url('employee-client-assets/download/logo/' . $asset['logo_file']) ?>" 
-                                   class="btn btn-primary">
-                                    <i class="fas fa-download"></i> Download Logo
-                                </a>
-                            <?php else: ?>
-                                <div class="alert alert-warning">
-                                    <i class="fas fa-exclamation-triangle"></i> No logo available
+            <!-- Client Logos -->
+            <div class="card card-success">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-image"></i> Client Logos</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- PNG Logo -->
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-header bg-info">
+                                    <h6 class="mb-0">PNG Logo</h6>
                                 </div>
-                            <?php endif; ?>
+                                <div class="card-body text-center">
+                                    <?php if (!empty($asset['logo_png'])): ?>
+                                        <i class="fas fa-file-image fa-3x text-success mb-3"></i>
+                                        <p class="text-truncate" title="<?= esc($asset['logo_png']) ?>">
+                                            <?= esc($asset['logo_png']) ?>
+                                        </p>
+                                        <a href="<?= base_url('employee-client-assets/download/logo/' . $asset['logo_png']) ?>" 
+                                           class="btn btn-sm btn-primary btn-block">
+                                            <i class="fas fa-download"></i> Download
+                                        </a>
+                                    <?php else: ?>
+                                        <i class="fas fa-times-circle fa-3x text-muted mb-3"></i>
+                                        <p class="text-muted">Not available</p>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- JPG Logo -->
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-header bg-info">
+                                    <h6 class="mb-0">JPG Logo</h6>
+                                </div>
+                                <div class="card-body text-center">
+                                    <?php if (!empty($asset['logo_jpg'])): ?>
+                                        <i class="fas fa-file-image fa-3x text-success mb-3"></i>
+                                        <p class="text-truncate" title="<?= esc($asset['logo_jpg']) ?>">
+                                            <?= esc($asset['logo_jpg']) ?>
+                                        </p>
+                                        <a href="<?= base_url('employee-client-assets/download/logo/' . $asset['logo_jpg']) ?>" 
+                                           class="btn btn-sm btn-primary btn-block">
+                                            <i class="fas fa-download"></i> Download
+                                        </a>
+                                    <?php else: ?>
+                                        <i class="fas fa-times-circle fa-3x text-muted mb-3"></i>
+                                        <p class="text-muted">Not available</p>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PSD Logo -->
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-header bg-info">
+                                    <h6 class="mb-0">PSD Logo</h6>
+                                </div>
+                                <div class="card-body text-center">
+                                    <?php if (!empty($asset['logo_psd'])): ?>
+                                        <i class="fas fa-file-code fa-3x text-success mb-3"></i>
+                                        <p class="text-truncate" title="<?= esc($asset['logo_psd']) ?>">
+                                            <?= esc($asset['logo_psd']) ?>
+                                        </p>
+                                        <a href="<?= base_url('employee-client-assets/download/logo/' . $asset['logo_psd']) ?>" 
+                                           class="btn btn-sm btn-primary btn-block">
+                                            <i class="fas fa-download"></i> Download
+                                        </a>
+                                    <?php else: ?>
+                                        <i class="fas fa-times-circle fa-3x text-muted mb-3"></i>
+                                        <p class="text-muted">Not available</p>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PDF Logo -->
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-header bg-info">
+                                    <h6 class="mb-0">PDF Logo</h6>
+                                </div>
+                                <div class="card-body text-center">
+                                    <?php if (!empty($asset['logo_pdf'])): ?>
+                                        <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
+                                        <p class="text-truncate" title="<?= esc($asset['logo_pdf']) ?>">
+                                            <?= esc($asset['logo_pdf']) ?>
+                                        </p>
+                                        <a href="<?= base_url('employee-client-assets/download/logo/' . $asset['logo_pdf']) ?>" 
+                                           class="btn btn-sm btn-primary btn-block">
+                                            <i class="fas fa-download"></i> Download
+                                        </a>
+                                    <?php else: ?>
+                                        <i class="fas fa-times-circle fa-3x text-muted mb-3"></i>
+                                        <p class="text-muted">Not available</p>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -175,73 +257,53 @@
                 </div>
             <?php endif; ?>
 
-            <!-- Social Media Links -->
+            <!-- Social Media Links (Link Only - NO Credentials for Employees) -->
             <?php if (!empty($asset['social_media_array'])): ?>
                 <div class="card card-warning">
                     <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-share-alt"></i> Social Media Links (<?= count($asset['social_media_array']) ?>)</h3>
+                        <h3 class="card-title"><i class="fas fa-share-alt"></i> Social Media Links</h3>
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <?php foreach ($asset['social_media_array'] as $social): ?>
+                            <?php 
+                            $platformIcons = [
+                                'facebook' => ['icon' => 'fab fa-facebook', 'color' => 'primary'],
+                                'instagram' => ['icon' => 'fab fa-instagram', 'color' => 'danger'],
+                                'youtube' => ['icon' => 'fab fa-youtube', 'color' => 'danger'],
+                                'twitter' => ['icon' => 'fab fa-twitter', 'color' => 'info'],
+                                'quora' => ['icon' => 'fab fa-quora', 'color' => 'danger'],
+                                'website' => ['icon' => 'fas fa-globe', 'color' => 'primary'],
+                                'linkedin' => ['icon' => 'fab fa-linkedin', 'color' => 'primary'],
+                                'pinterest' => ['icon' => 'fab fa-pinterest', 'color' => 'danger'],
+                                'gmb' => ['icon' => 'fab fa-google', 'color' => 'danger']
+                            ];
+                            
+                            foreach ($asset['social_media_array'] as $platform => $data): 
+                                // Skip if no link available
+                                if (empty($data['link'])) continue;
+                                
+                                $platformName = ucfirst($platform);
+                                if ($platform == 'gmb') $platformName = 'Google My Business';
+                                $icon = $platformIcons[$platform]['icon'] ?? 'fas fa-link';
+                                $color = $platformIcons[$platform]['color'] ?? 'secondary';
+                            ?>
                                 <div class="col-md-4 mb-3">
                                     <div class="card h-100">
+                                        <div class="card-header bg-<?= $color ?>">
+                                            <h6 class="mb-0 text-white">
+                                                <i class="<?= $icon ?>"></i> <?= $platformName ?>
+                                            </h6>
+                                        </div>
                                         <div class="card-body">
-                                            <h5 class="card-title">
-                                                <?php
-                                                $platform = strtolower($social['platform']);
-                                                $iconClass = 'fa-link';
-                                                $iconColor = 'text-secondary';
-                                                $brandClass = '';
-                                                
-                                                if (strpos($platform, 'instagram') !== false) {
-                                                    $iconClass = 'fa-instagram';
-                                                    $iconColor = 'text-danger';
-                                                    $brandClass = 'fab';
-                                                } elseif (strpos($platform, 'facebook') !== false) {
-                                                    $iconClass = 'fa-facebook';
-                                                    $iconColor = 'text-primary';
-                                                    $brandClass = 'fab';
-                                                } elseif (strpos($platform, 'twitter') !== false || strpos($platform, 'x') !== false) {
-                                                    $iconClass = 'fa-twitter';
-                                                    $iconColor = 'text-info';
-                                                    $brandClass = 'fab';
-                                                } elseif (strpos($platform, 'linkedin') !== false) {
-                                                    $iconClass = 'fa-linkedin';
-                                                    $iconColor = 'text-primary';
-                                                    $brandClass = 'fab';
-                                                } elseif (strpos($platform, 'youtube') !== false) {
-                                                    $iconClass = 'fa-youtube';
-                                                    $iconColor = 'text-danger';
-                                                    $brandClass = 'fab';
-                                                } elseif (strpos($platform, 'tiktok') !== false) {
-                                                    $iconClass = 'fa-tiktok';
-                                                    $iconColor = 'text-dark';
-                                                    $brandClass = 'fab';
-                                                } elseif (strpos($platform, 'pinterest') !== false) {
-                                                    $iconClass = 'fa-pinterest';
-                                                    $iconColor = 'text-danger';
-                                                    $brandClass = 'fab';
-                                                } elseif (strpos($platform, 'whatsapp') !== false) {
-                                                    $iconClass = 'fa-whatsapp';
-                                                    $iconColor = 'text-success';
-                                                    $brandClass = 'fab';
-                                                } else {
-                                                    $brandClass = 'fas';
-                                                }
-                                                ?>
-                                                <i class="<?= $brandClass ?> <?= $iconClass ?> <?= $iconColor ?>"></i>
-                                                <?= esc($social['platform']) ?>
-                                            </h5>
-                                            <p class="card-text">
-                                                <small class="text-muted text-truncate d-block" title="<?= esc($social['link']) ?>">
-                                                    <?= esc($social['link']) ?>
-                                                </small>
+                                            <p class="mb-2">
+                                                <strong>Link:</strong><br>
+                                                <a href="<?= esc($data['link']) ?>" target="_blank" class="text-truncate d-block">
+                                                    <?= esc($data['link']) ?>
+                                                </a>
                                             </p>
-                                            <a href="<?= esc($social['link']) ?>" 
+                                            <a href="<?= esc($data['link']) ?>" 
                                                target="_blank" 
-                                               rel="noopener noreferrer"
-                                               class="btn btn-sm btn-primary btn-block">
+                                               class="btn btn-sm btn-<?= $color ?> btn-block mt-2">
                                                 <i class="fas fa-external-link-alt"></i> Visit Page
                                             </a>
                                         </div>

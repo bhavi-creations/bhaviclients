@@ -72,11 +72,17 @@ class ClientAsset extends BaseController
     /**
      * Store client assets
      */
+    /**
+     * Store client assets
+     */
     public function store()
     {
         $rules = [
             'client_id' => 'required|integer',
-            'logo_file' => 'permit_empty|uploaded[logo_file]|max_size[logo_file,2048]|ext_in[logo_file,png,jpg,jpeg,svg]',
+            'logo_png' => 'permit_empty|uploaded[logo_png]|max_size[logo_png,5120]|ext_in[logo_png,png]',
+            'logo_jpg' => 'permit_empty|uploaded[logo_jpg]|max_size[logo_jpg,5120]|ext_in[logo_jpg,jpg,jpeg]',
+            'logo_psd' => 'permit_empty|uploaded[logo_psd]|max_size[logo_psd,51200]|ext_in[logo_psd,psd]',
+            'logo_pdf' => 'permit_empty|uploaded[logo_pdf]|max_size[logo_pdf,5120]|ext_in[logo_pdf,pdf]',
             'remarks' => 'permit_empty'
         ];
 
@@ -90,26 +96,54 @@ class ClientAsset extends BaseController
         $input = $this->request->getPost();
 
         try {
-            // Handle logo upload
-            $logoFile = null;
-            $logo = $this->request->getFile('logo_file');
-            if ($logo && $logo->isValid() && !$logo->hasMoved()) {
-                $uploadPath = FCPATH . 'uploads/client_assets/logos/';
-                if (!is_dir($uploadPath)) {
-                    mkdir($uploadPath, 0755, true);
-                }
-                $logoName = time() . '_' . $logo->getRandomName();
-                $logo->move($uploadPath, $logoName);
-                $logoFile = $logoName;
+            $uploadPath = FCPATH . 'uploads/client_assets/logos/';
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+
+            // Handle PNG logo upload
+            $logoPng = null;
+            $pngFile = $this->request->getFile('logo_png');
+            if ($pngFile && $pngFile->isValid() && !$pngFile->hasMoved()) {
+                $pngName = time() . '_png_' . $pngFile->getRandomName();
+                $pngFile->move($uploadPath, $pngName);
+                $logoPng = $pngName;
+            }
+
+            // Handle JPG logo upload
+            $logoJpg = null;
+            $jpgFile = $this->request->getFile('logo_jpg');
+            if ($jpgFile && $jpgFile->isValid() && !$jpgFile->hasMoved()) {
+                $jpgName = time() . '_jpg_' . $jpgFile->getRandomName();
+                $jpgFile->move($uploadPath, $jpgName);
+                $logoJpg = $jpgName;
+            }
+
+            // Handle PSD logo upload
+            $logoPsd = null;
+            $psdFile = $this->request->getFile('logo_psd');
+            if ($psdFile && $psdFile->isValid() && !$psdFile->hasMoved()) {
+                $psdName = time() . '_psd_' . $psdFile->getRandomName();
+                $psdFile->move($uploadPath, $psdName);
+                $logoPsd = $psdName;
+            }
+
+            // Handle PDF logo upload
+            $logoPdf = null;
+            $pdfFile = $this->request->getFile('logo_pdf');
+            if ($pdfFile && $pdfFile->isValid() && !$pdfFile->hasMoved()) {
+                $pdfName = time() . '_pdf_' . $pdfFile->getRandomName();
+                $pdfFile->move($uploadPath, $pdfName);
+                $logoPdf = $pdfName;
             }
 
             // Handle template files upload (multiple)
             $templateFiles = [];
             $templates = $this->request->getFiles('template_files');
             if (!empty($templates)) {
-                $uploadPath = FCPATH . 'uploads/client_assets/templates/';
-                if (!is_dir($uploadPath)) {
-                    mkdir($uploadPath, 0755, true);
+                $templatePath = FCPATH . 'uploads/client_assets/templates/';
+                if (!is_dir($templatePath)) {
+                    mkdir($templatePath, 0755, true);
                 }
 
                 foreach ($templates as $template) {
@@ -117,40 +151,45 @@ class ClientAsset extends BaseController
                         foreach ($template as $file) {
                             if ($file->isValid() && !$file->hasMoved()) {
                                 $fileName = time() . '_' . $file->getRandomName();
-                                $file->move($uploadPath, $fileName);
+                                $file->move($templatePath, $fileName);
                                 $templateFiles[] = $fileName;
                             }
                         }
                     } else {
                         if ($template->isValid() && !$template->hasMoved()) {
                             $fileName = time() . '_' . $template->getRandomName();
-                            $template->move($uploadPath, $fileName);
+                            $template->move($templatePath, $fileName);
                             $templateFiles[] = $fileName;
                         }
                     }
                 }
             }
 
-            // Handle social media links (dynamic fields)
+            // Handle social media - Fixed platforms with link, username, password
             $socialMedia = [];
-            $platformNames = $this->request->getPost('social_platform');
-            $platformLinks = $this->request->getPost('social_link');
+            $platforms = ['facebook', 'instagram', 'youtube', 'twitter', 'quora', 'website', 'linkedin', 'pinterest', 'gmb'];
 
-            if (!empty($platformNames) && is_array($platformNames)) {
-                foreach ($platformNames as $index => $platform) {
-                    if (!empty($platform) && !empty($platformLinks[$index])) {
-                        $socialMedia[] = [
-                            'platform' => trim($platform),
-                            'link' => trim($platformLinks[$index])
-                        ];
-                    }
+            foreach ($platforms as $platform) {
+                $link = $this->request->getPost($platform . '_link');
+                $username = $this->request->getPost($platform . '_username');
+                $password = $this->request->getPost($platform . '_password');
+
+                if (!empty($link) || !empty($username) || !empty($password)) {
+                    $socialMedia[$platform] = [
+                        'link' => trim($link ?? ''),
+                        'username' => trim($username ?? ''),
+                        'password' => trim($password ?? '')  // Consider encrypting this in production
+                    ];
                 }
             }
 
             // Insert asset record
             $assetData = [
                 'client_id' => $input['client_id'],
-                'logo_file' => $logoFile,
+                'logo_png' => $logoPng,
+                'logo_jpg' => $logoJpg,
+                'logo_psd' => $logoPsd,
+                'logo_pdf' => $logoPdf,
                 'template_files' => !empty($templateFiles) ? json_encode($templateFiles) : null,
                 'social_media' => !empty($socialMedia) ? json_encode($socialMedia) : null,
                 'remarks' => !empty($input['remarks']) ? trim($input['remarks']) : null,
@@ -169,6 +208,7 @@ class ClientAsset extends BaseController
             return redirect()->back()->withInput();
         }
     }
+
 
     /**
      * View client assets
@@ -246,6 +286,10 @@ class ClientAsset extends BaseController
 
         $rules = [
             'client_id' => 'required|integer',
+            'logo_png' => 'permit_empty|uploaded[logo_png]|max_size[logo_png,5120]|ext_in[logo_png,png]',
+            'logo_jpg' => 'permit_empty|uploaded[logo_jpg]|max_size[logo_jpg,5120]|ext_in[logo_jpg,jpg,jpeg]',
+            'logo_psd' => 'permit_empty|uploaded[logo_psd]|max_size[logo_psd,51200]|ext_in[logo_psd,psd]',
+            'logo_pdf' => 'permit_empty|uploaded[logo_pdf]|max_size[logo_pdf,5120]|ext_in[logo_pdf,pdf]',
             'remarks' => 'permit_empty'
         ];
 
@@ -259,25 +303,107 @@ class ClientAsset extends BaseController
         $input = $this->request->getPost();
 
         try {
-            // Handle logo upload
-            $logoFile = $asset['logo_file'];
-            $logo = $this->request->getFile('logo_file');
-            if ($logo && $logo->isValid() && !$logo->hasMoved()) {
-                // Delete old logo
-                if (!empty($logoFile)) {
-                    $oldPath = FCPATH . 'uploads/client_assets/logos/' . $logoFile;
+            $uploadPath = FCPATH . 'uploads/client_assets/logos/';
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+
+            // Handle PNG Logo
+            $logoPng = $asset['logo_png'];
+            if ($this->request->getPost('delete_logo_png')) {
+                // Delete existing PNG
+                if (!empty($logoPng)) {
+                    $oldPath = $uploadPath . $logoPng;
                     if (file_exists($oldPath)) {
                         unlink($oldPath);
                     }
                 }
-
-                $uploadPath = FCPATH . 'uploads/client_assets/logos/';
-                if (!is_dir($uploadPath)) {
-                    mkdir($uploadPath, 0755, true);
+                $logoPng = null;
+            }
+            $pngFile = $this->request->getFile('logo_png');
+            if ($pngFile && $pngFile->isValid() && !$pngFile->hasMoved()) {
+                // Delete old PNG
+                if (!empty($logoPng)) {
+                    $oldPath = $uploadPath . $logoPng;
+                    if (file_exists($oldPath)) {
+                        unlink($oldPath);
+                    }
                 }
-                $logoName = time() . '_' . $logo->getRandomName();
-                $logo->move($uploadPath, $logoName);
-                $logoFile = $logoName;
+                $pngName = time() . '_png_' . $pngFile->getRandomName();
+                $pngFile->move($uploadPath, $pngName);
+                $logoPng = $pngName;
+            }
+
+            // Handle JPG Logo
+            $logoJpg = $asset['logo_jpg'];
+            if ($this->request->getPost('delete_logo_jpg')) {
+                if (!empty($logoJpg)) {
+                    $oldPath = $uploadPath . $logoJpg;
+                    if (file_exists($oldPath)) {
+                        unlink($oldPath);
+                    }
+                }
+                $logoJpg = null;
+            }
+            $jpgFile = $this->request->getFile('logo_jpg');
+            if ($jpgFile && $jpgFile->isValid() && !$jpgFile->hasMoved()) {
+                if (!empty($logoJpg)) {
+                    $oldPath = $uploadPath . $logoJpg;
+                    if (file_exists($oldPath)) {
+                        unlink($oldPath);
+                    }
+                }
+                $jpgName = time() . '_jpg_' . $jpgFile->getRandomName();
+                $jpgFile->move($uploadPath, $jpgName);
+                $logoJpg = $jpgName;
+            }
+
+            // Handle PSD Logo
+            $logoPsd = $asset['logo_psd'];
+            if ($this->request->getPost('delete_logo_psd')) {
+                if (!empty($logoPsd)) {
+                    $oldPath = $uploadPath . $logoPsd;
+                    if (file_exists($oldPath)) {
+                        unlink($oldPath);
+                    }
+                }
+                $logoPsd = null;
+            }
+            $psdFile = $this->request->getFile('logo_psd');
+            if ($psdFile && $psdFile->isValid() && !$psdFile->hasMoved()) {
+                if (!empty($logoPsd)) {
+                    $oldPath = $uploadPath . $logoPsd;
+                    if (file_exists($oldPath)) {
+                        unlink($oldPath);
+                    }
+                }
+                $psdName = time() . '_psd_' . $psdFile->getRandomName();
+                $psdFile->move($uploadPath, $psdName);
+                $logoPsd = $psdName;
+            }
+
+            // Handle PDF Logo
+            $logoPdf = $asset['logo_pdf'];
+            if ($this->request->getPost('delete_logo_pdf')) {
+                if (!empty($logoPdf)) {
+                    $oldPath = $uploadPath . $logoPdf;
+                    if (file_exists($oldPath)) {
+                        unlink($oldPath);
+                    }
+                }
+                $logoPdf = null;
+            }
+            $pdfFile = $this->request->getFile('logo_pdf');
+            if ($pdfFile && $pdfFile->isValid() && !$pdfFile->hasMoved()) {
+                if (!empty($logoPdf)) {
+                    $oldPath = $uploadPath . $logoPdf;
+                    if (file_exists($oldPath)) {
+                        unlink($oldPath);
+                    }
+                }
+                $pdfName = time() . '_pdf_' . $pdfFile->getRandomName();
+                $pdfFile->move($uploadPath, $pdfName);
+                $logoPdf = $pdfName;
             }
 
             // Handle template files
@@ -299,46 +425,55 @@ class ClientAsset extends BaseController
             // Upload new templates
             $templates = $this->request->getFiles('template_files');
             if (!empty($templates)) {
-                $uploadPath = FCPATH . 'uploads/client_assets/templates/';
+                $templatePath = FCPATH . 'uploads/client_assets/templates/';
+                if (!is_dir($templatePath)) {
+                    mkdir($templatePath, 0755, true);
+                }
+
                 foreach ($templates as $template) {
                     if (is_array($template)) {
                         foreach ($template as $file) {
                             if ($file->isValid() && !$file->hasMoved()) {
                                 $fileName = time() . '_' . $file->getRandomName();
-                                $file->move($uploadPath, $fileName);
+                                $file->move($templatePath, $fileName);
                                 $keptTemplates[] = $fileName;
                             }
                         }
                     } else {
                         if ($template->isValid() && !$template->hasMoved()) {
                             $fileName = time() . '_' . $template->getRandomName();
-                            $template->move($uploadPath, $fileName);
+                            $template->move($templatePath, $fileName);
                             $keptTemplates[] = $fileName;
                         }
                     }
                 }
             }
 
-            // Handle social media links
+            // Handle social media - Fixed platforms with link, username, password
             $socialMedia = [];
-            $platformNames = $this->request->getPost('social_platform');
-            $platformLinks = $this->request->getPost('social_link');
+            $platforms = ['facebook', 'instagram', 'youtube', 'twitter', 'quora', 'website', 'linkedin', 'pinterest', 'gmb'];
 
-            if (!empty($platformNames) && is_array($platformNames)) {
-                foreach ($platformNames as $index => $platform) {
-                    if (!empty($platform) && !empty($platformLinks[$index])) {
-                        $socialMedia[] = [
-                            'platform' => trim($platform),
-                            'link' => trim($platformLinks[$index])
-                        ];
-                    }
+            foreach ($platforms as $platform) {
+                $link = $this->request->getPost($platform . '_link');
+                $username = $this->request->getPost($platform . '_username');
+                $password = $this->request->getPost($platform . '_password');
+
+                if (!empty($link) || !empty($username) || !empty($password)) {
+                    $socialMedia[$platform] = [
+                        'link' => trim($link ?? ''),
+                        'username' => trim($username ?? ''),
+                        'password' => trim($password ?? '')  // Consider encrypting in production
+                    ];
                 }
             }
 
             // Update asset record
             $updateData = [
                 'client_id' => $input['client_id'],
-                'logo_file' => $logoFile,
+                'logo_png' => $logoPng,
+                'logo_jpg' => $logoJpg,
+                'logo_psd' => $logoPsd,
+                'logo_pdf' => $logoPdf,
                 'template_files' => !empty($keptTemplates) ? json_encode($keptTemplates) : null,
                 'social_media' => !empty($socialMedia) ? json_encode($socialMedia) : null,
                 'remarks' => !empty($input['remarks']) ? trim($input['remarks']) : null,
@@ -355,6 +490,7 @@ class ClientAsset extends BaseController
             return redirect()->back()->withInput();
         }
     }
+
 
     /**
      * Delete client assets

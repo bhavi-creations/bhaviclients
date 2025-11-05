@@ -11,7 +11,11 @@ class ClientAssetModel extends Model
     protected $primaryKey = 'id';
     protected $allowedFields = [
         'client_id',
-        'logo_file',
+        'logo_file',      // Old field - keep for backward compatibility
+        'logo_png',       // NEW
+        'logo_jpg',       // NEW
+        'logo_psd',       // NEW
+        'logo_pdf',       // NEW
         'template_files',
         'social_media',
         'remarks',

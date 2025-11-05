@@ -56,7 +56,7 @@
                                     <tr>
                                         <th>S.No.</th>
                                         <th>Client Name</th>
-                                        <th>Logo</th>
+                                        <th>Logos</th>
                                         <th>Templates</th>
                                         <th>Social Media</th>
                                         <th>Uploaded By</th>
@@ -70,17 +70,31 @@
                                         <?php
                                         $templates = !empty($asset['template_files']) ? json_decode($asset['template_files'], true) : [];
                                         $socialMedia = !empty($asset['social_media']) ? json_decode($asset['social_media'], true) : [];
+                                        
+                                        // Count logos
+                                        $logoCount = 0;
+                                        if (!empty($asset['logo_png'])) $logoCount++;
+                                        if (!empty($asset['logo_jpg'])) $logoCount++;
+                                        if (!empty($asset['logo_psd'])) $logoCount++;
+                                        if (!empty($asset['logo_pdf'])) $logoCount++;
                                         ?>
                                         <tr>
                                             <td><?= $sn++ ?></td>
                                             <td><strong><?= esc($asset['client_name']) ?></strong></td>
                                             <td>
-                                                <?php if (!empty($asset['logo_file'])): ?>
+                                                <?php if ($logoCount > 0): ?>
                                                     <span class="badge badge-success">
-                                                        <i class="fas fa-check"></i> Yes
+                                                        <i class="fas fa-check"></i> <?= $logoCount ?> file(s)
                                                     </span>
+                                                    <br>
+                                                    <small class="text-muted">
+                                                        <?php if (!empty($asset['logo_png'])): ?><span class="badge badge-info">PNG</span> <?php endif; ?>
+                                                        <?php if (!empty($asset['logo_jpg'])): ?><span class="badge badge-info">JPG</span> <?php endif; ?>
+                                                        <?php if (!empty($asset['logo_psd'])): ?><span class="badge badge-info">PSD</span> <?php endif; ?>
+                                                        <?php if (!empty($asset['logo_pdf'])): ?><span class="badge badge-info">PDF</span> <?php endif; ?>
+                                                    </small>
                                                 <?php else: ?>
-                                                    <span class="badge badge-secondary">No</span>
+                                                    <span class="badge badge-secondary">No logos</span>
                                                 <?php endif; ?>
                                             </td>
                                             <td>
@@ -90,7 +104,7 @@
                                             </td>
                                             <td>
                                                 <span class="badge badge-primary">
-                                                    <?= count($socialMedia) ?> link(s)
+                                                    <?= count($socialMedia) ?> platform(s)
                                                 </span>
                                             </td>
                                             <td><?= esc($asset['uploaded_by_name'] . ' ' . $asset['uploaded_by_lastname']) ?></td>

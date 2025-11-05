@@ -79,23 +79,73 @@ $hasValidationErrors = isset($validation) && is_object($validation);
                                 <?php endif; ?>
                             </div>
 
-                            <!-- Logo Upload -->
-                            <h5 class="text-primary mb-3 mt-4"><i class="fas fa-image"></i> Client Logo</h5>
+                            <!-- Logo Upload - Separate Fields -->
+                            <h5 class="text-primary mb-3 mt-4"><i class="fas fa-image"></i> Client Logos</h5>
 
-                            <div class="form-group">
-                                <label for="logo_file">Upload Logo</label>
-                                <div class="custom-file">
-                                    <input type="file" 
-                                           name="logo_file" 
-                                           class="custom-file-input" 
-                                           id="logo_file"
-                                           accept="image/png,image/jpeg,image/jpg,image/svg+xml">
-                                    <label class="custom-file-label" for="logo_file">Choose logo file...</label>
+                            <div class="row">
+                                <!-- PNG Logo -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="logo_png">PNG Logo</label>
+                                    <div class="custom-file">
+                                        <input type="file" 
+                                               name="logo_png" 
+                                               class="custom-file-input" 
+                                               id="logo_png"
+                                               accept=".png">
+                                        <label class="custom-file-label" for="logo_png">Upload PNG format</label>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        <i class="fas fa-info-circle"></i> PNG format only (Max: 5MB)
+                                    </small>
                                 </div>
-                                <small class="form-text text-muted">
-                                    <i class="fas fa-info-circle"></i> 
-                                    Allowed: PNG, JPG, JPEG, SVG (Max: 2MB)
-                                </small>
+
+                                <!-- JPG Logo -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="logo_jpg">JPG Logo</label>
+                                    <div class="custom-file">
+                                        <input type="file" 
+                                               name="logo_jpg" 
+                                               class="custom-file-input" 
+                                               id="logo_jpg"
+                                               accept=".jpg,.jpeg">
+                                        <label class="custom-file-label" for="logo_jpg">Upload JPG format</label>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        <i class="fas fa-info-circle"></i> JPG/JPEG format only (Max: 5MB)
+                                    </small>
+                                </div>
+
+                                <!-- PSD Logo -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="logo_psd">PSD Logo</label>
+                                    <div class="custom-file">
+                                        <input type="file" 
+                                               name="logo_psd" 
+                                               class="custom-file-input" 
+                                               id="logo_psd"
+                                               accept=".psd">
+                                        <label class="custom-file-label" for="logo_psd">Upload PSD format</label>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        <i class="fas fa-info-circle"></i> PSD format only (Max: 50MB)
+                                    </small>
+                                </div>
+
+                                <!-- PDF Logo -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="logo_pdf">PDF Logo</label>
+                                    <div class="custom-file">
+                                        <input type="file" 
+                                               name="logo_pdf" 
+                                               class="custom-file-input" 
+                                               id="logo_pdf"
+                                               accept=".pdf">
+                                        <label class="custom-file-label" for="logo_pdf">Upload PDF format</label>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        <i class="fas fa-info-circle"></i> PDF format only (Max: 5MB)
+                                    </small>
+                                </div>
                             </div>
 
                             <!-- Template Files -->
@@ -118,36 +168,63 @@ $hasValidationErrors = isset($validation) && is_object($validation);
                                 </small>
                             </div>
 
-                            <!-- Social Media Links (Dynamic) -->
-                            <h5 class="text-primary mb-3 mt-4"><i class="fas fa-share-alt"></i> Social Media Links</h5>
+                            <!-- Social Media Links (Fixed Platforms) -->
+                            <h5 class="text-primary mb-3 mt-4"><i class="fas fa-share-alt"></i> Social Media Accounts</h5>
 
-                            <div id="socialMediaContainer">
-                                <div class="social-media-row mb-3">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <input type="text" 
-                                                   name="social_platform[]" 
-                                                   class="form-control" 
-                                                   placeholder="Platform (e.g., Instagram)">
-                                        </div>
-                                        <div class="col-md-7">
-                                            <input type="url" 
-                                                   name="social_link[]" 
-                                                   class="form-control" 
-                                                   placeholder="Link (e.g., https://instagram.com/username)">
-                                        </div>
-                                        <div class="col-md-1">
-                                            <button type="button" class="btn btn-danger btn-block remove-social" disabled>
-                                                <i class="fas fa-minus"></i>
-                                            </button>
+                            <?php
+                            $platforms = [
+                                'facebook' => ['name' => 'Facebook', 'icon' => 'fab fa-facebook'],
+                                'instagram' => ['name' => 'Instagram', 'icon' => 'fab fa-instagram'],
+                                'youtube' => ['name' => 'YouTube', 'icon' => 'fab fa-youtube'],
+                                'twitter' => ['name' => 'Twitter', 'icon' => 'fab fa-twitter'],
+                                'quora' => ['name' => 'Quora', 'icon' => 'fab fa-quora'],
+                                'website' => ['name' => 'Website', 'icon' => 'fas fa-globe'],
+                                'linkedin' => ['name' => 'LinkedIn', 'icon' => 'fab fa-linkedin'],
+                                'pinterest' => ['name' => 'Pinterest', 'icon' => 'fab fa-pinterest'],
+                                'gmb' => ['name' => 'Google My Business', 'icon' => 'fab fa-google']
+                            ];
+                            ?>
+
+                            <?php foreach ($platforms as $key => $platform): ?>
+                                <div class="card mb-3">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">
+                                            <i class="<?= $platform['icon'] ?>"></i> <?= $platform['name'] ?>
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label><?= $platform['name'] ?> Link</label>
+                                                    <input type="url" 
+                                                           name="<?= $key ?>_link" 
+                                                           class="form-control" 
+                                                           placeholder="https://<?= $key ?>.com/yourprofile">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label><?= $platform['name'] ?> Username</label>
+                                                    <input type="text" 
+                                                           name="<?= $key ?>_username" 
+                                                           class="form-control" 
+                                                           placeholder="Username">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label><?= $platform['name'] ?> Password</label>
+                                                    <input type="text" 
+                                                           name="<?= $key ?>_password" 
+                                                           class="form-control" 
+                                                           placeholder="Password">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <button type="button" id="addSocialMedia" class="btn btn-success btn-sm mb-3">
-                                <i class="fas fa-plus"></i> Add Another Social Media
-                            </button>
+                            <?php endforeach; ?>
 
                             <!-- Remarks -->
                             <h5 class="text-primary mb-3 mt-4"><i class="fas fa-comment"></i> Additional Information</h5>
@@ -191,9 +268,24 @@ $(document).ready(function() {
         placeholder: '-- Select Client --'
     });
 
-    // Update logo file label
-    $('#logo_file').on('change', function(e) {
-        var fileName = e.target.files[0]?.name || 'Choose logo file...';
+    // Update file labels for all logo inputs
+    $('#logo_png').on('change', function(e) {
+        var fileName = e.target.files[0]?.name || 'Upload PNG format';
+        $(this).next('.custom-file-label').text(fileName);
+    });
+
+    $('#logo_jpg').on('change', function(e) {
+        var fileName = e.target.files[0]?.name || 'Upload JPG format';
+        $(this).next('.custom-file-label').text(fileName);
+    });
+
+    $('#logo_psd').on('change', function(e) {
+        var fileName = e.target.files[0]?.name || 'Upload PSD format';
+        $(this).next('.custom-file-label').text(fileName);
+    });
+
+    $('#logo_pdf').on('change', function(e) {
+        var fileName = e.target.files[0]?.name || 'Upload PDF format';
         $(this).next('.custom-file-label').text(fileName);
     });
 
@@ -202,39 +294,6 @@ $(document).ready(function() {
         var fileCount = e.target.files.length;
         var label = fileCount > 0 ? fileCount + ' file(s) selected' : 'Choose template files...';
         $(this).next('.custom-file-label').text(label);
-    });
-
-    // Add social media field
-    $('#addSocialMedia').on('click', function() {
-        var newRow = `
-            <div class="social-media-row mb-3">
-                <div class="row">
-                    <div class="col-md-4">
-                        <input type="text" 
-                               name="social_platform[]" 
-                               class="form-control" 
-                               placeholder="Platform (e.g., YouTube)">
-                    </div>
-                    <div class="col-md-7">
-                        <input type="url" 
-                               name="social_link[]" 
-                               class="form-control" 
-                               placeholder="Link (e.g., https://youtube.com/@channel)">
-                    </div>
-                    <div class="col-md-1">
-                        <button type="button" class="btn btn-danger btn-block remove-social">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-        $('#socialMediaContainer').append(newRow);
-    });
-
-    // Remove social media field
-    $(document).on('click', '.remove-social', function() {
-        $(this).closest('.social-media-row').remove();
     });
 });
 </script>
