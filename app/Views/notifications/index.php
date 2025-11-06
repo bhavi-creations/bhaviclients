@@ -1,5 +1,6 @@
 <?php
 // C:\xampp\htdocs\bhaviclients\app\Views\notifications\index.php
+$roleId = session()->get('role_id');
 ?>
 <?= $this->extend('layouts/main') ?>
 
@@ -42,7 +43,9 @@
                         <ul class="list-group list-group-flush">
                             <?php foreach ($notifications as $notif): ?>
                                 <li class="list-group-item <?= $notif['is_read'] ? '' : 'bg-light' ?>">
-                                    <a href="<?= base_url('notifications/mark-read/' . $notif['id']) ?>" class="text-dark">
+                                    <?php if (in_array($roleId, [1, 5])): // Only admins/managers can click ?>
+                                        <a href="<?= base_url('notifications/mark-read/' . $notif['id']) ?>" class="text-dark">
+                                    <?php endif; ?>
                                         <div class="d-flex justify-content-between align-items-start">
                                             <div class="flex-grow-1">
                                                 <div class="d-flex align-items-center mb-1">
@@ -55,9 +58,7 @@
                                                     <?php else: ?>
                                                         <i class="fas fa-calendar-day text-info mr-2"></i>
                                                     <?php endif; ?>
-                                                    
                                                     <strong><?= esc($notif['title']) ?></strong>
-                                                    
                                                     <?php if (!$notif['is_read']): ?>
                                                         <span class="badge badge-primary ml-2">New</span>
                                                     <?php endif; ?>
@@ -67,11 +68,11 @@
                                                     <i class="far fa-clock"></i> <?= timeAgo($notif['created_at']) ?>
                                                 </small>
                                             </div>
-                                            <div class="ml-3">
-                                                <i class="fas fa-chevron-right text-muted"></i>
-                                            </div>
+                                            
                                         </div>
-                                    </a>
+                                    <?php if (in_array($roleId, [1, 5])): ?>
+                                        </a>
+                                    <?php endif; ?>
                                 </li>
                             <?php endforeach; ?>
                         </ul>

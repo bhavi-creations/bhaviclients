@@ -378,12 +378,7 @@
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a href="<?= base_url('holidays-list') ?>" class="nav-link <?= url_is('holidays-list*') ? 'active' : '' ?>">
-                            <i class="nav-icon fas fa-calendar-day"></i>
-                            <p>Company Holidays</p>
-                        </a>
-                    </li>
+                  
 
                     <?php if ($userRoleId == 3): ?>
                         <!-- ONLY SHOW PROJECT DETAILS FOR CLIENTS (role 3), NOT CLIENT MANAGERS (role 4) -->

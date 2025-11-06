@@ -151,14 +151,26 @@ class HolidayManagement extends Controller
         ];
 
         if ($this->holidayModel->update($holidayId, $updateData)) {
+
+            // Update all related notifications so employees, clients, client managers see the change
+            $this->db->table('notifications')
+                ->where('related_type', 'holiday')
+                ->where('related_id', $holidayId)
+                ->set([
+                    'title'   => 'New Holiday Announced',
+                    'message' => $input['holiday_name'] . ' on ' . date('d M Y', strtotime($input['holiday_date']))
+                ])
+                ->update();
+
             return redirect()->to(base_url('holidays'))
-                ->with('message', 'Holiday updated successfully!');
+                ->with('message', 'Holiday updated successfully and notifications updated!');
         } else {
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Failed to update holiday.');
         }
     }
+
 
     /**
      * Delete holiday

@@ -1,7 +1,7 @@
 <?php
-// C:\xampp\htdocs\bhaviclients\app\Views\components\notifications_widget.php
 $notificationModel = new \App\Models\NotificationModel();
 $userId = session()->get('user_id');
+$roleId = session()->get('role_id');
 $notifications = $notificationModel->getUnreadNotifications($userId, 5);
 $unreadCount = $notificationModel->getUnreadCount($userId);
 ?>
@@ -20,7 +20,9 @@ $unreadCount = $notificationModel->getUnreadCount($userId);
         <ul class="list-group list-group-flush">
             <?php foreach ($notifications as $notif): ?>
                 <li class="list-group-item">
-                    <a href="<?= base_url($notif['link']) ?>" class="text-dark">
+                    <?php if (in_array($roleId, [1, 5])): ?>
+                        <a href="<?= base_url($notif['link']) ?>" class="text-dark">
+                    <?php endif; ?>
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <strong>
@@ -40,7 +42,9 @@ $unreadCount = $notificationModel->getUnreadCount($userId);
                             </div>
                             <small class="text-muted"><?= timeAgo($notif['created_at']) ?></small>
                         </div>
-                    </a>
+                    <?php if (in_array($roleId, [1, 5])): ?>
+                        </a>
+                    <?php endif; ?>
                 </li>
             <?php endforeach; ?>
         </ul>
