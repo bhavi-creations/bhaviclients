@@ -276,6 +276,14 @@
                             <p>Client Assets</p>
                         </a>
                     </li>
+
+                    <!-- Holiday Management -->
+                    <li class="nav-item">
+                        <a href="<?= base_url('holidays') ?>" class="nav-link <?= url_is('holidays*') ? 'active' : '' ?>">
+                            <i class="nav-icon fas fa-calendar-day"></i>
+                            <p>Holiday Management</p>
+                        </a>
+                    </li>
                 <?php endif; ?>
 
                 <!-- EMPLOYEE PANEL (role_id = 2) -->

@@ -60,31 +60,107 @@ class ForgotPassword extends Controller
         // Create reset link
         $resetLink = base_url('reset-password/' . $token);
 
-        // Send email (you'll need to configure email in Config/Email.php)
+        // Send email
         $emailService = \Config\Services::email();
 
-        $emailService->setFrom('noreply@bhaviclients.com', 'Bhavi Clients');
+        $emailService->setFrom('bhavicreations2022@gmail.com', 'Bhavi Clients');
         $emailService->setTo($email);
-        $emailService->setSubject('Password Reset Request');
+        $emailService->setSubject('Password Reset Request - Bhavi Clients');
 
-        $message = "Hello,\n\n";
-        $message .= "You requested a password reset. Click the link below to reset your password:\n\n";
-        $message .= $resetLink . "\n\n";
-        $message .= "This link will expire in 1 hour.\n\n";
-        $message .= "If you didn't request this, please ignore this email.\n\n";
-        $message .= "Thanks,\nBhavi Clients Team";
+        // HTML Email Body
+        $message = "
+    <html>
+    <body style='font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;'>
+        <div style='max-width: 600px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);'>
+            <h2 style='color: #333; margin-bottom: 20px;'>Password Reset Request</h2>
+            
+            <p style='color: #555; line-height: 1.6;'>Hello,</p>
+            
+            <p style='color: #555; line-height: 1.6;'>
+                You requested a password reset for your <strong>Bhavi Clients</strong> account.
+            </p>
+            
+            <p style='color: #555; line-height: 1.6;'>
+                Click the button below to reset your password:
+            </p>
+            
+            <div style='text-align: center; margin: 30px 0;'>
+                <a href='{$resetLink}' 
+                   style='background-color: #007bff; 
+                          color: white; 
+                          padding: 14px 28px; 
+                          text-decoration: none; 
+                          border-radius: 5px; 
+                          display: inline-block;
+                          font-weight: bold;'>
+                    Reset Password
+                </a>
+            </div>
+            
+            <p style='color: #555; line-height: 1.6; font-size: 14px;'>
+                Or copy and paste this link into your browser:
+            </p>
+            
+            <p style='background-color: #f8f9fa; 
+                      padding: 10px; 
+                      border-radius: 5px; 
+                      word-break: break-all;
+                      font-size: 12px;
+                      color: #007bff;'>
+                <a href='{$resetLink}' style='color: #007bff;'>{$resetLink}</a>
+            </p>
+            
+            <div style='background-color: #fff3cd; 
+                        border-left: 4px solid #ffc107; 
+                        padding: 12px; 
+                        margin: 20px 0;
+                        border-radius: 4px;'>
+                <strong style='color: #856404;'>⚠️ Important:</strong>
+                <span style='color: #856404;'> This link will expire in 1 hour.</span>
+            </div>
+            
+            <p style='color: #555; line-height: 1.6;'>
+                If you didn't request this password reset, please ignore this email. 
+                Your password will remain unchanged.
+            </p>
+            
+            <hr style='margin: 30px 0; border: none; border-top: 1px solid #ddd;'>
+            
+            <p style='color: #999; font-size: 12px; line-height: 1.6;'>
+                Thanks,<br>
+                <strong>Bhavi Clients Team</strong>
+            </p>
+            
+            <p style='color: #999; font-size: 11px; margin-top: 20px;'>
+                This is an automated email. Please do not reply to this message.
+            </p>
+        </div>
+    </body>
+    </html>
+    ";
 
         $emailService->setMessage($message);
 
-        if ($emailService->send()) {
-            return redirect()->to(base_url('login'))
-                ->with('message', 'Password reset link sent to your email!');
-        } else {
-            // If email fails, show the link for development
-            return redirect()->back()
-                ->with('message', 'Reset link: ' . $resetLink);
-        }
+        // Try sending email
+            if ($emailService->send()) {
+                return redirect()->to(base_url('login'))
+                    ->with('message', 'Password reset link sent to your email! Please check your inbox (and spam folder).');
+            } else {
+                // Log the error for debugging
+                log_message('error', 'Password reset email failed: ' . $emailService->printDebugger(['headers']));
+
+                // In development, show the link
+                if (ENVIRONMENT === 'development') {
+                    return redirect()->back()
+                        ->with('message', 'Email not configured. Reset link: ' . $resetLink);
+                }
+
+                // In production, show generic error
+                return redirect()->back()
+                    ->with('error', 'Failed to send reset email. Please contact support or try again later.');
+            }
     }
+
 
     /**
      * Show reset password form
@@ -104,7 +180,7 @@ class ForgotPassword extends Controller
             'validation' => \Config\Services::validation()
         ]);
     }
- 
+
     /**
      * Reset password
      */
