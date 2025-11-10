@@ -166,6 +166,15 @@
                         </a>
                     </li>
 
+
+                    <li class="nav-item">
+                        <a href="<?= base_url('employee-messages/list') ?>" class="nav-link">
+                            <i class="nav-icon fas fa-envelope"></i>
+                            <p>Personal Notifications</p>
+                        </a>
+                    </li>
+
+
                     <!-- 9. Company Assets (Dropdown Menu) -->
                     <!-- <?php
                             $isCompanyAssetsActive = url_is('department*') || url_is('roles*') || url_is('user-management*');
@@ -284,6 +293,15 @@
                             <p>Holiday Management</p>
                         </a>
                     </li>
+
+
+
+                    <li class="nav-item">
+                        <a href="<?= base_url('employee-messages/list') ?>" class="nav-link">
+                            <i class="nav-icon fas fa-envelope"></i>
+                            <p>Personal Notifications</p>
+                        </a>
+                    </li>
                 <?php endif; ?>
 
                 <!-- EMPLOYEE PANEL (role_id = 2) -->
@@ -335,8 +353,13 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a href="<?= base_url('employee-messages/my-messages') ?>" class="nav-link">
+                            <i class="nav-icon fas fa-envelope-open-text"></i>
+                            <p>Messages from Admin</p>
+                        </a>
+                    </li>
 
-                    
                 <?php endif; ?>
 
                 <!-- CLIENT + CLIENT MANAGER -->
@@ -365,6 +388,12 @@
                     </li>
 
                     <li class="nav-item">
+                        <a href="<?= base_url('client/reports') ?>" class="nav-link">
+                            <i class="nav-icon fas fa-chart-bar"></i>
+                            <p>Monthly Reports</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="<?= base_url('self-uploads') ?>" class="nav-link <?= url_is('self-uploads*') ? 'active' : '' ?>">
                             <i class="nav-icon fas fa-upload"></i>
                             <p>My Uploads</p>
@@ -378,7 +407,8 @@
                         </a>
                     </li>
 
-                  
+
+
 
                     <?php if ($userRoleId == 3): ?>
                         <!-- ONLY SHOW PROJECT DETAILS FOR CLIENTS (role 3), NOT CLIENT MANAGERS (role 4) -->

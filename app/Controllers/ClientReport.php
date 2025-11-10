@@ -24,12 +24,28 @@ class ClientReport extends BaseController
         $this->db = \Config\Database::connect();
         helper(['form', 'url']);
 
-        // Access control - Only Admin and Admin Manager
-        if (!in_array(session()->get('role_id'), [1, 5])) {
+        $roleId = session()->get('role_id');
+        $method = service('router')->methodName();
+        $adminOnly = [
+            'index',
+            'create',
+            'store',
+            'edit',
+            'update',
+            'delete',
+            'downloadFile',
+            'deleteFile',
+            'view' // add more if needed (admin CRUD methods)
+        ];
+
+        // Only restrict admin/manager functions, NOT client ones!
+        if (in_array($method, $adminOnly) && !in_array($roleId, [1, 5])) {
             header('Location: ' . base_url('dashboard'));
             exit;
         }
+        // Client/client_manager-friendly methods (clientReportsList, clientReportView) are accessible!
     }
+
 
     /**
      * Display all reports
@@ -178,27 +194,37 @@ class ClientReport extends BaseController
         return view('client_report/view', $data);
     }
 
-    /**
-     * Download report file
-     */
     public function downloadFile($reportId, $fileName)
     {
+        $roleId = session()->get('role_id');
+        $userId = session()->get('user_id');
         $report = $this->reportModel->find($reportId);
-        if (!$report) {
-            return redirect()->back()->with('error', 'Report not found.');
+
+        // Security check: allow if admin/manager or correct client/client manager
+        $clientId = null;
+        log_message('error', 'DEBUG - role_id: ' . $roleId . ', user_id: ' . $userId . ', client_id: ' . $clientId . ', report.client_id: ' . ($report ? $report['client_id'] : 'NULL'));
+
+        if ($roleId == 3) {
+            $clientRec = $this->clientModel->where('user_id', $userId)->first();
+            $clientId = $clientRec ? $clientRec['id'] : null;
+        } elseif ($roleId == 4) {
+            $clientRec = $this->clientModel->where('client_manager_id', $userId)->first();
+            $clientId = $clientRec ? $clientRec['id'] : null;
         }
 
-        $files = $this->reportModel->getReportFiles($reportId);
-        if (!in_array($fileName, $files)) {
-            return redirect()->back()->with('error', 'File not found.');
+        if ($roleId == 1 || $roleId == 5 || ($report && $report['client_id'] == $clientId)) {
+            $files = json_decode($report['file_uploads'], true) ?: [];
+            if (!in_array($fileName, $files)) {
+                return redirect()->back()->with('error', 'File not found.');
+            }
+            $filePath = FCPATH . 'uploads/client_reports/' . $fileName;
+            if (!file_exists($filePath)) {
+                return redirect()->back()->with('error', 'File not found on server.');
+            }
+            return $this->response->download($filePath, null)->setFileName($fileName);
+        } else {
+            return redirect()->to(base_url('dashboard'))->with('error', 'Access denied.');
         }
-
-        $filePath = FCPATH . 'uploads/client_reports/' . $fileName;
-        if (!file_exists($filePath)) {
-            return redirect()->back()->with('error', 'File not found on server.');
-        }
-
-        return $this->response->download($filePath, null)->setFileName($fileName);
     }
 
     /**
@@ -374,5 +400,101 @@ class ClientReport extends BaseController
             session()->setFlashdata('error', 'Failed to update report: ' . $e->getMessage());
             return redirect()->back()->withInput();
         }
+    }
+
+
+    // Show all reports for this (logged-in) client or client manager
+    public function clientReportsList()
+    {
+        $roleId = session()->get('role_id');
+        $userId = session()->get('user_id');
+        $clientId = null;
+
+        if ($roleId == 3) { // Client
+            // Find client where user_id matches session user ID
+            $clientRec = $this->clientModel->where('user_id', $userId)->first();
+            $clientId = $clientRec ? $clientRec['id'] : null;
+        } elseif ($roleId == 4) { // Client Manager
+            // Find client where client_manager_id matches session user ID
+            $clientRec = $this->clientModel->where('client_manager_id', $userId)->first();
+            $clientId = $clientRec ? $clientRec['id'] : null;
+        }
+        if (!$clientId) return redirect()->to(base_url('dashboard'))->with('error', 'No reports found for you.');
+
+        $reports = $this->db->table('client_reports')
+            ->where('client_id', $clientId)
+            ->orderBy('created_at', 'desc')
+            ->get()->getResultArray();
+
+        return view('client_reports/client_list', [
+            'title' => 'My Reports',
+            'reports' => $reports
+        ]);
+    }
+
+    public function clientReportView($reportId)
+    {
+        $roleId = session()->get('role_id');
+        $userId = session()->get('user_id');
+        $clientId = null;
+
+        if ($roleId == 3) {
+            $clientRec = $this->clientModel->where('user_id', $userId)->first();
+            $clientId = $clientRec ? $clientRec['id'] : null;
+        } elseif ($roleId == 4) {
+            $clientRec = $this->clientModel->where('client_manager_id', $userId)->first();
+            $clientId = $clientRec ? $clientRec['id'] : null;
+        }
+
+        $report = $this->db->table('client_reports')->where('id', $reportId)->where('client_id', $clientId)->get()->getRowArray();
+        if (!$report) return redirect()->to(base_url('client/reports'))->with('error', 'Report not found!');
+
+        // Get attached files (json decode)
+        $files = [];
+        if (!empty($report['file_uploads'])) {
+            $files = json_decode($report['file_uploads'], true) ?: [];
+        }
+
+        return view('client_reports/client_view', [
+            'title' => 'View Report',
+            'report' => $report,
+            'files'  => $files
+        ]);
+    }
+
+
+    public function clientDownloadFile($reportId, $fileName)
+    {
+        $roleId = session()->get('role_id');
+        $userId = session()->get('user_id');
+        $clientId = null;
+
+        // Mapping for client/client manager
+        if ($roleId == 3) {
+            $clientRec = $this->clientModel->where('user_id', $userId)->first();
+            $clientId = $clientRec ? $clientRec['id'] : null;
+        } elseif ($roleId == 4) {
+            $clientRec = $this->clientModel->where('client_manager_id', $userId)->first();
+            $clientId = $clientRec ? $clientRec['id'] : null;
+        }
+
+        $report = $this->db->table('client_reports')
+            ->where('id', $reportId)
+            ->where('client_id', $clientId)
+            ->get()->getRowArray();
+
+        if (!$report) {
+            return redirect()->to(base_url('client/reports'))->with('error', 'Access denied or report not found.');
+        }
+
+        $files = json_decode($report['file_uploads'], true) ?: [];
+        if (!in_array($fileName, $files)) {
+            return redirect()->back()->with('error', 'File not found.');
+        }
+        $filePath = FCPATH . 'uploads/client_reports/' . $fileName;
+        if (!file_exists($filePath)) {
+            return redirect()->back()->with('error', 'File not found on server.');
+        }
+        return $this->response->download($filePath, null)->setFileName($fileName);
     }
 }

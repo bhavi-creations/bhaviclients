@@ -106,8 +106,8 @@
                                         <p class="text-truncate" title="<?= esc($asset['logo_png']) ?>">
                                             <?= esc($asset['logo_png']) ?>
                                         </p>
-                                        <a href="<?= base_url('employee-client-assets/download/logo/' . $asset['logo_png']) ?>" 
-                                           class="btn btn-sm btn-primary btn-block">
+                                        <a href="<?= base_url('employee-client-assets/download/logo/' . $asset['logo_png']) ?>"
+                                            class="btn btn-sm btn-primary btn-block">
                                             <i class="fas fa-download"></i> Download
                                         </a>
                                     <?php else: ?>
@@ -130,8 +130,8 @@
                                         <p class="text-truncate" title="<?= esc($asset['logo_jpg']) ?>">
                                             <?= esc($asset['logo_jpg']) ?>
                                         </p>
-                                        <a href="<?= base_url('employee-client-assets/download/logo/' . $asset['logo_jpg']) ?>" 
-                                           class="btn btn-sm btn-primary btn-block">
+                                        <a href="<?= base_url('employee-client-assets/download/logo/' . $asset['logo_jpg']) ?>"
+                                            class="btn btn-sm btn-primary btn-block">
                                             <i class="fas fa-download"></i> Download
                                         </a>
                                     <?php else: ?>
@@ -154,8 +154,8 @@
                                         <p class="text-truncate" title="<?= esc($asset['logo_psd']) ?>">
                                             <?= esc($asset['logo_psd']) ?>
                                         </p>
-                                        <a href="<?= base_url('employee-client-assets/download/logo/' . $asset['logo_psd']) ?>" 
-                                           class="btn btn-sm btn-primary btn-block">
+                                        <a href="<?= base_url('employee-client-assets/download/logo/' . $asset['logo_psd']) ?>"
+                                            class="btn btn-sm btn-primary btn-block">
                                             <i class="fas fa-download"></i> Download
                                         </a>
                                     <?php else: ?>
@@ -178,8 +178,8 @@
                                         <p class="text-truncate" title="<?= esc($asset['logo_pdf']) ?>">
                                             <?= esc($asset['logo_pdf']) ?>
                                         </p>
-                                        <a href="<?= base_url('employee-client-assets/download/logo/' . $asset['logo_pdf']) ?>" 
-                                           class="btn btn-sm btn-primary btn-block">
+                                        <a href="<?= base_url('employee-client-assets/download/logo/' . $asset['logo_pdf']) ?>"
+                                            class="btn btn-sm btn-primary btn-block">
                                             <i class="fas fa-download"></i> Download
                                         </a>
                                     <?php else: ?>
@@ -209,7 +209,7 @@
                                             $fileExt = strtolower(pathinfo($file, PATHINFO_EXTENSION));
                                             $iconClass = 'fa-file';
                                             $iconColor = 'text-secondary';
-                                            
+
                                             if (in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'])) {
                                                 $iconClass = 'fa-file-image';
                                                 $iconColor = 'text-info';
@@ -236,8 +236,8 @@
                                             </p>
                                             <span class="badge badge-secondary mb-2">.<?= strtoupper($fileExt) ?></span>
                                             <br>
-                                            <a href="<?= base_url('employee-client-assets/download/template/' . $file) ?>" 
-                                               class="btn btn-sm btn-primary btn-block mt-2">
+                                            <a href="<?= base_url('employee-client-assets/download/template/' . $file) ?>"
+                                                class="btn btn-sm btn-primary btn-block mt-2">
                                                 <i class="fas fa-download"></i> Download
                                             </a>
                                         </div>
@@ -261,11 +261,11 @@
             <?php if (!empty($asset['social_media_array'])): ?>
                 <div class="card card-warning">
                     <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-share-alt"></i> Social Media Links</h3>
+                        <h3 class="card-title"><i class="fas fa-share-alt"></i> Social Media Accounts</h3>
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <?php 
+                            <?php
                             $platformIcons = [
                                 'facebook' => ['icon' => 'fab fa-facebook', 'color' => 'primary'],
                                 'instagram' => ['icon' => 'fab fa-instagram', 'color' => 'danger'],
@@ -277,35 +277,42 @@
                                 'pinterest' => ['icon' => 'fab fa-pinterest', 'color' => 'danger'],
                                 'gmb' => ['icon' => 'fab fa-google', 'color' => 'danger']
                             ];
-                            
-                            foreach ($asset['social_media_array'] as $platform => $data): 
-                                // Skip if no link available
-                                if (empty($data['link'])) continue;
-                                
+                            foreach ($asset['social_media_array'] as $platform => $data):
+                                if (empty($data['link']) && empty($data['username'])) continue; // no password included!
                                 $platformName = ucfirst($platform);
                                 if ($platform == 'gmb') $platformName = 'Google My Business';
                                 $icon = $platformIcons[$platform]['icon'] ?? 'fas fa-link';
                                 $color = $platformIcons[$platform]['color'] ?? 'secondary';
                             ?>
                                 <div class="col-md-4 mb-3">
-                                    <div class="card h-100">
+                                    <div class="card">
                                         <div class="card-header bg-<?= $color ?>">
                                             <h6 class="mb-0 text-white">
                                                 <i class="<?= $icon ?>"></i> <?= $platformName ?>
                                             </h6>
                                         </div>
                                         <div class="card-body">
-                                            <p class="mb-2">
-                                                <strong>Link:</strong><br>
-                                                <a href="<?= esc($data['link']) ?>" target="_blank" class="text-truncate d-block">
-                                                    <?= esc($data['link']) ?>
+                                            <?php if (!empty($data['link'])): ?>
+                                                <p class="mb-2">
+                                                    <strong>Link:</strong><br>
+                                                    <a href="<?= esc($data['link']) ?>" target="_blank" class="text-truncate d-block">
+                                                        <?= esc($data['link']) ?>
+                                                    </a>
+                                                </p>
+                                            <?php endif; ?>
+                                            <?php if (!empty($data['username'])): ?>
+                                                <p class="mb-2">
+                                                    <strong>Username:</strong><br>
+                                                    <code><?= esc($data['username']) ?></code>
+                                                </p>
+                                            <?php endif; ?>
+                                            <?php if (!empty($data['link'])): ?>
+                                                <a href="<?= esc($data['link']) ?>"
+                                                    target="_blank"
+                                                    class="btn btn-sm btn-<?= $color ?> btn-block mt-2">
+                                                    <i class="fas fa-external-link-alt"></i> Visit
                                                 </a>
-                                            </p>
-                                            <a href="<?= esc($data['link']) ?>" 
-                                               target="_blank" 
-                                               class="btn btn-sm btn-<?= $color ?> btn-block mt-2">
-                                                <i class="fas fa-external-link-alt"></i> Visit Page
-                                            </a>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>

@@ -197,16 +197,13 @@ $routes->group('/', ['filter' => 'auth:1,5'], function ($routes) {
     });
 
 
-
-
-    // EMPLOYEE TASKS
-    // $routes->group('task-management', function ($routes) {
-    //     $routes->get('', 'TaskManagement::index');
-    //     $routes->get('view/(:num)', 'TaskManagement::view/$1');
-    //     $routes->post('update-status/(:num)', 'TaskManagement::updateStatus/$1');
-    //     $routes->post('delete/(:num)', 'TaskManagement::delete/$1');
-    //     $routes->get('filter', 'TaskManagement::filter');
-    // });
+    // Admin/Manager
+    $routes->get('employee-messages/create', 'EmployeeMessages::create');
+    $routes->post('employee-messages/store', 'EmployeeMessages::store');
+    $routes->get('employee-messages/list', 'EmployeeMessages::index');
+    $routes->get('employee-messages/edit/(:num)', 'EmployeeMessages::edit/$1');
+    $routes->post('employee-messages/update/(:num)', 'EmployeeMessages::update/$1');
+    $routes->get('employee-messages/delete/(:num)', 'EmployeeMessages::delete/$1');
 });
 
 // 5. ADMIN MANAGER ROUTES (role_id = 5)
@@ -225,25 +222,15 @@ $routes->group('/', ['filter' => 'auth:5'], function ($routes) {
 });
 
 
-// 4. EMPLOYEE ROUTES (role_id = 2)
-// $routes->group('/', ['filter' => 'auth:2'], function ($routes) {
-//     $routes->get('employee-dashboard', 'EmployeeDashboard::index');
-//     $routes->get('my-tasks', 'EmployeeDashboard::myTasks');
-//     $routes->get('submit-work', 'EmployeeDashboard::submitWork');
-//     $routes->post('store-work', 'EmployeeDashboard::storeWork');
-//     $routes->get('edit-task/(:num)', 'EmployeeDashboard::editTask/$1');
-//     $routes->post('update-task/(:num)', 'EmployeeDashboard::updateTask/$1');
-//     $routes->post('delete-task/(:num)', 'EmployeeDashboard::deleteTask/$1');
-//     $routes->get('delete-file/(:num)/(:num)', 'EmployeeDashboard::deleteFile/$1/$2');
-
-// });
-
 
 
 
 // 4. EMPLOYEE ROUTES (role_id = 2)
 $routes->group('/', ['filter' => 'auth:2'], function ($routes) {
     $routes->get('employee-dashboard', 'EmployeeDashboard::index');
+
+    $routes->get('employee-messages/my-messages', 'EmployeeMessages::myMessages');
+
 
     // My Tasks
     $routes->get('my-tasks', 'EmployeeDashboard::myTasks');
@@ -318,13 +305,14 @@ $routes->group('/', ['filter' => 'auth:3,4'], function ($routes) {
     $routes->get('my-social-media-calendar/view/(:num)', 'ClientSocialMediaCalendar::view/$1');
 
 
- 
+    // Mothly Reports(view only)
+    $routes->get('client/reports', 'ClientReport::clientReportsList');
+    $routes->get('client/reports/view/(:num)', 'ClientReport::clientReportView/$1');
+    $routes->get('client/reports/download-file/(:num)/(:any)', 'ClientReport::clientDownloadFile/$1/$2');
 
 
 
     // CLIENT MANAGER
-
-
     $routes->get('manager-dashboard', 'ClientManager::index');
     $routes->get('manager/clients', 'ClientManager::clients');
     $routes->get('manager/work-updates', 'ClientManager::workUpdates');
