@@ -27,6 +27,7 @@ class EmployeeTaskModel extends Model
         'submitted_at',
         'employee_files',       // NEW: Renamed from files_upload
         'employee_remarks',
+        'self_logged',
         'created_at',
         'updated_at'
     ];

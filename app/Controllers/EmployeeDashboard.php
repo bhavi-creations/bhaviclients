@@ -117,13 +117,25 @@ class EmployeeDashboard extends BaseController
 
         $employeeId = $user['employee_id'];
 
-        // Fetch tasks for this employee with client info
-        $tasks = $this->taskModel
-            ->select('employee_tasks.*, clients.name as client_name, clients.email as client_email')
+        $request = \Config\Services::request();
+        $statusFilter = $request->getGet('status');
+        $priorityFilter = $request->getGet('priority');
+
+        $builder = $this->taskModel
+            ->select('employee_tasks.*, clients.name as client_name, clients.email as client_email, users.first_name as assigned_by_name, users.last_name as assigned_by_lastname')
             ->join('clients', 'clients.id = employee_tasks.client_id', 'left')
-            ->where('employee_tasks.employee_id', $employeeId)
-            ->orderBy('employee_tasks.submitted_at', 'DESC')
-            ->findAll();
+            ->join('users', 'users.id = employee_tasks.assigned_by', 'left')
+            ->where('employee_tasks.employee_id', $employeeId);
+
+        if (!empty($statusFilter)) {
+            $builder->where('employee_tasks.status', $statusFilter);
+        }
+
+        if (!empty($priorityFilter)) {
+            $builder->where('employee_tasks.priority', $priorityFilter);
+        }
+
+        $tasks = $builder->orderBy('employee_tasks.created_at', 'DESC')->findAll();
 
         $data = [
             'title' => 'My Tasks',
@@ -132,6 +144,121 @@ class EmployeeDashboard extends BaseController
         ];
 
         return view('employee/my_tasks', $data);
+    }
+
+    /**
+     * Show form to allow employees create their own task/work item
+     */
+    public function createSelfTask()
+    {
+        $userId = session()->get('user_id');
+        $user = $this->userModel->find($userId);
+
+        if (!$user || !isset($user['employee_id'])) {
+            return redirect()->to(base_url('dashboard'))->with('error', 'Employee record not found.');
+        }
+
+        $clients = $this->clientModel->orderBy('name', 'ASC')->findAll();
+
+        $data = [
+            'title' => 'Add Task / Work Submission',
+            'clients' => $clients,
+            'validation' => $this->validation
+        ];
+
+        return view('employee/create_task', $data);
+    }
+
+    /**
+     * Store employee-created task so admin can review it
+     */
+    public function storeSelfTask()
+    {
+        $userId = session()->get('user_id');
+        $user = $this->userModel->find($userId);
+
+        if (!$user || !isset($user['employee_id'])) {
+            return redirect()->to(base_url('dashboard'))->with('error', 'Employee record not found.');
+        }
+
+        $employeeId = $user['employee_id'];
+
+        $rules = [
+            'client_id' => 'required|integer',
+            'title' => 'required|min_length[3]|max_length[255]',
+            'description' => 'required|min_length[10]',
+            'priority' => 'required|in_list[Low,Medium,High,Urgent]',
+            'status' => 'required|in_list[Pending,In Progress,Completed]',
+            'employee_remarks' => 'permit_empty'
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('validation', $this->validation)
+                ->with('error', 'Validation failed. Please review the form.');
+        }
+
+        $input = $this->request->getPost();
+
+        $taskData = [
+            'employee_id' => $employeeId,
+            'assigned_by' => $userId,
+            'client_id' => (int) $input['client_id'],
+            'title' => trim($input['title']),
+            'description' => trim($input['description']),
+            'priority' => $input['priority'],
+            'status' => $input['status'],
+            'employee_remarks' => !empty($input['employee_remarks']) ? trim($input['employee_remarks']) : null,
+            'self_logged' => 1
+        ];
+
+        if ($input['status'] === 'Completed') {
+            $taskData['submitted_at'] = date('Y-m-d H:i:s');
+        }
+
+        // Handle employee work file uploads (if any)
+        $files = $this->request->getFiles('work_files');
+        $uploadedFiles = [];
+
+        if (!empty($files)) {
+            $uploadPath = FCPATH . 'uploads/task_files/';
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+
+            foreach ($files as $file) {
+                if (is_array($file)) {
+                    foreach ($file as $singleFile) {
+                        if ($singleFile->isValid() && !$singleFile->hasMoved()) {
+                            $newName = 'employee_' . time() . '_' . $singleFile->getRandomName();
+                            $singleFile->move($uploadPath, $newName);
+                            $uploadedFiles[] = $newName;
+                        }
+                    }
+                } else {
+                    if ($file->isValid() && !$file->hasMoved()) {
+                        $newName = 'employee_' . time() . '_' . $file->getRandomName();
+                        $file->move($uploadPath, $newName);
+                        $uploadedFiles[] = $newName;
+                    }
+                }
+            }
+        }
+
+        if (!empty($uploadedFiles)) {
+            $taskData['employee_files'] = json_encode($uploadedFiles);
+        }
+
+        try {
+            $this->taskModel->insert($taskData);
+            session()->setFlashdata('success', 'Task added successfully!');
+            return redirect()->to(base_url('my-tasks'));
+        } catch (\Exception $e) {
+            log_message('error', 'Self Task Creation Error: ' . $e->getMessage());
+            session()->setFlashdata('error', 'Failed to add task. Please try again.');
+            return redirect()->back()->withInput();
+        }
     }
 
     /**

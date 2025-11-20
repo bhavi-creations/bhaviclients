@@ -163,6 +163,7 @@ $request = \Config\Services::request();
                                 <tr>
                                     <th>S.No.</th>
                                     <th>Task Title</th>
+                                    <th>Source</th>
                                     <th>Employee</th>
                                     <th>Client</th>
                                     <th>Priority</th>
@@ -178,6 +179,20 @@ $request = \Config\Services::request();
                                         <tr>
                                             <td><?= $sn++ ?></td>
                                             <td><strong><?= esc($task['title']) ?></strong></td>
+                                            <td>
+                                                <?php 
+                                                $isSelfLogged = isset($task['self_logged']) && (int)$task['self_logged'] === 1;
+                                                ?>
+                                                <?php if ($isSelfLogged): ?>
+                                                    <span class="badge badge-info">
+                                                        <i class="fas fa-user-edit mr-1"></i>Self-Logged
+                                                    </span>
+                                                <?php else: ?>
+                                                    <span class="badge badge-secondary">
+                                                        <i class="fas fa-user-shield mr-1"></i>Assigned
+                                                    </span>
+                                                <?php endif; ?>
+                                            </td>
                                             <td><?= esc($task['emp_first_name'] . ' ' . $task['emp_last_name']) ?></td>
                                             <td><?= esc($task['client_name'] ?? 'N/A') ?></td>
                                             <td>
@@ -228,7 +243,7 @@ $request = \Config\Services::request();
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
-                                    <tr><td colspan="8" class="text-center py-4">No tasks found.</td></tr>
+                                    <tr><td colspan="9" class="text-center py-4">No tasks found.</td></tr>
                                 <?php endif; ?>
                             </tbody>
                         </table>

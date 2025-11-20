@@ -171,6 +171,7 @@ class TaskManagement extends BaseController
                 'due_date' => !empty($input['due_date']) ? $input['due_date'] : null,
                 'priority' => $input['priority'],
                 'status' => 'Pending',
+                'self_logged' => 0,
                 'created_at' => date('Y-m-d H:i:s')
             ];
 

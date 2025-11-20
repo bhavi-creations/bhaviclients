@@ -95,8 +95,11 @@ $request = \Config\Services::request();
 
             <!-- Tasks Card -->
             <div class="card shadow-lg">
-                <div class="card-header border-0">
-                    <h3 class="card-title">My Assigned Tasks</h3>
+                <div class="card-header border-0 d-flex justify-content-between align-items-center flex-wrap">
+                    <h3 class="card-title mb-2 mb-sm-0">My Tasks & Work Logs</h3>
+                    <a href="<?= base_url('my-tasks/create') ?>" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Add Task / Work
+                    </a>
                 </div>
                 <div class="card-body p-0">
                     <?php if (!empty($tasks)): ?>
@@ -183,7 +186,10 @@ $request = \Config\Services::request();
                         <div class="p-4 text-center">
                             <i class="fas fa-tasks fa-3x text-muted mb-3"></i>
                             <h5 class="text-muted">No tasks assigned yet</h5>
-                            <p class="text-muted">Tasks assigned by admin will appear here</p>
+                            <p class="text-muted mb-3">Use the button above to log your own task and keep admins updated.</p>
+                            <a href="<?= base_url('my-tasks/create') ?>" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Add Task / Work
+                            </a>
                         </div>
                     <?php endif; ?>
                 </div>

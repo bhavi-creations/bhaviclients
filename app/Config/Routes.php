@@ -234,6 +234,8 @@ $routes->group('/', ['filter' => 'auth:2'], function ($routes) {
 
     // My Tasks
     $routes->get('my-tasks', 'EmployeeDashboard::myTasks');
+    $routes->get('my-tasks/create', 'EmployeeDashboard::createSelfTask');
+    $routes->post('my-tasks/store', 'EmployeeDashboard::storeSelfTask');
     $routes->get('my-tasks/view/(:num)', 'EmployeeDashboard::viewTask/$1');
     $routes->get('my-tasks/submit/(:num)', 'EmployeeDashboard::submitWorkForm/$1');
     $routes->post('my-tasks/store-work/(:num)', 'EmployeeDashboard::storeTaskWork/$1');
